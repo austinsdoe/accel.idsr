@@ -1,0 +1,60 @@
+<div id="C1" class="row">
+    <div class="col-md-6">
+        <form>
+            <label for="first_name">Patient First Name:</label>
+            <br>
+            <input type="text" name="first_name" required>
+            <br>
+            <label for="middle_name">Patient Middle Name:</label>
+            <br>
+            <input type="text" name="middle_name">
+            <br>
+            <label for="last_name">Patient Last Name:</label>
+            <br>
+            <input type="text" name="last_name" required>
+            <br>
+        </form>
+    </div>
+
+    <div class="col-md-6">
+        <form>
+            <!-- <label for="sex">Patient Sex:</label> -->
+            <label for="patient_gender" class="patient_gender">Gender:</label><br>
+            <select name="gender" id="patient_gender">
+                <option value="male">Male</option>
+                <option value="female">Female</option>
+                <option value="unknown">Unknown</option>
+            </select>
+            <br>
+            <input type="radio" name="age_of_patient" id="date_of_birth" required>
+            <label for="age_of_patient">Date of Birth</label><br>
+            <input type="text" name="date_of_birth" id="pick_age" readonly="readonly">
+
+
+            <input type="radio" name="age_of_patient" id="age_of_patient">
+            <label for="age_of_patient">Patient Age:</label><br>
+
+        </form>
+        <!-- The below was done to keep the elements inline --->
+        <form class="form-inline">
+            <div class="form-group">
+                <input type="text" name="patient_age_year" id="patient_age_years" class="form-control age_enter_field"
+                       size=3>
+                <label for="patient_age_years" class="age_enter_field">Years:</label>
+            </div>
+            <div class="form-group">
+                <input type="text" name="patient_age_month" id="patient_age_month" class="form-control age_enter_field"
+                       size=3>
+                <label for="patient_age_month" class="age_enter_field">Months:</label>
+
+            </div>
+            <div class="form-group">
+
+                <input type="text" name="patient_age_day" id="patient_age_days" class="form-control age_enter_field"
+                       size=3>
+                <label for="patient_age_years" class="age_enter_field" style="float: left">Days:</label>
+            </div>
+
+        </form>
+    </div>
+</div>
