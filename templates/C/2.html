@@ -1,5 +1,18 @@
-<h3>County of Residence:</h3>
-<select name="counties" id="counties"></select>
+<div id="C2">
+    <div>
+        <label for="counties" class="required county_select" id = "test_hide" >
+        County of Residence:</label><br>
 
-<h3>County of Residence:</h3>
-<select name="district" id="district"></select>
+        <select name="counties" id="counties" onchange="changeEventHandler(event);"></select><br>
+
+        <label for="district" class="required district_select">District of Residence:</label><br>
+        <select name="district" id="district"></select>
+
+           <form class="form-inline">
+            <div class="form-group">
+                <label for="patient_community" class="required">Community of Residence:</label>
+                <input type="text" name="patient_age_year" id="patient_community" class="form-control" required>
+            </div>
+        </form>
+    </div>
+</div>

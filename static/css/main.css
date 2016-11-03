@@ -297,3 +297,7 @@ li
         page-break-after: avoid;
     }
 }
+
+/* added for require fields */
+
+label.required:after {content: " *"; color: red;}
