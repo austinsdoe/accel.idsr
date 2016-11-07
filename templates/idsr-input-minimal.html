@@ -14,8 +14,6 @@
     <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/normalize.css') }}"/>
     <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/main.css') }}"/>
 
-    <script type="text/javascript" src="{{ url_for('static', filename='js/select.js') }} "></script>
-
     <!-- Bootstrap things -->
     <script type="text/javascript" src="{{ url_for('static', filename='bootstrap/js/bootstrap.min.js') }} "></script>
      <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='bootstrap/css/bootstrap.min.css') }}"/>
@@ -29,9 +27,12 @@
     <script type="text/javascript" src="{{ url_for('static', filename='js/idsr-minimal-B1.js') }}"></script>
     <script type="text/javascript" src="{{ url_for('static', filename='js/idsr-minimal-C1.js') }}"></script>
     <script type="text/javascript" src="{{ url_for('static', filename='js/idsr-minimal-C2.js') }}"></script>
+    <script type="text/javascript" src="{{ url_for('static', filename='js/idsr-minimal-D1.js') }}"></script>
+
 
     <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/idsr-minimal-B1.css') }}"/>
     <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/idsr-minimal-C1.css') }}"/>
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/idsr-minimal-D1.css') }}"/>
 </head>
 
 <body>
@@ -51,6 +52,11 @@
     <h1>Section C</h1>
     <section>
         {% include "C/index.html" %}
+    </section>
+
+     <h1>Section D</h1>
+    <section>
+        {% include "D/index.html" %}
     </section>
 
 </div>

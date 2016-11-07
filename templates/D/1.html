@@ -1,0 +1,28 @@
+<div id="D1">
+    <form>
+        <div class="row">
+            <div class="col-md-6">
+                <label for="date_of_onset" class="required">Date of Onset:</label><br>
+                <input type="text" name="date_of_onset" id="date_of_onset" readonly="readonly">
+                <label for="age_of_patient" class="required">Date Seen:</label><br>
+                <input type="text" name="date_seen" id="date_seen" readonly="readonly"><br>
+
+                <label class="required">In/Out Patient?: </label><br>
+                <input type="radio" name="in_or_out_patient" value="in_patient" id="in_patient">
+                <label for="in_patient"> In Patient </label>
+                <br>
+                <input type="radio" name="in_or_out_patient" value="out_patient" id="out_patient">
+                <label for="out_patient"> Out Patient </label>
+                <br>
+            </div>
+            <div class="col-md-6">
+                <label class="required">Outcome:</label><br>
+                <input type="radio" name="case_outcome" value="patient_alive" id="case_alive">
+                <label for="case_alive">Alive</label>
+                <br>
+                <input type="radio" name="case_outcome" value="patient_died" id="case_dead">
+                <label for="case_dead">Dead (deceased)</label><br>
+            </div>
+        </div>
+    </form>
+</div>
