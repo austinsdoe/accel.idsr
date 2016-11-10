@@ -1,9 +1,7 @@
 (function ($) {
-
     $(document).ready(function () {
         $("#C1 #pick_age").hide();
         $("#C1 .age_enter_field").hide();
-
         $("#C1 #date_of_birth").click(function () {  // when the date of birth field is click
             $("#C1 #pick_age").show().datepicker({
 
@@ -44,12 +42,9 @@
                     document.getElementById("patient_age_days").disabled = true;
                 }
             });
-
             $("#C1 .age_enter_field").show().disabled();
-
         });
         $("#C1 #age_of_patient").click(function () {
-
             document.getElementById("patient_age_years").disabled = false;
             document.getElementById("patient_age_month").disabled = false;
             document.getElementById("patient_age_days").disabled = false;
@@ -57,7 +52,6 @@
             $("#C1 .age_enter_field").show();
         });
         $("#C1 #age_of_patient").$("#C1 input[type='radio']").checkboxradio();
-
     })
 
 })(jQuery);
