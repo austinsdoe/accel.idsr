@@ -301,3 +301,38 @@ li
 /* added for require fields */
 
 label.required:after {content: " *"; color: red;}
+
+
+#application {
+    padding: 40px;
+}
+div.mainsteps.steps li a {
+    font-size: 2em;
+    font-weight: bold;
+    height: 150px;
+    line-height: 100%;
+    padding: 10px 0 20px 20px;
+    background-color: #aaa;
+    color: #fff;
+}
+div.content div.steps li a {
+    font-size: 1.4em;
+    font-weight: bold;
+    padding: 5px 0 10px 20px;
+}
+div.mainsteps.steps a span.small {
+    font-size: 0.7em;
+    font-weight: 400;
+}
+div.mainsteps.steps li {
+    width: 200px;
+}
+div.mainsteps.steps li.done a {
+    background-color: green;
+}
+div.mainsteps.steps li.current a {
+    background-color: #ffa100;
+}
+div.content div.steps li {
+    width: 100px;
+}

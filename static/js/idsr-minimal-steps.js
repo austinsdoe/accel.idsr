@@ -46,6 +46,7 @@
             enableAllSteps: true
         });
 
+        $('div.steps').first().addClass('mainsteps');
     })
 })(jQuery);
 
