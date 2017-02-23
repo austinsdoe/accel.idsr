@@ -3,7 +3,7 @@
  */
 (function ($) {
     $(document).ready(function () {
-        $("#D1 #date_of_onset").click().show().datepicker({
+        $("#D1 #date_of_disease_onset").click().show().datepicker({
 
             minDate: "-10Y",  //
             maxDate: "0D",   //date cannot be in the future
@@ -11,7 +11,7 @@
             changeMonth: true,
             changeYear: true,
         });
-        $("#D1 #date_seen").click().show().datepicker({
+        $("#D1 #date_patient_seen").click().show().datepicker({
 
             minDate: "-10Y",  //
             maxDate: "0D",   //date cannot be in the future

@@ -1,0 +1,32 @@
+<!doctype html>
+<html>
+<head>
+
+
+
+</head>
+<body>
+ {% include "header.html" %}
+<div id="page_center">
+
+      <label for="generate_report_for">Disease</label><br>
+    <select name="generate_report_for" id="generate_report_for" onchange="changeEventHandler(event);"></select><br>
+
+    <label for="disease_to_report">Disease</label><br>
+    <select name="disease_to_report" id="disease_to_report" onchange="changeEventHandler(event);"></select><br>
+
+    <label for="facility_sample">Disease</label><br>
+    <select name="facility_sample" id="facility_sample" onchange="changeEventHandler(event);"></select><br>
+
+     <label for="date_receive_range_of_sample" class="required">Date Speciment Receive:</label>
+    <input type="text" name="date_receive_range_of_sample" id="date_receive_range_of_sample" required>
+
+     <label for="result_type">Result</label><br>
+    <select name="result_type" id="result_type" onchange="changeEventHandler(event);"></select><br>
+
+
+
+
+</div>
+</body>
+</html>

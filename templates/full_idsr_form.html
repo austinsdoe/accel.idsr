@@ -1,0 +1,243 @@
+<!doctype html>
+<head>
+    <title>IDSR Input</title>
+
+    <!-- JQuery and JQueryUI -->
+    <script type="text/javascript" src="{{ url_for('static', filename='js/jquery-3.1.1.min.js') }} "></script>
+    <script type="text/javascript" src="{{ url_for('static', filename='jqueryui/jquery-ui.min.js') }} "></script>
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='jqueryui/jquery-ui.min.css') }}"/>
+    <link rel="stylesheet" type="text/css"
+          href="{{ url_for('static', filename='jqueryui/jquery-ui.structure.min.css') }}"/>
+
+    <!-- JQuery-Steps things -->
+    <script type="text/javascript" src="{{ url_for('static', filename='js/jquery.steps.js') }}"></script>
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/jquery.steps.css') }}"/>
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/normalize.css') }}"/>
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/main.css') }}"/>
+
+    <!-- Bootstrap things -->
+    <script type="text/javascript" src="{{ url_for('static', filename='bootstrap/js/bootstrap.min.js') }} "></script>
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='bootstrap/css/bootstrap.min.css') }}"/>
+
+     <!-- CSS Files -->
+
+        <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/hidden.css') }}"/>
+
+    <!-- Jquery Validation -->
+    <script type="text/javascript" src="{{ url_for('static', filename='js/jquery.validate.js') }}"></script>
+
+    <!-- This contains the configuration of the entire steps-form -->
+    <script type="text/javascript" src="{{ url_for('static', filename='js/idsr-minimal-steps.js') }}"></script>
+    <!-- JS for each section must live in thhese files, if the JS is
+         inserted directly into the HTML, the steps-wizard will remove it.  -->
+    <script type="text/javascript" src="{{ url_for('static', filename='js/idsr-minimal-A1.js') }}"></script>
+    <script type="text/javascript" src="{{ url_for('static', filename='js/idsr-minimal-A2.js') }}"></script>
+    <script type="text/javascript" src="{{ url_for('static', filename='js/idsr-minimal-B1.js') }}"></script>
+    <script type="text/javascript" src="{{ url_for('static', filename='js/idsr-minimal-C1.js') }}"></script>
+    <script type="text/javascript" src="{{ url_for('static', filename='js/idsr-minimal-C2.js') }}"></script>
+    <script type="text/javascript" src="{{ url_for('static', filename='js/idsr-minimal-D1.js') }}"></script>
+    <script type="text/javascript" src="{{ url_for('static', filename='js/idsr-minimal-D4.js') }}"></script>
+
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/idsr-minimal-B1.css') }}"/>
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/idsr-minimal-C1.css') }}"/>
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/idsr-minimal-D1.css') }}"/>
+
+    <script>
+        (function ($) {
+            $(document).ready(function () {
+
+                $("#application").validate({
+                    rules: {
+                        onclick: false,
+
+                        reporting_date: {
+                            required: true,
+                            date: true,
+                        },
+                        county_code: {
+                            required: true,
+                            maxlength: 2,
+                            minLength: 2,
+                            digits: true,
+
+                        },
+                        facility_code: {
+                            required: true,
+                            maxlength: 8
+                        },
+                        case_id: {
+                            required: true,
+                            minlength: 3,
+                            maxlength: 7
+                        },
+                        patient_record_id: {},
+                        reporting_health_facility: {
+                            required: true,
+
+                        },
+                        reporting_county: {
+                            required: true,
+
+                        },
+                        reporting_district: {
+                            required: true,
+
+                        },
+                        condition_of_alert: {
+                            required: true,
+                        },
+                        patient_gender: {
+                            required: true,
+                        },
+                        age_of_patient: {
+                            required: true,
+                            digits: true,
+                        },
+                        patient_date_of_birth: {
+                            required: true,
+                            date: true,
+                        },
+                        patient_age_years: {
+                            required: true,
+                            digits: true,
+                        },
+                        patient_age_months: {
+                            required: true,
+                            digits: true,
+                        },
+                        patient_age_days: {
+                            required: true,
+                            digits: true,
+                        },
+                        patient_county_of_residence: {
+                            required: true,
+                        },
+                        patient_district_of_residence: {
+                            required: true,
+                        },
+                        patient_community_of_residence: {
+                            required: true,
+                        },
+                        head_of_household: {},
+                        patient_parent_name: {},
+                        patient_parent_phone_number: {},
+                        patient_cross_border_in_last_month: {},
+                        case_detected_at_community_level: {},
+                        date_of_disease_onset: {
+                            required: true,
+                        },
+                        date_patient_seen: {
+                            required: true,
+                        },
+                        patient_type: {
+                            required: true,
+                        },
+                        case_outcome: {
+                            required: true,
+                        },
+                        reporting_person_first_name: {
+                            required: true,
+                        },
+                        reporting_person_last_name: {
+                            required: true,
+                        },
+                        phone_number_of_person_reporting: {
+                            digits: true,
+                        },
+                        name_of_person_collecting_specimen: {},
+                        phone_number_of_person_collecting_specimen: {
+                            digits: true,
+
+                        },
+                        health_worker_comments: {},
+                        vaccinated_for_disease: {},
+                        num_of_vaccinations: {
+                            digits: true,
+                        },
+                        date_of_most_recent_vaccination: {
+                            date: true,
+                        },
+                        date_of_specimen_collection: {
+                            required: true,
+                            date: true,
+                        },
+                        date_specimen_sent_to_lab: {
+                            required: true,
+                            date: true,
+                        },
+                        specimen_type: {
+                            required: true,
+                        },
+                        lab_analysis_requested: {
+                            required: true,
+                        },
+                        lab_specimen_id: {
+                            required: true,
+                        },
+                        final_lab_result: {
+                            required: true,
+                        },
+                        date_results_reported: {
+                            required: true,
+                            date: true,
+                        },
+                        bika_client_id: {
+
+                        },
+                        bika_patient_id: {
+
+                        },
+                        bika_ar_id: {
+
+                        },
+                        _id: {
+
+                        }
+
+                    },
+                    // Specify validation error messages
+                    messages: {
+                        firstname: "Please enter your firstname",
+                        lastname: "Please enter your lastname",
+                    },
+                    errorPlacement: function (error, element) {
+                         alert(error.text());
+                   }
+
+                });
+
+
+            })
+        })(jQuery);
+
+
+        $("form").validate();
+
+    </script>
+
+</head>
+
+<body>
+ {% include "header.html" %}
+<div id="wrapper">
+    <form id="application" class="form-inline" method="POST" action="http://localhost:5000/idsr-form-p">
+
+        <h1><span class="small"><br/>Basic information</span></h1>
+        <section>
+            {% include "A/index.html" %}
+        </section>
+        <h1><span class="small"><br/>Diagnosis information</span></h1>
+        <section>
+            {% include "B/index.html" %}
+        </section>
+        <h1><span class="small"><br/>Patient basic information</span></h1>
+        <section>
+            {% include "C/index.html" %}
+        </section>
+        <h1><span class="small"><br/>Clinical information</span></h1>
+        <section>
+            {% include "D/index.html" %}
+        </section>
+    </form>
+</div>
+</body>

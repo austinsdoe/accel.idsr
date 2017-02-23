@@ -16,25 +16,21 @@ The date of most recent vaccination must be within the lifetime of the patient b
 -->
 <div id="D4">
 
-    <form>
-        <div>
-            <label class="required">Vaccinated for this desease? </label><br>
-            <input type="radio" name="vaccinated_for_disease" value="vaccinated_yes" id="vaccinated_yes">
-            <label for="vaccinated_yes"> Yes </label>
-            <br>
-            <input type="radio" name="vaccinated_for_disease" value="vaccinated_no" id="vaccinated_no">
-            <label for="vaccinated_no"> No </label>
-            <br>
-            <input type="radio" name="vaccinated_for_disease" value="vaccinated_unknown" id="vaccinated_unknown" checked>
-            <label for="vaccinated_unknown"> Unknown </label>
-        </div>
+    <label class="required">Vaccinated for this desease? </label><br>
+    <input type="radio" name="vaccinated_for_disease" value="yes" id="vaccinated_yes">
+    <label for="vaccinated_yes"> Yes </label>
+    <br>
+    <input type="radio" name="vaccinated_for_disease" value="no" id="vaccinated_no">
+    <label for="vaccinated_no"> No </label>
+    <br>
+    <input type="radio" name="vaccinated_for_disease" value="unknown" id="vaccinated_unknown" checked>
+    <label for="vaccinated_unknown"> Unknown </label>
 
+    <div id="if_patient_vaccinated_for_disease">
         <label for="num_of_vaccinations">Number of vaccinations:</label><br>
         <input type="number" min="0" name="num_of_vaccinations" id="num_of_vaccinations">
 
         <label for="date_of_most_recent_vaccination">Date of most recent vaccination:</label><br>
         <input type="text" name="date_of_most_recent_vaccination" id="date_of_most_recent_vaccination" readonly="readonly">
-
-    </form>
-
+    </div>
 </div>

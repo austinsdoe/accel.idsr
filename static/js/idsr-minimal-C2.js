@@ -32,13 +32,13 @@
 
         function countiesList() {
 
-            html = '<option value=" + ">--Select--</option>'//make the default option blank
+            html = '<option disabled selected value>--Select--</option>'//make the default option blank
 
             for (var key in liberia_counties) {
                 html += "<option value=" + key + ">" + key + "</option>"
             }
 
-            $("#C2 #counties").append(html);
+            $("#C2 #patient_county_of_residence").append(html);
         }
 
         //Dynamically generate the option of the <select> of district based on the county selected
@@ -47,7 +47,7 @@
 
             var county_string = county_select_key;
 
-            $("#C2 #district").empty()  //delete all options under the select with id = "district
+            $("#C2 #patient_district_of_residence").empty()  //delete all options under the select with id = "district
 
             html_district = "<option value=" + ">--Select--</option>" //make the default option blank
 
@@ -58,7 +58,7 @@
                 html_district += "<option value=" + district_for_county[district] + ">" +district_for_county[district]+"</option>"
             }
 
-            $("#C2 #district").append(html_district);
+            $("#C2 #patient_district_of_residence").append(html_district);
         }
 
         countiesList();
@@ -66,9 +66,9 @@
         // Upon a particular option been selected in the county drop down, get the select county and call the
         // districtMap function
 
-        $("#C2").find("#counties").change(function () {
+        $("#C2").find("#patient_county_of_residence").change(function () {
 
-            var county_key = $("#C2 #counties option:selected").text();
+            var county_key = $("#C2 #patient_county_of_residence option:selected").text();
 
             districtMap(county_key);
 
@@ -78,3 +78,5 @@
 
     })
 })(jQuery);
+
+

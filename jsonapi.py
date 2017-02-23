@@ -1,6 +1,7 @@
 """A flask endpoint for accessing the jsonapi.
 Any javascript code that needs to talk to bika lims should use this URL.
 """
+
 import json
 import urllib
 import urllib2
@@ -54,13 +55,24 @@ class JSONAPI(object):
     def read(self, **kwargs):
         url = '/'.join([self.jsonapi_url, 'read'])
         f = self.opener.open(url, data=urllib.urlencode(kwargs))
+        print type(f)
+        print f
         data = f.read()
         f.close()
         return json.loads(data)
 
     def update(self, **kwargs):
         url = '/'.join([self.jsonapi_url, 'update'])
-        import pdb;pdb.set_trace();pass
+        import pdb;
+        pdb.set_trace();
+        pass
+        f = self.opener.open(url, data=urllib.urlencode(kwargs))
+        data = f.read()
+        f.close()
+        return json.loads(data)
+
+    def create(self, **kwargs):
+        url = '/'.join([self.jsonapi_url, 'create'])
         f = self.opener.open(url, data=urllib.urlencode(kwargs))
         data = f.read()
         f.close()

@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+     <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/imcomplete.css') }}"/>
+
+</head>
+<body>
+ {% include "header.html" %}
+<table border=1>
+      <tr>
+          <th> PATIENT FIRST NAME </th>
+          <th> PATIENT LASTNAME </th>
+          <th> FACILITY NAME </th>
+          <th> PATIENT ID </th>
+          <th> COMPLETE IDSR INPUT </th>
+        </tr>
+
+    {% for results in result %}
+        <tr>
+            <td> {{ results['patient_first_name'] }}</td>
+            <td> {{ results['patient_last_name'] }}</td>
+            <td> {{ results['reporting_health_facility']  }}</td>
+            <td> {{ results['patient_record_id']  }}</td>
+            <td> <input type="button"   value="Click Here To Enter Remaining IDSR Info" name="approve" onclick="window.location='/idsr-partial/{{results['patient_record_id']}}';">  </td>
+        </tr>
+    {% endfor %}
+
+</table>
+</body>
+</html>

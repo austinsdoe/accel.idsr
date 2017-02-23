@@ -142,7 +142,7 @@
     background: #eee;
     display: block;
     margin: 0.5em;
-    min-height: 27em;
+    min-height: 100%;
     overflow: hidden;
     position: relative;
     width: auto;
@@ -160,13 +160,17 @@
     width: 65%;
 }
 
+/* Place to make change*/
+
 .wizard > .content > .body
 {
     float: left;
-    position: absolute;
-    width: 95%;
-    height: 95%;
-    padding: 2.5%;
+    /*position: absolute;*/
+    width: 100%;
+    /*height: auto;*/
+    padding: 15px;
+    position: relative;
+
 }
 
 .wizard > .content > .body ul

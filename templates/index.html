@@ -1,11 +1,28 @@
-<!doctype html>
+<!DOCTYPE html>
+<html lang="en">
 <head>
-  <title>IDSR Input</title>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/index.css') }}"/>
 </head>
+<body>
 
-<h1>IDSR Input</h1>
-
-<hr size="1">
-
-<a href="idsr-input-minimal">Click here</a> for minimal input capture
-
+<form method="POST" action="http://127.0.0.1:5000/">
+    <div class="wrap">
+        <div class="avatar">
+            <img src="{{ url_for('static', filename='pictures/moh.png')}}">
+        </div>
+        <input type="text" name="username" required>
+        <div class="bar">
+            <i></i>
+        </div>
+        <input type="password" name="password" required>
+        <br>
+        <button>Sign in</button>
+    </div>
+</form>
+      {% if error %}
+        <p class="error"><strong>Error:</strong> {{ error }}
+      {% endif %}
+</body>
+</html>
