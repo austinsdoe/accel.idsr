@@ -1,7 +1,2 @@
 *.pyc
-.idea
-bin
-include
-lib
-local
-accel.idsr.ini
+env
