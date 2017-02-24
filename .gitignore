@@ -1,3 +1,4 @@
 *.pyc
 env
 accelidsr.egg-info
+accelidsr/accel.idsr.ini
