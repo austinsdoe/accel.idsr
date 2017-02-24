@@ -19,7 +19,7 @@ def index():
         return render_template('dataclerk_task_selection.html', user=current_user)
     else:
         # Redirect to login page
-        return redirect(url_for('login'))
+        return redirect(url_for('auth.login'))
 
 @app.route('/dataclerk-task-selection')
 @login_required

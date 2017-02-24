@@ -1,12 +1,22 @@
 from accelidsr import app
+from accelidsr import db
 from accelidsr.mod_auth.forms import CreateUserForm
 from accelidsr.mod_auth.models import User
+from flask import Blueprint
+from flask import flash
+from flask import g
+from flask import redirect
+from flask import render_template
+from flask import request
+from flask import session
+from flask import url_for
 from flask_login import current_user
 from flask_login import login_user
 from flask_login import LoginManager
-from flask_login import login_equired
+from flask_login import login_required
 
-import flask_login
+# Define the blueprint: 'auth', set its url prefix: app.url/auth
+mod_auth = Blueprint('auth', __name__, url_prefix='/auth')
 
 @mod_auth.route('/createuser', methods=['GET', 'POST'])
 def createuser():
@@ -24,8 +34,11 @@ def createuser():
 
     return render_template('auth/createuser.html', form=form)
 
+@mod_auth.route('/')
+@mod_auth.route('/home')
 @mod_auth.route('/login', methods=['GET', 'POST'])
 def login():
+    error = ''
     if request.method == 'POST':
         # POST request. Check user credentials
         data_connect = mongo.get_db()
@@ -36,15 +49,10 @@ def login():
             login_user(user)
             error = 'Logged in Successfully'
             flash("Credentials are correct", category='success')
-
-            # Redirect to the main page, which will be in charge of rendering
-            # the default main page when a user is logged. Otherwise, it will
-            # redirect again to the login page
-            redirect('/')
         else:
             error = 'Invalid Credentials. Please try again.'
             flash("Wrong username or password", category='error')
-            render_template('index.html', error = error)
+    return render_template('index.html', error = error)
 
 @mod_auth.route('/logout')
 def logout():
