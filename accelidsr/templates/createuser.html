@@ -10,7 +10,7 @@
     <div>{{ form.email.label }}: {{ form.email }}</div>
     <div>
         <select multiple>
-            {% for roles in form.role%}
+            {% for roles in form.role.choices%}
             <option value={{ roles }}>{{ roles }}</option>
             {% endfor %}
         </select></div>

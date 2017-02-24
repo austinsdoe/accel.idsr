@@ -2,4 +2,3 @@
 plone_site_url = http://localhost:8080/Plone
 jsonapi_username = admin
 jsonapi_password = adminsecret
-

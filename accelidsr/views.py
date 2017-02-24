@@ -1,5 +1,4 @@
-#!/usr/bin/env python
-import os
+from accelidsr import app
 from flask import Flask
 from flask import render_template
 from flask import session, redirect, g, url_for, flash
@@ -10,29 +9,11 @@ from arcreation import ARCREATION
 from databaseconnect import DBCONNECT
 from user import User
 from usercreation import CreateUserForm
+import os
 import flask_login
 import bcrypt
 import json
 
-app = Flask(__name__)
-
-app.secret_key = os.urandom(24)
-
-arcreation = ARCREATION()
-jsonapi = JSONAPI()
-mongo = DBCONNECT()
-
-lm = LoginManager()
-lm.init_app(app)
-
-@lm.user_loader
-def load_user(username):
-    data_connect = mongo.get_db()
-    u = data_connect.users.find_one({"_id": username})
-    if not u:
-        return None
-
-    return User(u['_id'])
 
 @app.route('/createuser', methods=['GET', 'POST'])
 def createuser():
@@ -272,6 +253,3 @@ def idsr_reports( ):
 
 
     return render_template('idsr_reports.html', result=partial)
-
-if __name__ == "__main__":
-    app.run(debug=True)

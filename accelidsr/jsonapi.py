@@ -77,4 +77,3 @@ class JSONAPI(object):
         data = f.read()
         f.close()
         return json.loads(data)
-
