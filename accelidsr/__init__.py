@@ -5,6 +5,7 @@ app = Flask(__name__)
 
 from ConfigParser import ConfigParser
 from database import Database
+from flask import render_template
 import os
 import os.path
 

@@ -87,3 +87,9 @@ body {
 	border-bottom: 3px solid #307d63;
 	cursor: pointer;
 }
+
+body.page-404 {
+    font-size: 1.5em;
+    margin: 15%;
+    text-align: center;
+}
