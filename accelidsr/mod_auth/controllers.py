@@ -24,14 +24,13 @@ def createuser():
     form = CreateUserForm()
     if request.method == 'POST':
         if form.validate_on_submit():
-            db_connect = mongo.get_db()
-            db_connect.users.insert({
+            db.users.insert({
                 "_id":request['username'],
                 "password":user_to_create.generate_hash(request['password']),
                 "email":request['email'],
                 "role":request['role']
             })
-
+            return redirect(url_for('index'))
     return render_template('auth/createuser.html', form=form)
 
 @mod_auth.route('/')
@@ -41,14 +40,19 @@ def login():
     error = ''
     if request.method == 'POST':
         # POST request. Check user credentials
-        data_connect = mongo.get_db()
         username = request.form['username']
-        login_request = data_connect.users.find_one({"_id": username})
+        login_request = db.users.find_one({"_id": username})
         if login_request:
             user = User(login_request['_id'])
             login_user(user)
-            error = 'Logged in Successfully'
-            flash("Credentials are correct", category='success')
+            flash("Logged in successfully", category='success')
+
+            next = flask.request.args.get('next')
+            # is_safe_url should check if the url is safe for redirects.
+            # See http://flask.pocoo.org/snippets/62/ for an example.
+            if not is_safe_url(next):
+                return flask.abort(400)
+            return flask.redirect(next or flask.url_for('index'))
         else:
             error = 'Invalid Credentials. Please try again.'
             flash("Wrong username or password", category='error')

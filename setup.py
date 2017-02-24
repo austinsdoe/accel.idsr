@@ -9,5 +9,6 @@ setup(
         'flask-login',
         'flask-wtf',
         'flask-pymongo',
+        'bcrypt',
     ],
 )

@@ -9,6 +9,9 @@ from flask import render_template
 import os
 import os.path
 
+# Flask-WTF CSRF infrastructure requires a csfr token
+app.secret_key = os.urandom(24)
+
 # Configurations
 dirname = os.path.dirname(__file__)
 cfg = ConfigParser()
@@ -34,7 +37,6 @@ def load_user(username):
     u = db.users.find_one({"_id": username})
     if not u:
         return None
-
     return User(u['_id'])
 
 # Sample HTTP error handling
