@@ -10,4 +10,3 @@ class CreateUserForm(Form):
     email = StringField("Email", validators=[DataRequired("Please enter your email address."), Email()])
     role = SelectField('User Role', choices=["clerk", "admin", "superuser"])
     submit = SubmitField("Submit")
-

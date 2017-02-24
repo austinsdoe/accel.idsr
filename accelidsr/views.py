@@ -15,50 +15,14 @@ import bcrypt
 import json
 
 
-@app.route('/createuser', methods=['GET', 'POST'])
-def createuser():
-    user_to_create = User
-    form = CreateUserForm()
-    if request.method == 'POST':
-        if form.validate_on_submit():
-            db_connect = mongo.get_db()
-            db_connect.users.insert({
-                "_id":request['username'],
-                "password":user_to_create.generate_hash(request['password']),
-                "email":request['email'],
-                "role":request['role']
-            })
-
-    return render_template('createuser.html', form=form)
-
-@app.route('/login', methods=['GET', 'POST'])
-def login():
-    return redirect(url_for('index'))
-
-@app.route('/logout')
-def logout():
-    logout_user()
-    return redirect(url_for('index'))
-
-
 @app.route('/', methods=['GET', 'POST'])
 def index():
-    error = None
-    if request.method == 'POST':
-        data_connect = mongo.get_db()
-        login_request = data_connect.users.find_one({"_id": request.form['username']})
-        if login_request:
-            user = User(login_request['_id'])
-            login_user(user)
-            error = 'Logged in Successfully'
-            flash("Credentials is currect", category='success')
-
-            return render_template('dataclerk_task_selection.html', user = user)
-        else:
-            error = 'Invalid Credentials. Please try again.'
-            flash("Wrong username or password", category='error')
-
-    return render_template('index.html', error = error)
+    if current_user.is_authenticated:
+        # Load app's main page
+        return render_template('dataclerk_task_selection.html', user=current_user)
+    else:
+        # Redirect to login page
+        return redirect(url_for('login'))
 
 @app.route('/dataclerk-task-selection')
 @login_required

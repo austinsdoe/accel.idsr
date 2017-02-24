@@ -25,5 +25,3 @@ class User():
     @staticmethod
     def generate_hash(password):
         return generate_password_hash(password)
-
-

@@ -2,3 +2,4 @@
 env
 accelidsr.egg-info
 accelidsr/accel.idsr.ini
+run_debug
