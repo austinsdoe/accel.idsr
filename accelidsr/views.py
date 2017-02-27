@@ -13,13 +13,9 @@ import json
 
 
 @app.route('/', methods=['GET', 'POST'])
+@login_required
 def index():
-    if current_user.is_authenticated:
-        # Load app's main page
-        return render_template('dataclerk_task_selection.html', user=current_user)
-    else:
-        # Redirect to login page
-        return redirect(url_for('auth.login'))
+    return render_template('dataclerk_task_selection.html')
 
 @app.route('/dataclerk-task-selection')
 @login_required

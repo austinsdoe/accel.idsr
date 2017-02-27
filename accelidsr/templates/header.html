@@ -11,7 +11,7 @@
         <ul class="nav navbar-nav navbar-right">
             {% if current_user.is_authenticated %}
                 <li><a href="#"><span class="glyphicon glyphicon-user"></span> {{ current_user.username }}</a></li>
-                 <li><a href="http://localhost:5000/logout"><span class="glyphicon glyphicon-log-in"></span> Logout</a></li>
+                 <li><a href="/auth/logout"><span class="glyphicon glyphicon-log-in"></span> Logout</a></li>
             {% endif %}
             {% if not current_user.is_authenticated %}
                 <li><a href="#"><span class="glyphicon glyphicon-log-in"></span> Login</a></li>

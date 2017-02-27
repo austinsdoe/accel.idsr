@@ -1,6 +1,8 @@
+from accelidsr import utils
 from accelidsr import app
 from accelidsr import db
 from accelidsr.mod_auth.forms import CreateUserForm
+from accelidsr.mod_auth.forms import LoginForm
 from accelidsr.mod_auth.models import User
 from flask import Blueprint
 from flask import flash
@@ -12,6 +14,7 @@ from flask import session
 from flask import url_for
 from flask_login import current_user
 from flask_login import login_user
+from flask_login import logout_user
 from flask_login import LoginManager
 from flask_login import login_required
 
@@ -20,43 +23,40 @@ mod_auth = Blueprint('auth', __name__, url_prefix='/auth')
 
 @mod_auth.route('/createuser', methods=['GET', 'POST'])
 def createuser():
-    user_to_create = User
     form = CreateUserForm()
-    if request.method == 'POST':
-        if form.validate_on_submit():
-            db.users.insert({
-                "_id":request['username'],
-                "password":user_to_create.generate_hash(request['password']),
-                "email":request['email'],
-                "role":request['role']
-            })
-            return redirect(url_for('index'))
+    if request.method == 'POST' and form.validate_on_submit():
+        db.users.insert({
+            "username":request.form['username'],
+            "password":User.generate_hash(request.form['password']),
+            "email":request.form['email']
+        })
+        return redirect(url_for('auth.login'))
     return render_template('auth/createuser.html', form=form)
 
-@mod_auth.route('/')
-@mod_auth.route('/home')
 @mod_auth.route('/login', methods=['GET', 'POST'])
 def login():
-    error = ''
-    if request.method == 'POST':
-        # POST request. Check user credentials
+    next = utils.get_redirect_target()
+    form = LoginForm()
+    if request.method == 'POST' and form.validate_on_submit():
+        # Login and validate the user.
         username = request.form['username']
-        login_request = db.users.find_one({"_id": username})
-        if login_request:
-            user = User(login_request['_id'])
-            login_user(user)
+        password = request.form['password']
+        hashpass = User.generate_hash(password)
+        user = db.users.find_one({"username": username})
+        if user and User.validate_login(user['password'], form.password.data):
+            user_obj = User(str(user['_id']))
+            login_user(user_obj)
             flash("Logged in successfully", category='success')
 
-            next = flask.request.args.get('next')
+            next = request.args.get('next')
             # is_safe_url should check if the url is safe for redirects.
             # See http://flask.pocoo.org/snippets/62/ for an example.
-            if not is_safe_url(next):
-                return flask.abort(400)
-            return flask.redirect(next or flask.url_for('index'))
-        else:
-            error = 'Invalid Credentials. Please try again.'
-            flash("Wrong username or password", category='error')
-    return render_template('index.html', error = error)
+            if not utils.is_safe_url(next):
+                return abort(400)
+            return redirect(next or url_for('index'))
+
+        flash("Invalid Credentials. Please try again.")
+    return render_template('auth/login.html', form=form)
 
 @mod_auth.route('/logout')
 def logout():

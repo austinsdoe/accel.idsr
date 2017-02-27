@@ -4,16 +4,11 @@
 </head>
 <body>
 {% include "header.html" %}
-<form action="http://localhost:5000/createuser" method="post">
+<form action="" method="post" name="createuser">
+    {{ form.hidden_tag() }}
     <div>{{ form.username.label }}: {{ form.username(class="css_class") }}</div>
     <div>{{ form.password.label }}: {{ form.password() }}</div>
     <div>{{ form.email.label }}: {{ form.email }}</div>
-    <div>
-        <select multiple>
-            {% for roles in form.role.choices%}
-            <option value={{ roles }}>{{ roles }}</option>
-            {% endfor %}
-        </select></div>
     <div>{{ form.submit.label }}: {{ form.submit }}</div>
 </form>
 </body>

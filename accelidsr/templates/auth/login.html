@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/index.css') }}"/>
+</head>
+<body>
+
+<form action="" method="post" name="login">
+    {{ form.hidden_tag() }}
+    <div class="wrap">
+        <div class="avatar">
+            <img src="{{ url_for('static', filename='pictures/moh.png')}}">
+        </div>
+        {{ form.username(class="css_class") }}
+        <div class="bar">
+            <i></i>
+        </div>
+        {{ form.password() }}
+        <br>
+        {{ form.submit }}
+    </div>
+</form>
+      {% if error %}
+        <p class="error"><strong>Error:</strong> {{ error }}
+      {% endif %}
+</body>
+</html>
