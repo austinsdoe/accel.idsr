@@ -3,7 +3,6 @@
     <title>User Creation Page</title>
 </head>
 <body>
-{% include "header.html" %}
 <form action="" method="post" name="createuser">
     {{ form.hidden_tag() }}
     <div>{{ form.username.label }}: {{ form.username(class="css_class") }}</div>

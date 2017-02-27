@@ -23,6 +23,13 @@ mod_auth = Blueprint('auth', __name__, url_prefix='/auth')
 
 @mod_auth.route('/createuser', methods=['GET', 'POST'])
 def createuser():
+    # Only allow the creation of a new user if there is no users in there
+    # database yet or if the current user is authenticated
+    if not current_user.is_authenticated and db.users.find().count() > 0:
+        return redirect(url_for('auth.login'))
+
+    # Current user is authenticated or there are no users registered in
+    # the database yet, so render the form for user creation.
     form = CreateUserForm()
     if request.method == 'POST' and form.validate_on_submit():
         db.users.insert({
@@ -35,6 +42,12 @@ def createuser():
 
 @mod_auth.route('/login', methods=['GET', 'POST'])
 def login():
+    # If no users are available in the database yet, redirect the user to
+    # the user creation page
+    import pdb;pdb.set_trace()
+    if db.users.find().count() == 0:
+        return redirect(url_for('auth.createuser'))
+
     next = utils.get_redirect_target()
     form = LoginForm()
     if request.method == 'POST' and form.validate_on_submit():
