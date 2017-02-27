@@ -44,7 +44,6 @@ def createuser():
 def login():
     # If no users are available in the database yet, redirect the user to
     # the user creation page
-    import pdb;pdb.set_trace()
     if db.users.find().count() == 0:
         return redirect(url_for('auth.createuser'))
 
