@@ -1,4 +1,6 @@
 from accelidsr import app
+from accelidsr import db
+from accelidsr import mongo
 from flask import Flask
 from flask import render_template
 from flask import session, redirect, g, url_for, flash
@@ -68,8 +70,7 @@ def idsr_form_p():
         idsr_data['_id'] = patient_data['obj_id']
         idsr_data['totally_filled'] = 'True'
 
-        db = mongo.get_db()
-        mongo.add_idsr(idsr_data, db)
+        mongo.add_idsr(idsr_data)
 
         return render_template("dataclerk_task_selection.html", result=idsr_data)
 
@@ -92,10 +93,9 @@ def idsr_complete_partial_input():
 
         idsr_data['totally_filled'] = 'True'
 
-        db = mongo.get_db()
-        mongo.add_idsr_partial_full(idsr_data, db)  # update the previous record
+        mongo.add_idsr_partial_full(idsr_data)  # update the previous record
 
-        bika_data = mongo.get_document_by_id(idsr_data, db)  # get entire record from DB
+        bika_data = mongo.get_document_by_id(idsr_data)  # get entire record from DB
 
         partial = {}
         records = dict((record['_id'], record) for record in bika_data)
@@ -145,8 +145,7 @@ def store_quick_idsr():
         idsr_data['patient_record_id']=patient_data['obj_id']
         idsr_data['totally_filled'] = 'False'
 
-        db = mongo.get_db()
-        mongo.add_idsr(idsr_data, db)
+        mongo.add_idsr(idsr_data)
 
         return render_template("dataclerk_task_selection.html", result=idsr_data)
     else:
@@ -162,8 +161,7 @@ def idsr_complete(patient_id):
     Pass the data to the HTML pages to autofilled the previously filled fields
     """
 
-    db = mongo.get_db()
-    partially_filled = (mongo.get_partial_idsr(db))
+    partially_filled = mongo.get_partial_idsr()
 
     partial = {}
     records = dict((record['_id'], record) for record in partially_filled)
@@ -182,8 +180,7 @@ def incomplete_idsr( ):
     Pass the data to the HTML pages to autofilled the previously filled fields
     """
 
-    db = mongo.get_db()
-    partially_filled = (mongo.get_partial_idsr(db))
+    partially_filled = mongo.get_partial_idsr()
 
     partial = []
     for object in partially_filled:
@@ -201,8 +198,7 @@ def idsr_reports( ):
     Pass the data to the HTML pages to autofilled the previously filled fields
     """
 
-    db = mongo.get_db()
-    partially_filled = (mongo.get_partial_idsr(db))
+    partially_filled = mongo.get_partial_idsr()
 
     partial = []
     for object in partially_filled:

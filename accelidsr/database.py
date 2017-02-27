@@ -30,21 +30,21 @@ class Database(object):
     def get_db(self):
         return self._db
 
-    def add_idsr_partial_full(self, idsr_data, db):
-        db.partialidsr.update_one(
+    def add_idsr_partial_full(self, idsr_data):
+        self._db.partialidsr.update_one(
             {'_id': idsr_data['patient_record_id']},
             {"$set": idsr_data},
             upsert=False)
 
-    def add_idsr(self, idsr_data, db):
-        db.partialidsr.insert(self.idsr_load(idsr_data))
+    def add_idsr(self, idsr_data):
+        self._db.partialidsr.insert(self.idsr_load(idsr_data))
 
-    def get_partial_idsr(self, db):
-        partially_filled = db.partialidsr.find({'totally_filled': 'False'})
+    def get_partial_idsr(self):
+        partially_filled = self._db.partialidsr.find({'totally_filled': 'False'})
         return partially_filled
 
-    def get_document_by_id(self, idsr_data, db):
-        doc = db.partialidsr.find({'_id': idsr_data['patient_record_id']})
+    def get_document_by_id(self, idsr_data):
+        doc = self._db.partialidsr.find({'_id': idsr_data['patient_record_id']})
         return doc
 
     def idsr_load(self, idsr_data):

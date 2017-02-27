@@ -19,8 +19,8 @@ cfg = ConfigParser()
 cfg.read(os.path.join(dirname, "accel.idsr.ini"))
 
 # Database setup
-dbhelper = Database()
-db = dbhelper.connect(cfg)
+mongo = Database()
+db = mongo.connect(cfg)
 
 import flask_login
 from jsonapi import JSONAPI
