@@ -28,7 +28,7 @@ You'll need  to create your own copy of the accel.idsr.ini configuration file,
 for which you can copy the file accelidsr/accel.idsr.ini.CHANGEME file, set
 your configuration properties there and save as accel.idsr.ini
 
-To run the application ensure you active the virtualenv first:
+To run the application ensure you activate the virtualenv first:
 
 ::
 
