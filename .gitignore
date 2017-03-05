@@ -3,3 +3,6 @@ env
 accelidsr.egg-info
 accelidsr/accel.idsr.ini
 run_debug
+start_mongodb
+stop_mongodb
+
