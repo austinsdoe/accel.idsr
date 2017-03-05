@@ -28,8 +28,11 @@ from flask_login import LoginManager
 
 # Import modules as blueprints
 from accelidsr.mod_auth.models import User
-from accelidsr.mod_auth.controllers import mod_auth as auth_module
-app.register_blueprint(auth_module)
+from accelidsr.mod_auth.controllers import mod_auth
+app.register_blueprint(mod_auth)
+
+from accelidsr.mod_idsrentry.controllers import mod_idsrentry
+app.register_blueprint(mod_idsrentry)
 
 lm = LoginManager()
 lm.init_app(app)
