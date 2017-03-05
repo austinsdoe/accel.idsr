@@ -24,11 +24,7 @@ db = mongo.connect(cfg)
 
 import flask_login
 from jsonapi import JSONAPI
-from arcreation import ARCREATION
 from flask_login import LoginManager
-
-arcreation = ARCREATION()
-jsonapi = JSONAPI()
 
 # Import modules as blueprints
 from accelidsr.mod_auth.models import User
