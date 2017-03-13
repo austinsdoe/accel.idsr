@@ -7,6 +7,10 @@ from flask import url_for
 from flask_login import login_required
 from models import fetch_idsr
 from models.idsr import Idsr
+from accelidsr.mod_idsrentry.forms import IdsrEntryStepAForm
+from accelidsr.mod_idsrentry.forms import IdsrEntryStepBForm
+from accelidsr.mod_idsrentry.forms import IdsrEntryStepCForm
+from accelidsr.mod_idsrentry.forms import IdsrEntryStepDForm
 
 # Define the blueprint: 'idsrentry', set its url prefix: app.url/idsrentry
 mod_idsrentry = Blueprint('idsrentry', __name__, url_prefix='/idsrentry')
@@ -19,7 +23,8 @@ def stepA():
     Renders the IDSR's form wizard at Step A - Basic information
     :returns: the html template for Step A
     """
-    return _process_request('a')
+    form = IdsrEntryStepAForm()
+    return _process_request('a', form)
 
 @mod_idsrentry.route('/b')
 @login_required
@@ -28,7 +33,8 @@ def stepB():
     Renders the IDSR's form wizard at Step B - Diganosis information
     :returns: the html template for Step B
     """
-    return _process_request('b')
+    form = IdsrEntryStepBForm()
+    return _process_request('b', form)
 
 @mod_idsrentry.route('/c')
 @login_required
@@ -37,7 +43,8 @@ def stepC():
     Renders the IDSR's form wizard at Step C - Patient Basic Information
     :returns: the html template for Step C
     """
-    return _process_request('c')
+    form = IdsrEntryStepCForm()
+    return _process_request('c', form)
 
 @mod_idsrentry.route('/d')
 @login_required
@@ -46,9 +53,10 @@ def stepD():
     Renders the IDSR's form wizard at Step D - Clinical Information
     :returns: the html template for Step C
     """
-    return _process_request('d')
+    form = IdsrEntryStepDForm()
+    return _process_request('d', form)
 
-def _process_request(step):
+def _process_request(step, form):
     """
     Renders the IDSR's form wizard at the step indicated.
     If a parameter 'id' is provided via get or post, the form is displayed with
@@ -74,5 +82,5 @@ def _process_request(step):
             flash("No IDSR Form found")
             urlid = 'idsrentry.step%s' % step.upper()
             return redirect(url_for(urlid))
-    urltemplate = 'idsrentry/step_%s/index.html' % step
-    return render_template(urltemplate)
+    urltemplate = 'idsrentry/index.html'
+    return render_template(urltemplate, form=form)

@@ -1,0 +1,28 @@
+<!doctype html>
+<head>
+    <title>IDSR Input</title>
+    <style>
+        div.formline {
+            padding:5px;
+        }
+        div.required::after {
+            color:red;
+            content: "*";
+        }
+    </style>
+</head>
+<body>
+    <div class="wrapper">
+        <ul>
+            <li><a href="/idsrentry/a">A. Basic information</a></li>
+            <li><a href="/idsrentry/b">B. Diagnosis information</a></li>
+            <li><a href="/idsrentry/c">C. Patient basic information</a></li>
+            <li><a href="/idsrentry/d">D. Clinical information</a></li>
+        </ul>
+        <form action="" method="post">
+            {% from "idsrentry/_formhelpers.html" import render_substeps %}
+            {{ render_substeps(form) }}
+            <div>{{ form.submit }}</div>
+        </form>
+    </div>
+</body>

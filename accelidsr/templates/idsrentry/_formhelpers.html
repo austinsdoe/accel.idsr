@@ -1,0 +1,27 @@
+{% macro render_field(field) %}
+  {% if field.flags.required %}
+  <div class="formline required">
+  {% else %}
+  <div class="formline">
+  {% endif %}
+  {{ field.label }}: {{ field(**kwargs)|safe }}
+  {% if field.errors %}
+    <ul class=errors>
+    {% for error in field.errors %}
+      <li>{{ error }}</li>
+    {% endfor %}
+    </ul>
+  {% endif %}
+  </div>
+{% endmacro %}
+
+{% macro render_substeps(form) %}
+{% for step in form.getSubsteps() %}
+    <div class="substep">
+    <h2>{{ form.step }}.{{ loop.index }}</h2>
+    {% for field in step %}
+        {{ render_field(field) }}
+    {% endfor %}
+    </div>
+{% endfor %}
+{% endmacro %}
