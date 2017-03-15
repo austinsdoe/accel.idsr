@@ -118,20 +118,11 @@ class IdsrEntryStepBForm(AbstractIdsrEntryStepForm):
 
     # Step B.1
     diagnosis_or_condition = SelectField('Diagnosis or Condition', choices=getDiagnosisChoices(), validators=[DataRequired(), ])
-    reporting_date = DateField('Reporting Date', format='%d/%m/%Y', validators=[DataRequired(), ])
-    facility_code = TextField('Facility Code', validators=[DataRequired(), Length(max=8)])
-    case_id = TextField('Case ID', validators=[Length(max=3), ])
-    patient_record_id = TextField('Patient Record ID', validators=[Length(max=8), ])
-
-    # Step B.2
-    reporting_country = SelectField('Reporting County', choices=getCountiesChoices(), validators=[DataRequired(), ])
-    reporting_district = SelectField('Reporting District', choices=getDistrictChoices(), validators=[DataRequired(), ])
-    facility_name = SelectField('Health Facility Name', choices=getFacilityChoices(), validators=[DataRequired(), ])
+    other_diagnosis = TextField('Other diagnosis')
 
     def getSubsteps(self):
         return [
-            [self.diagnosis_or_condition, self.facility_code, self.case_id, self.patient_record_id],
-            [self.reporting_country, self.reporting_district, self.facility_name]
+            [self.diagnosis_or_condition, self.other_diagnosis],
         ]
 
 class IdsrEntryStepCForm(AbstractIdsrEntryStepForm):
