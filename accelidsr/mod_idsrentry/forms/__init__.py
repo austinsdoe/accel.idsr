@@ -39,17 +39,17 @@ def newIdsrEntryForm(step):
     :returns: A form for the step passed in
     :rtype: AbstractIdsrEntryStepForm
     """
-    from accelidsr.mod_idsrentry.forms.a import IdsrEntryStepAForm
-    from accelidsr.mod_idsrentry.forms.b import IdsrEntryStepBForm
-    from accelidsr.mod_idsrentry.forms.c import IdsrEntryStepCForm
-    from accelidsr.mod_idsrentry.forms.d import IdsrEntryStepDForm
     if step.lower() == 'a':
+        from accelidsr.mod_idsrentry.forms.a import IdsrEntryStepAForm
         return IdsrEntryStepAForm()
     if step.lower() == 'b':
+        from accelidsr.mod_idsrentry.forms.b import IdsrEntryStepBForm
         return IdsrEntryStepBForm()
     if step.lower() == 'c':
+        from accelidsr.mod_idsrentry.forms.c import IdsrEntryStepCForm
         return IdsrEntryStepCForm()
     if step.lower() == 'd':
+        from accelidsr.mod_idsrentry.forms.d import IdsrEntryStepDForm
         return IdsrEntryStepDForm()
     raise NotImplementedError("No form available for step '%s'" % step)
 

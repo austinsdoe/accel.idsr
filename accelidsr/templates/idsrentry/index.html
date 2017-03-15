@@ -1,6 +1,11 @@
-<!doctype html>
-<head>
-    <title>IDSR Input</title>
+{% extends "base.html" %}
+
+{% block title %}
+IDSR Input Form
+{% endblock %}
+
+{% block head %}
+    {{ super() }}
     <style>
         div.formline {
             padding:5px;
@@ -10,15 +15,14 @@
             content: "*";
         }
     </style>
-</head>
-<body>
-    <div class="wrapper">
-        {% from "idsrentry/_formhelpers.html" import render_stepsnav %}
-        {{ render_stepsnav(form, steps) }}
-        {% from "idsrentry/_formhelpers.html" import render_substeps %}
-        <form action="" method="post">
-            {{ render_substeps(form) }}
-            <div>{{ form.submit }}</div>
-        </form>
-    </div>
-</body>
+{% endblock %}
+
+{% block content %}
+{% from "idsrentry/_formhelpers.html" import render_stepsnav %}
+{% from "idsrentry/_formhelpers.html" import render_substeps %}
+{{ render_stepsnav(form, steps) }}
+<form action="" method="post">
+    {{ render_substeps(form) }}
+    <div>{{ form.submit }}</div>
+</form>
+{% endblock %}
