@@ -1,9 +1,12 @@
-from wtforms import BooleanField, TextField, TextAreaField, PasswordField, validators, HiddenField, DateField, SelectField, SubmitField
+from wtforms import BooleanField, TextField, TextAreaField, PasswordField, \
+                    validators, HiddenField, DateField, SelectField, \
+                    SubmitField, RadioField
 from wtforms.validators import DataRequired, Email, Length
 from flask_wtf import Form
 from accelidsr.mod_idsrentry import getCountiesChoices
 from accelidsr.mod_idsrentry import getDistrictChoices
 from accelidsr.mod_idsrentry import getFacilityChoices
+from accelidsr.mod_idsrentry import getDiagnosisChoices
 
 def getAvailableSteps():
     """
@@ -114,6 +117,7 @@ class IdsrEntryStepBForm(AbstractIdsrEntryStepForm):
     step = 'B'
 
     # Step B.1
+    diagnosis_or_condition = RadioField('Diagnosis or Condition', choices=getDiagnosisChoices(), validators=[DataRequired(), ])
     reporting_date = DateField('Reporting Date', format='%d/%m/%Y', validators=[DataRequired(), ])
     facility_code = TextField('Facility Code', validators=[DataRequired(), Length(max=8)])
     case_id = TextField('Case ID', validators=[Length(max=3), ])
@@ -126,7 +130,7 @@ class IdsrEntryStepBForm(AbstractIdsrEntryStepForm):
 
     def getSubsteps(self):
         return [
-            [self.reporting_date, self.facility_code, self.case_id, self.patient_record_id],
+            [self.diagnosis_or_condition, self.facility_code, self.case_id, self.patient_record_id],
             [self.reporting_country, self.reporting_district, self.facility_name]
         ]
 

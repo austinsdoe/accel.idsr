@@ -93,3 +93,24 @@ def getFacilityChoices(county=None, district=None):
     choices = [(f['uid'], f['title']) for f in facilities]
     choices.insert(0, ('', 'Select...'))
     return choices
+
+def getDiagnosisChoices():
+    """
+    Returns a list of 2-tuples that contains the diagnosis available in the
+    system, sorted by name asc. Each element within the list is a 2-tuple,
+    where the first element is the value to be used in the html control and
+    the second item is the text to be displayed:
+    [('val1', 'text1'), (val2, text2)]
+    An additional tuple is added in the last position:
+    [(''), 'Other']
+
+    :return: A list of 2-tuples with the counties sorted by name ascending, with
+        an additional item in position 0: ('', 'Select...')
+    :rtype: A list of 2-tuples
+    """
+    # TODO Get available diagnosis from Bika instance
+    facilities = [{'uid': 'fake-1', 'title': 'Diagnosis fake 1'},
+                  {'uid': 'fake-2', 'title': 'Diagnosis fake 2'}]
+    choices = [(c['uid'], c['title']) for c in facilities]
+    choices.append(('', 'Other'))
+    return choices
