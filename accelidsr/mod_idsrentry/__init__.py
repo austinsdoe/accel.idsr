@@ -101,16 +101,20 @@ def getDiagnosisChoices():
     where the first element is the value to be used in the html control and
     the second item is the text to be displayed:
     [('val1', 'text1'), (val2, text2)]
+    An additional tuple is added in the first position:
+    [(''), 'Select...']
     An additional tuple is added in the last position:
-    [(''), 'Other']
+    [('_other'), 'Other']
 
     :return: A list of 2-tuples with the counties sorted by name ascending, with
-        an additional item in position 0: ('', 'Select...')
+        an additional item in position 0: ('', 'Select...') and another in last
+        position ('_other', 'Other')
     :rtype: A list of 2-tuples
     """
     # TODO Get available diagnosis from Bika instance
     facilities = [{'uid': 'fake-1', 'title': 'Diagnosis fake 1'},
                   {'uid': 'fake-2', 'title': 'Diagnosis fake 2'}]
     choices = [(c['uid'], c['title']) for c in facilities]
+    choices.insert(0, ('', 'Select...'))
     choices.append(('', 'Other'))
     return choices

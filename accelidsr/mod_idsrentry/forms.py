@@ -117,7 +117,7 @@ class IdsrEntryStepBForm(AbstractIdsrEntryStepForm):
     step = 'B'
 
     # Step B.1
-    diagnosis_or_condition = RadioField('Diagnosis or Condition', choices=getDiagnosisChoices(), validators=[DataRequired(), ])
+    diagnosis_or_condition = SelectField('Diagnosis or Condition', choices=getDiagnosisChoices(), validators=[DataRequired(), ])
     reporting_date = DateField('Reporting Date', format='%d/%m/%Y', validators=[DataRequired(), ])
     facility_code = TextField('Facility Code', validators=[DataRequired(), Length(max=8)])
     case_id = TextField('Case ID', validators=[Length(max=3), ])
