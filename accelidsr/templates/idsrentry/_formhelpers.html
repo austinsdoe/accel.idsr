@@ -25,3 +25,17 @@
     </div>
 {% endfor %}
 {% endmacro %}
+
+{% macro render_stepsnav(form, steps) %}
+<div class='stepsnav'>
+    <ul>
+{% for step in steps %}
+    {% if form.step.lower() == step['id'] %}
+        <li class='current'><a href="/idsrentry/{{ step['id'] }}">{{ step['id'].upper()+'. '+step['title'] }}</a></li>
+    {% else %}
+        <li><a href="/idsrentry/{{ step['id'] }}">{{ step['id'].upper()+'. '+step['title'] }}</a></li>
+    {% endif %}
+{% endfor %}
+    </ul>
+</div>
+{% endmacro %}

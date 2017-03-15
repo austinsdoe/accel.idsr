@@ -7,7 +7,8 @@ from flask import url_for
 from flask_login import login_required
 from models import fetch_idsr
 from models.idsr import Idsr
-from accelidsr.mod_idsrentry.forms import getIdsrEntryForm
+from accelidsr.mod_idsrentry.forms import getAvailableSteps
+from accelidsr.mod_idsrentry.forms import newIdsrEntryForm
 
 # Define the blueprint: 'idsrentry', set its url prefix: app.url/idsrentry
 mod_idsrentry = Blueprint('idsrentry', __name__, url_prefix='/idsrentry')
@@ -38,10 +39,10 @@ def step(step):
 
     :param step: the step to load
     :param type: string
-    :returns: the html template for Step B
+    :returns: the html of the form for the passed in step
     """
     fstep = format(step)
-    form = getIdsrEntryForm(step)
+    form = newIdsrEntryForm(step)
     id = request.args.get('id')
     if id:
         idsrform = fetch_idsr(id)
@@ -53,4 +54,4 @@ def step(step):
             urlid = 'idsrentry.step%s' % step.upper()
             return redirect(url_for(urlid))
     urltemplate = 'idsrentry/index.html'
-    return render_template(urltemplate, form=form)
+    return render_template(urltemplate, form=form, steps=getAvailableSteps())
