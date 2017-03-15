@@ -15,6 +15,41 @@ counties_districts = {
     "Rivercess": ["Morweh", "Timbo"],
     "Sinoe": ["Butaw", "Dugbe River", "Greenville", "Jaedae Jaedepo", "Juarzon", "Kpayan", "Pyneston"]
 }
+diseases = [
+    ('cholera', 'Cholera'),
+    ('human_rabies', 'Human Rabies'),
+    ('lassa_fever', 'Lassa fever'),
+    ('measles', 'Measles'),
+    ('meningitis', 'Meningitis'),
+    ('vhf', 'VHF (EVD)'),
+    ('yellow_fever', 'Yellow Fever'),
+    ('maternal_death', 'Maternal Death'),
+    ('nenoatal_death', 'Neonatal Death'),
+    ('acute_bloody_diarrhea', 'Acute Bloody Diarrhea (Shigellosis)'),
+    ('u_cluster_death', 'Member of Unexplained Cluster of Death'),
+    ('u_cluster_disease', 'Member of Unexplained Cluster of Disease'),
+    ('_other', 'Other')
+]
+case_outcomes = [
+    ('alive', 'Alive'),
+    ('dead', 'Dead (deceased)'),
+]
+case_classifications = [
+    ('', 'Select...'),
+    ('confirmed', 'Confirmed'),
+    ('suspected', 'Suspected')
+]
+specimen_types = [
+    ('', 'Select...'),
+    ('semen_evd', 'Semen (EVD)'),
+    ('serum_evd', 'Serum (EVD)'),
+    ('swabs_evd', 'Swabs (EVD)'),
+    ('whole_blood_evd', 'Whole Blood (EVD)'),
+]
+analysis_profiles = [
+    ('', 'Select...'),
+    ('genexpert_evd', 'GeneXpert EVD')
+]
 
 def getCountiesChoices():
     """
@@ -101,20 +136,77 @@ def getDiagnosisChoices():
     where the first element is the value to be used in the html control and
     the second item is the text to be displayed:
     [('val1', 'text1'), (val2, text2)]
-    An additional tuple is added in the first position:
-    [(''), 'Select...']
     An additional tuple is added in the last position:
     [('_other'), 'Other']
 
     :return: A list of 2-tuples with the counties sorted by name ascending, with
-        an additional item in position 0: ('', 'Select...') and another in last
-        position ('_other', 'Other')
+        an additional item in last position ('_other', 'Other')
     :rtype: A list of 2-tuples
     """
     # TODO Get available diagnosis from Bika instance
-    facilities = [{'uid': 'fake-1', 'title': 'Diagnosis fake 1'},
-                  {'uid': 'fake-2', 'title': 'Diagnosis fake 2'}]
-    choices = [(c['uid'], c['title']) for c in facilities]
-    choices.insert(0, ('', 'Select...'))
-    choices.append(('', 'Other'))
-    return choices
+    return diseases
+
+def getCaseOutcomeChoices():
+    """
+    Returns a list of 2-tuples that contains the case outcomes available in the
+    system, sorted by name asc. Each element within the list is a 2-tuple,
+    where the first element is the value to be used in the html control and
+    the second item is the text to be displayed:
+    [('val1', 'text1'), (val2, text2)]
+
+    :return: A list of 2-tuples with the counties sorted by name ascending
+    :rtype: A list of 2-tuples
+    """
+    # TODO Get available case outcomes from Bika instance
+    return case_outcomes
+
+def getCaseClassificationChoices():
+    """
+    Returns a list of 2-tuples that contains the clinical case classifications
+    available in the system, sorted by name asc. Each element within the list
+    is a 2-tuple, where the first element is the value to be used in the html
+    control and the second item is the text to be displayed:
+    [('val1', 'text1'), (val2, text2)]
+    An additional tuple is added in the first position:
+    [(''), 'Select...']
+
+    :return: A list of 2-tuples with the clinical case classifications sorted
+        by name ascending, with an additional item in position 0: ('', 'Select...')
+    :rtype: A list of 2-tuples
+    """
+    # TODO Get available case classifications from Bika instance
+    return case_classifications
+
+def getSpecimenTypeChoices():
+    """
+    Returns a list of 2-tuples that contains the specimen types (sample types)
+    available in the system, sorted by name asc. Each element within the list
+    is a 2-tuple, where the first element is the value to be used in the html
+    control and the second item is the text to be displayed:
+    [('val1', 'text1'), (val2, text2)]
+    An additional tuple is added in the first position:
+    [(''), 'Select...']
+
+    :return: A list of 2-tuples with the specimen types (sample types) sorted
+        by name ascending, with an additional item in position 0: ('', 'Select...')
+    :rtype: A list of 2-tuples
+    """
+    # TODO Get available case classifications from Bika instance
+    return specimen_types
+
+def getAnalysisProfileChoices():
+    """
+    Returns a list of 2-tuples that contains the analysis profiles (tests)
+    available in the system, sorted by name asc. Each element within the list
+    is a 2-tuple, where the first element is the value to be used in the html
+    control and the second item is the text to be displayed:
+    [('val1', 'text1'), (val2, text2)]
+    An additional tuple is added in the first position:
+    [(''), 'Select...']
+
+    :return: A list of 2-tuples with the specimen types (sample types) sorted
+        by name ascending, with an additional item in position 0: ('', 'Select...')
+    :rtype: A list of 2-tuples
+    """
+    # TODO Get available case classifications from Bika instance
+    return analysis_profiles

@@ -4,7 +4,11 @@
   {% else %}
   <div class="formline">
   {% endif %}
-  {{ field.label }}: {{ field(**kwargs)|safe }}
+  {% if field.type == "BooleanField" %}
+    {{ field(**kwargs)|safe }} {{ field.label }}
+  {% else %}
+    {{ field.label }}: {{ field(**kwargs)|safe }}
+  {% endif %}
   {% if field.errors %}
     <ul class=errors>
     {% for error in field.errors %}

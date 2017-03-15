@@ -15,17 +15,17 @@ class IdsrEntryStepAForm(AbstractIdsrEntryStepForm):
 
     # Step A.1
     reporting_date = DateField('Reporting Date', format='%d/%m/%Y', validators=[DataRequired(), ])
+    county_code = TextField('County Code', validators=[DataRequired(), Length(max=8)])
     facility_code = TextField('Facility Code', validators=[DataRequired(), Length(max=8)])
     case_id = TextField('Case ID', validators=[Length(max=3), ])
-    patient_record_id = TextField('Patient Record ID', validators=[Length(max=8), ])
 
     # Step A.2
+    reporting_health_facility = SelectField('Reporting Health Facility', choices=getFacilityChoices(), validators=[DataRequired(), ])
     reporting_country = SelectField('Reporting Country', choices=getCountiesChoices(), validators=[DataRequired(), ])
     reporting_district = SelectField('Reporting District', choices=getDistrictChoices(), validators=[DataRequired(), ])
-    facility_name = SelectField('Health Facility Name', choices=getFacilityChoices(), validators=[DataRequired(), ])
 
     def getSubsteps(self):
         return [
-            [self.reporting_date, self.facility_code, self.case_id, self.patient_record_id],
-            [self.reporting_country, self.reporting_district, self.facility_name]
+            [self.reporting_date, self.county_code, self.facility_code, self.case_id],
+            [self.reporting_health_facility, self.reporting_country, self.reporting_district]
         ]

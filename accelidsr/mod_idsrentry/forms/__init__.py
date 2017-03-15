@@ -1,4 +1,4 @@
-from flask_wtf import Form
+from flask_wtf import FlaskForm
 from wtforms import SubmitField
 
 def getAvailableSteps():
@@ -54,7 +54,7 @@ def newIdsrEntryForm(step):
     raise NotImplementedError("No form available for step '%s'" % step)
 
 
-class AbstractIdsrEntryStepForm(Form):
+class AbstractIdsrEntryStepForm(FlaskForm):
     """
     Base Form that provides common methods for IDSR forms
     """

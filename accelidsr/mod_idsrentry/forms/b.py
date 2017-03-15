@@ -12,10 +12,10 @@ class IdsrEntryStepBForm(AbstractIdsrEntryStepForm):
     step = 'B'
 
     # Step B.1
-    diagnosis_or_condition = SelectField('Diagnosis or Condition', choices=getDiagnosisChoices(), validators=[DataRequired(), ])
-    other_diagnosis = TextField('Other diagnosis')
+    diagnosis = RadioField('Diagnosis or Condition', choices=getDiagnosisChoices(), validators=[DataRequired(), ])
+    diagnosis_other = TextField('Other diagnosis')
 
     def getSubsteps(self):
         return [
-            [self.diagnosis_or_condition, self.other_diagnosis],
+            [self.diagnosis, self.diagnosis_other],
         ]
