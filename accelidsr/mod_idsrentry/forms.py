@@ -3,10 +3,22 @@ from wtforms.validators import DataRequired, Email, Length
 from flask_wtf import Form
 from accelidsr.mod_idsrentry import getCountiesChoices
 from accelidsr.mod_idsrentry import getDistrictChoices
+from accelidsr.mod_idsrentry import getFacilityChoices
 
+def getIdsrEntryForm(step):
+    if step.lower() == 'a':
+        return IdsrEntryStepAForm()
+    if step.lower() == 'b':
+        return IdsrEntryStepBForm()
+    if step.lower() == 'c':
+        return IdsrEntryStepCForm()
+    if step.lower() == 'd':
+        return IdsrEntryStepCForm()
+    raise NotImplementedError("No form available for step '%s'" % step)
 
 class AbstractIdsrEntryStepForm(Form):
 
+    step = ''
     submit = SubmitField("Next")
 
     def getSubsteps(self):
@@ -25,8 +37,8 @@ class IdsrEntryStepAForm(AbstractIdsrEntryStepForm):
 
     # Step A.2
     reporting_country = SelectField('Reporting Country', choices=getCountiesChoices(), validators=[DataRequired(), ])
-    reporting_district = SelectField('Reporting District', choices=getDistrictChoices(None), validators=[DataRequired(), ])
-    facility_name = TextField('Health Facility Name', validators=[DataRequired(), ])
+    reporting_district = SelectField('Reporting District', choices=getDistrictChoices(), validators=[DataRequired(), ])
+    facility_name = SelectField('Health Facility Name', choices=getFacilityChoices(), validators=[DataRequired(), ])
 
     def getSubsteps(self):
         return [
@@ -45,9 +57,9 @@ class IdsrEntryStepBForm(AbstractIdsrEntryStepForm):
     patient_record_id = TextField('Patient Record ID', validators=[Length(max=8), ])
 
     # Step B.2
-    reporting_country = SelectField('Reporting Country', choices=getCountiesChoices(), validators=[DataRequired(), ])
-    reporting_district = TextField('Reporting District', validators=[DataRequired(), ])
-    facility_name = TextField('Health Facility Name', validators=[DataRequired(), ])
+    reporting_country = SelectField('Reporting County', choices=getCountiesChoices(), validators=[DataRequired(), ])
+    reporting_district = SelectField('Reporting District', choices=getDistrictChoices(), validators=[DataRequired(), ])
+    facility_name = SelectField('Health Facility Name', choices=getFacilityChoices(), validators=[DataRequired(), ])
 
     def getSubsteps(self):
         return [

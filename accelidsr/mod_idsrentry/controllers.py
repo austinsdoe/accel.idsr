@@ -7,56 +7,24 @@ from flask import url_for
 from flask_login import login_required
 from models import fetch_idsr
 from models.idsr import Idsr
-from accelidsr.mod_idsrentry.forms import IdsrEntryStepAForm
-from accelidsr.mod_idsrentry.forms import IdsrEntryStepBForm
-from accelidsr.mod_idsrentry.forms import IdsrEntryStepCForm
-from accelidsr.mod_idsrentry.forms import IdsrEntryStepDForm
+from accelidsr.mod_idsrentry.forms import getIdsrEntryForm
 
 # Define the blueprint: 'idsrentry', set its url prefix: app.url/idsrentry
 mod_idsrentry = Blueprint('idsrentry', __name__, url_prefix='/idsrentry')
 
-@mod_idsrentry.route('/', methods=['GET', 'POST'])
-@mod_idsrentry.route('/a')
+@mod_idsrentry.route('/')
 @login_required
-def stepA():
+def idsrentry():
     """
-    Renders the IDSR's form wizard at Step A - Basic information
+    Redirects to the Step A (Basic information) from the IDSR's form wizard.
     :returns: the html template for Step A
     """
-    form = IdsrEntryStepAForm()
-    return _process_request('a', form)
+    url = url_for('idsrentry.step', step='a')
+    return redirect(url)
 
-@mod_idsrentry.route('/b')
+@mod_idsrentry.route('/<step>', methods=['GET', 'POST'])
 @login_required
-def stepB():
-    """
-    Renders the IDSR's form wizard at Step B - Diganosis information
-    :returns: the html template for Step B
-    """
-    form = IdsrEntryStepBForm()
-    return _process_request('b', form)
-
-@mod_idsrentry.route('/c')
-@login_required
-def stepC():
-    """
-    Renders the IDSR's form wizard at Step C - Patient Basic Information
-    :returns: the html template for Step C
-    """
-    form = IdsrEntryStepCForm()
-    return _process_request('c', form)
-
-@mod_idsrentry.route('/d')
-@login_required
-def stepD():
-    """
-    Renders the IDSR's form wizard at Step D - Clinical Information
-    :returns: the html template for Step C
-    """
-    form = IdsrEntryStepDForm()
-    return _process_request('d', form)
-
-def _process_request(step, form):
+def step(step):
     """
     Renders the IDSR's form wizard at the step indicated.
     If a parameter 'id' is provided via get or post, the form is displayed with
@@ -72,6 +40,8 @@ def _process_request(step, form):
     :param type: string
     :returns: the html template for Step B
     """
+    fstep = format(step)
+    form = getIdsrEntryForm(step)
     id = request.args.get('id')
     if id:
         idsrform = fetch_idsr(id)
