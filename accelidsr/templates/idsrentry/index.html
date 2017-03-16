@@ -21,8 +21,13 @@ IDSR Input Form
 {% from "idsrentry/_formhelpers.html" import render_stepsnav %}
 {% from "idsrentry/_formhelpers.html" import render_substeps %}
 {{ render_stepsnav(form, steps) }}
-<form action="" method="post">
+<form action="" method="post" id="{{ form.step }}" name="{{ form.step }}">
+    {{ form.hidden_tag() }}
     {{ render_substeps(form) }}
-    <div>{{ form.submit }}</div>
+    <div>
+        {{ form.submit }}
+        {{ form.formstep(value=form.step.lower()) }}
+        {{ form.idobj(value='1') }}
+    </div>
 </form>
 {% endblock %}

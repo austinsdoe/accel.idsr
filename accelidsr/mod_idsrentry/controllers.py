@@ -5,10 +5,11 @@ from flask import render_template
 from flask import request
 from flask import url_for
 from flask_login import login_required
-from models import fetch_idsr
-from models.idsr import Idsr
+from accelidsr.mod_idsrentry.models import save
+from accelidsr.mod_idsrentry.models.idsr import Idsr
 from accelidsr.mod_idsrentry.forms import getAvailableSteps
 from accelidsr.mod_idsrentry.forms import newIdsrEntryForm
+from accelidsr.mod_idsrentry.forms import loadIdsrEntryForm
 
 # Define the blueprint: 'idsrentry', set its url prefix: app.url/idsrentry
 mod_idsrentry = Blueprint('idsrentry', __name__, url_prefix='/idsrentry')
@@ -41,17 +42,50 @@ def step(step):
     :param type: string
     :returns: the html of the form for the passed in step
     """
-    fstep = format(step)
-    form = newIdsrEntryForm(step)
+    idsrobj = Idsr()
+    # Is this a post and form submission?
+    if request.method == 'POST':
+        # Get the form that suits with the current step, loaded
+        # with the vars from request.form
+        form = loadIdsrEntryForm(reqform=request.form)
+        if form.validate():
+            # Seems the data is correct. Get the Idsr object filled
+            # with the post data and try to save
+            formdict = form.getDict()
+            objid = formdict.get('_id','')
+            idsrobj = idsrobj if not objid else Idsr.fetch(objid)
+            if idsrobj:
+                idsrobj.update(formdict)
+                if save(idsrobj):
+                    flash('Saved!')
+                    #TODO Redirect to next step?
+                    url = url_for('idsrentry.step', step=step)
+                    return redirect(url)
+
+        # Oops, unable to save the form
+        flash('Cannot save!')
+        urltemplate = 'idsrentry/index.html'
+        return render_template(urltemplate, form=form,
+            steps=getAvailableSteps())
+
+    # No Post submission, check if this is a previously created IDSR record
     id = request.args.get('id')
     if id:
-        idsrform = fetch_idsr(id)
-        if idsrform:
+        # This is a previously created form. Fetch the data stored in the db
+        # for this IDSR record, check if the user has enough privileges and
+        # fill the form fields with previously stored values
+        idsrobj = Idsr.fetch(id)
+        if idsrobj:
             #TODO Check the user has enough privileges if previously data is available
-            idsr = idsrform
+            pass
         else:
             flash("No IDSR Form found")
-            urlid = 'idsrentry.step%s' % step.upper()
-            return redirect(url_for(urlid))
+            url = url_for('idsrentry.step', step=step)
+            return redirect(url)
+
+    # Get the suitable form in accordance with the step
+    form = newIdsrEntryForm(idsrobj, step)
+
+    # Render the Html template
     urltemplate = 'idsrentry/index.html'
     return render_template(urltemplate, form=form, steps=getAvailableSteps())

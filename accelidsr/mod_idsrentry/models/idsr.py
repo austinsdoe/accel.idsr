@@ -1,62 +1,26 @@
-class Idsr(object):
-    idsr_dict = {
-        'reporting_date': '',
-        'county_code': '',
-        'facility_code': '',
-        'case_id': '',
-        'patient_record_id': '',
-        'reporting_health_facility': '',
-        'reporting_county': '',
-        'reporting_district': '',
-        'condition_of_alert': '',
-        'patient_first_name':'',
-        'patient_middle_name': '',
-        'patient_last_name': '',
-        'patient_gender': '',
-        'age_of_patient': '',
-        'patient_date_of_birth': '',
-        'patient_age_years': '',
-        'patient_age_months': '',
-        'patient_age_days': '',
-        'patient_county_of_residence': '',
-        'patient_district_of_residence': '',
-        'patient_community_of_residence': '',
-        'head_of_household': '',
-        'patient_parent_name': '',
-        'patient_parent_phone_number': '',
-        'patient_cross_border_in_last_month': '',
-        'case_detected_at_community_level': '',
-        'date_of_disease_onset': '',
-        'date_patient_seen': '',
-        'patient_type': '',
-        'case_outcome': '',
-        'case_classification':'',
-        'reporting_person_first_name': '',
-        'reporting_person_last_name': '',
-        'phone_number_of_person_reporting': '',
-        'name_of_person_collecting_specimen': '',
-        'phone_number_of_person_collecting_specimen': '',
-        'health_worker_comments': '',
-        'vaccinated_for_disease': '',
-        'num_of_vaccinations': '',
-        'date_of_most_recent_vaccination': '',
-        'date_of_specimen_collection': '',
-        'date_specimen_sent_to_lab': '',
-        'specimen_type': '',
-        'lab_analysis_requested': '',
-        'lab_specimen_id': '',
-        'final_lab_result': '',
-        'date_results_reported': '',
-        'totally_filled': '',
-        'bika_client_id': '',
-        'bika_patient_id': '',
-        'bika_ar_id': '',
-        '_id':'',
-        'patient_record_id_old':'',
-        'creator':'',
-        'creation_date':'',
-        'lastmodification_date': '',
-    }
+from accelidsr import db
+from accelidsr.mod_idsrentry.models import fetch_by_id
+from accelidsr.mod_idsrentry.models.dbobject import MongoDbBaseObject
+from bson import ObjectId
+import bson
 
-    def __init__(self, id):
-        self.id = id
+class Idsr(MongoDbBaseObject):
+    _collection = 'idsrform'
+
+    @staticmethod
+    def fetch(id):
+        """
+        Fetch an idsrform from the database and returns its Idsr object.
+        Returns none if id is empty or no idsrform record found for the passed
+        in id
+
+        :param id: Unique identifier for the idsrform to be retrieved
+        :type id: 12-byte input or a 24-character hex string
+        :returns: The Idsr object that corresponds to the given id
+        """
+        doc = fetch_by_id(id, 'idsrform')
+        if doc:
+            idsr = Idsr(id)
+            idsr.update(doc)
+            return idsr
+        return None

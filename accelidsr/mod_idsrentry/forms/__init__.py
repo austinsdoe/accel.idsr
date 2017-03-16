@@ -1,5 +1,6 @@
 from flask_wtf import FlaskForm
-from wtforms import SubmitField
+from wtforms import SubmitField, HiddenField
+from accelidsr.mod_idsrentry.models.idsr import Idsr
 
 def getAvailableSteps():
     """
@@ -29,29 +30,60 @@ def getStepTitle(step):
         return title[0]
     return ''
 
-def newIdsrEntryForm(step):
+def loadIdsrEntryForm(reqform):
+    if reqform is None:
+        raise NotImplementedError("No form object passed in")
+
+    step = reqform.get('formstep')
+    if step.lower() == 'a':
+        from accelidsr.mod_idsrentry.forms.a import IdsrEntryStepAForm
+        form = IdsrEntryStepAForm(reqform)
+    elif step.lower() == 'b':
+        from accelidsr.mod_idsrentry.forms.b import IdsrEntryStepBForm
+        form = IdsrEntryStepBForm(reqform)
+    elif step.lower() == 'c':
+        from accelidsr.mod_idsrentry.forms.c import IdsrEntryStepCForm
+        form =  IdsrEntryStepCForm(reqform)
+    elif step.lower() == 'd':
+        from accelidsr.mod_idsrentry.forms.d import IdsrEntryStepDForm
+        form =  IdsrEntryStepDForm(reqform)
+    else:
+        raise NotImplementedError("No form available for step '%s'" % step)
+    return form
+
+def newIdsrEntryForm(idsrobj=None, step='a'):
     """
     Returns the Form to be loaded in accordance with the step passed in.
     If there is no defined form for the step passed in, throws an Error.
 
     :param step: The step identifier from the IDSR Form
     :type step: string
+    :param idsrobj: The Idsr object to attach to the current form
+    :type id: string
     :returns: A form for the step passed in
     :rtype: AbstractIdsrEntryStepForm
     """
+    if step is None:
+        raise NotImplementedError("No step passed in")
+
+    form = None
     if step.lower() == 'a':
         from accelidsr.mod_idsrentry.forms.a import IdsrEntryStepAForm
-        return IdsrEntryStepAForm()
-    if step.lower() == 'b':
+        form = IdsrEntryStepAForm()
+    elif step.lower() == 'b':
         from accelidsr.mod_idsrentry.forms.b import IdsrEntryStepBForm
-        return IdsrEntryStepBForm()
-    if step.lower() == 'c':
+        form = IdsrEntryStepBForm()
+    elif step.lower() == 'c':
         from accelidsr.mod_idsrentry.forms.c import IdsrEntryStepCForm
-        return IdsrEntryStepCForm()
-    if step.lower() == 'd':
+        form = IdsrEntryStepCForm()
+    elif step.lower() == 'd':
         from accelidsr.mod_idsrentry.forms.d import IdsrEntryStepDForm
-        return IdsrEntryStepDForm()
-    raise NotImplementedError("No form available for step '%s'" % step)
+        form = IdsrEntryStepDForm()
+    else:
+        raise NotImplementedError("No form available for step '%s'" % step)
+
+    form.initFromIdsrObject(idsrobj)
+    return form
 
 
 class AbstractIdsrEntryStepForm(FlaskForm):
@@ -59,8 +91,42 @@ class AbstractIdsrEntryStepForm(FlaskForm):
     Base Form that provides common methods for IDSR forms
     """
     step = ''
-
+    idobj = HiddenField('')
+    formstep = HiddenField('')
     submit = SubmitField("Next")
+
+    def initFromIdsrObject(self, idsrobj=None):
+        """
+        Fills the fields of the current form in accordance with the Idsr object
+        passed in. If no idsrbj is passed, initializes the form with Default
+        values.
+
+        :param idsrobj: The Idsr object that will be used to set the values of
+            the form fields
+        :type idsrobj: accelidsr.mod_idsrentry.models.idsr
+        """
+        self.formstep.data = self.step
+        if idsrobj is None:
+            self.initDefaults()
+            return
+
+        substeps = self.getSubsteps()
+        for s in substeps:
+            for field in s:
+                objval = idsrobj.get(field.name,'')
+                field.data = objval if objval else field.data
+        if idsrobj.getId():
+            self.idobj.data = idsrobj.getId()
+
+    def initDefaults(self):
+        """
+        Initializes the fields of the current form with default values.
+        """
+        substeps = self.getSubsteps()
+        for s in substeps:
+            for field in s:
+                field.data = field.default
+        #raise NotImplementedError("Not implemented 'initDefaults(idsrobj)'")
 
     def getSubsteps(self):
         """
@@ -72,7 +138,7 @@ class AbstractIdsrEntryStepForm(FlaskForm):
         :returns: A 2-tuple with the fields to be rendered in the current form
         :rtype: List of Lists
         """
-        raise NotImplementedError("Should have implemented this")
+        raise NotImplementedError("Not implemented 'getSubsteps(idsrobj)'")
 
     def getStepTitle(self):
         """
@@ -82,3 +148,13 @@ class AbstractIdsrEntryStepForm(FlaskForm):
         :rtype: string
         """
         return getStepTitle(self.step)
+
+    def getDict(self):
+        kvals = {}
+        substeps = self.getSubsteps()
+        fields = []
+        for s in substeps:
+            for field in s:
+                kvals[field.name] = field.data
+        kvals['_id'] = self.idobj.data
+        return kvals
