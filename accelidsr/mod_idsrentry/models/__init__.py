@@ -23,23 +23,32 @@ def save(dbobj):
     col = db.get_collection(dbobj.getCollection())
     objid = dbobj.getId()
     objdict = dbobj.getDict()
+    # Remove the _id from the dict to save. We want mongoDB to create the
+    # ids automatically (if record doesn't exist yet) or update the record
+    # without updating the value for _id
+    del objdict['_id']
     if objid:
         try:
             out = col.update_one(
                { "_id" : ObjectId(str(objid)) },
                { "$set": objdict },
                upsert=True)
-            if out.get('modifiedCount', 0) == 0:
-                newid = out.get('upsertedId',None)
-                if newid and newid.toString():
+            modifcount = out.modified_count
+            if modifcount == 0:
+                newid = out.upserted_id
+                if newid:
+                    newid = str(newid)
                     objdict['_id'] = newid.toString()
                     dbobj.update(objdict)
                     return dbobj
+                objdict['_id'] = objid
                 return None
-            if out.get('modifiedCount', 0) == 1:
+            if modifcount == 1:
+                objdict['_id'] = objid
                 return dbobj
             else:
                 # More than one record updated?
+                objdict['_id'] = objid
                 print("More than one record updated!")
                 return None
         except:
@@ -48,9 +57,11 @@ def save(dbobj):
     else:
         # This is a new object. Needs to be inserted
         out = col.insert_one(objdict)
-        if out.get('insertedId', ''):
-            newid = out.get('insertedId').toString()
+        newid = out.inserted_id
+        if out:
+            newid = str(newid)
             objdict['_id'] = newid
             dbobj.update(objdict)
             return dbobj
+        objdict['_id'] = objid
         return False

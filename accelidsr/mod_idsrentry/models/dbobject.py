@@ -10,7 +10,7 @@ class MongoDbBaseObject(object):
 
     def __init__(self, id=None):
         if id:
-            self._dict['id'] = id
+            self._dict['_id'] = id
 
     def getCollection(self):
         return self._collection
