@@ -6,6 +6,12 @@ IDSR Input Form
 
 {% block head %}
     {{ super() }}
+    <!-- JQuery and JQueryUI -->
+    <script type="text/javascript" src="{{ url_for('static', filename='js/jquery-3.1.1.min.js') }} "></script>
+    <script type="text/javascript" src="{{ url_for('static', filename='jqueryui/jquery-ui.min.js') }} "></script>
+    <script type="text/javascript" src="{{ url_for('static', filename='js/jquery.validate.js') }}"></script>
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='jqueryui/jquery-ui.min.css') }}"/>
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='jqueryui/jquery-ui.structure.min.css') }}"/>
     <style>
         div.formline {
             padding:5px;
@@ -15,6 +21,13 @@ IDSR Input Form
             content: "*";
         }
     </style>
+    <script type="text/javascript">
+    (function ($) {
+        $(document).ready(function () {
+            $("input[type='date']").datepicker();
+        })
+    })(jQuery);
+    </script>
 {% endblock %}
 
 {% block content %}

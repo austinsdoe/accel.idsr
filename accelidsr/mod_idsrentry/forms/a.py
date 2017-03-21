@@ -14,7 +14,7 @@ class IdsrEntryStepAForm(AbstractIdsrEntryStepForm):
     step = 'A'
 
     # Step A.1
-    reporting_date = DateField('Reporting Date', format='%d/%m/%Y', validators=[DataRequired(), ])
+    reporting_date = DateField('Reporting Date', format='%d/%m/%Y', validators=[DataRequired() ], render_kw={'type': 'date'})
     county_code = TextField('County Code', validators=[DataRequired(), Length(max=8)])
     facility_code = TextField('Facility Code', validators=[DataRequired(), Length(max=8)])
     case_id = TextField('Case ID', validators=[Length(max=3), ])
