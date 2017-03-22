@@ -1,5 +1,6 @@
 from flask import Blueprint
 from flask import flash
+from flask import jsonify
 from flask import redirect
 from flask import render_template
 from flask import request
@@ -10,6 +11,7 @@ from accelidsr.mod_idsrentry.models.idsr import Idsr
 from accelidsr.mod_idsrentry.forms import getAvailableSteps
 from accelidsr.mod_idsrentry.forms import newIdsrEntryForm
 from accelidsr.mod_idsrentry.forms import loadIdsrEntryForm
+from accelidsr.mod_idsrentry.json import IdsrJson
 
 # Define the blueprint: 'idsrentry', set its url prefix: app.url/idsrentry
 mod_idsrentry = Blueprint('idsrentry', __name__, url_prefix='/idsrentry')
@@ -23,6 +25,16 @@ def idsrentry():
     """
     url = url_for('idsrentry.step', step='a')
     return redirect(url)
+
+@mod_idsrentry.route('/@@json/<func>', methods=['GET', 'POST'])
+@login_required
+def json(func):
+    results = {'error': 'Not a valid function'}
+    if request.method == 'POST':
+        cargs = request.form.to_dict()
+        json = IdsrJson()
+        results = getattr(json, func)(**cargs)
+    return jsonify(results)
 
 @mod_idsrentry.route('/<step>', methods=['GET', 'POST'])
 @login_required

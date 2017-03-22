@@ -25,6 +25,34 @@ IDSR Input Form
     (function ($) {
         $(document).ready(function () {
             $("input[type='date']").datepicker();
+
+            // Updates the selection list of district in accordance with the
+            // selected option from the reporting county selection list
+            $('select[id="reporting_country"]').change(function (e) {
+                var country = $(this).val();
+                $.post( "/idsrentry/@@json/getDistrictChoices", { county: country, }, function(data) {
+                    $('select[id="reporting_district"] option').remove();
+                    $.each(data, function( i, val ) {
+                        var option = '<option value='+val[0]+'>'+val[1]+'</option>';
+                        $('select[id="reporting_district"]').append(option);
+                    });
+                }, "json");
+            });
+
+            // Updates the selection list of facilities in accordance with the
+            // selected option from the reporting county and district selection
+            // lists
+            $('select[id="reporting_district"]').change(function (e) {
+                var country = $('select[id="reporting_country"]').val()
+                var district = $(this).val();
+                $.post( "/idsrentry/@@json/getFacilityChoices", { county: country, district: district }, function(data) {
+                    $('select[id="reporting_health_facility"] option').remove();
+                    $.each(data, function( i, val ) {
+                        var option = '<option value='+val[0]+'>'+val[1]+'</option>';
+                        $('select[id="reporting_health_facility"]').append(option);
+                    });
+                }, "json");
+            });
         })
     })(jQuery);
     </script>
