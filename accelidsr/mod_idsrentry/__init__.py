@@ -139,8 +139,8 @@ def getDiagnosisChoices():
     An additional tuple is added in the last position:
     [('_other'), 'Other']
 
-    :return: A list of 2-tuples with the counties sorted by name ascending, with
-        an additional item in last position ('_other', 'Other')
+    :return: A list of 2-tuples with the counties sorted by name ascending,
+        with an additional item in last position ('_other', 'Other')
     :rtype: A list of 2-tuples
     """
     # TODO Get available diagnosis from Bika instance

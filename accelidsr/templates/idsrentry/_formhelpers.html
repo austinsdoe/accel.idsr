@@ -12,6 +12,9 @@
     {% else %}
         {{ field.label }}: {{ field(**kwargs)|safe }}
     {% endif %}
+    {% if field.flags.dynamic %}
+        <input type="hidden" name="{{ field.id }}_dynamic" id="{{ field.id }}_dynamic" />
+    {% endif %}
   {% endif %}
   {% if field.errors %}
     <ul class=errors>
@@ -25,11 +28,21 @@
 
 {% macro render_substeps(form) %}
 {% for step in form.getSubsteps() %}
-    <div class="substep">
+    <div id='substep-{{ loop.index }}' class="substep" {% if not loop.first %} style="display:none" {% endif %}>
     <h2>{{ form.step }}.{{ loop.index }}</h2>
     {% for field in step %}
         {{ render_field(field) }}
     {% endfor %}
+    <div class="form-footer">
+    {% if not loop.first %}
+        <a class='prev' href='#substep-{{ loop.index - 1 }}'>Previous</a>
+    {% endif %}
+    {% if loop.last %}
+        {{ form.submit }}
+    {% else %}
+        <a class='next' href='#substep-{{ loop.index + 1 }}'>Next</a>
+    {% endif %}
+    </div>
     </div>
 {% endfor %}
 {% endmacro %}

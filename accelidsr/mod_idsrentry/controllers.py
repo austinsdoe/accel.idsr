@@ -60,6 +60,18 @@ def step(step):
         # Get the form that suits with the current step, loaded
         # with the vars from request.form
         form = loadIdsrEntryForm(reqform=request.form)
+        # We need first to assign the choices to fields their values have been
+        # rendered dynamically to prevent the validation to fail.
+        # Used for fields like District SelectField, loaded dynamically when
+        # a County is selected in the form.
+        # https://wtforms.readthedocs.io/en/latest/fields.html#wtforms.fields.SelectField
+        fdict = request.form.to_dict()
+        for field in form:
+            dname = field.name + '_dynamic'
+            if field.type == "SelectField" and dname in fdict:
+                choices = fdict.get(dname)
+                field.choices = [(c, c) for c in choices.split('|')]
+
         if form.validate():
             # Seems the data is correct. Get the Idsr object filled
             # with the post data and try to save
