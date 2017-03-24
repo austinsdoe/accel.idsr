@@ -9,6 +9,7 @@ class MongoDbBaseObject(object):
     _dict = { }
 
     def __init__(self, id=None):
+        self._dict = { }
         if id:
             self._dict['_id'] = id
 

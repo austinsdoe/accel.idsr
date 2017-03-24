@@ -26,7 +26,7 @@
   </div>
 {% endmacro %}
 
-{% macro render_substeps(form) %}
+{% macro render_substeps(form, steps) %}
 {% for step in form.getSubsteps() %}
     <div id='substep-{{ loop.index }}' class="substep" {% if not loop.first %} style="display:none" {% endif %}>
     <h2>{{ form.step }}.{{ loop.index }}</h2>
@@ -35,12 +35,15 @@
     {% endfor %}
     <div class="form-footer">
     {% if not loop.first %}
-        <a class='prev' href='#substep-{{ loop.index - 1 }}'>Previous</a>
+        <a class='prev navlink' href='#substep-{{ loop.index - 1 }}'>Previous</a>
+    {% elif form.idobj.data %}
+        {# Is the first substep, but not from the first step of the serie #}
+        <a class='prev' href='/idsrentry/{{ form.getPrevStepId() }}{% if form.idobj.data %}?id={{ form.idobj.data }} {% endif %}'>Previous</a>
     {% endif %}
     {% if loop.last %}
         {{ form.submit }}
     {% else %}
-        <a class='next' href='#substep-{{ loop.index + 1 }}'>Next</a>
+        <a class='next navlink' href='#substep-{{ loop.index + 1 }}'>Next</a>
     {% endif %}
     </div>
     </div>

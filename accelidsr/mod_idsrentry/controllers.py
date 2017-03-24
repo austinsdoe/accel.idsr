@@ -9,6 +9,7 @@ from flask_login import login_required
 from accelidsr.mod_idsrentry.models import save
 from accelidsr.mod_idsrentry.models.idsr import Idsr
 from accelidsr.mod_idsrentry.forms import getAvailableSteps
+from accelidsr.mod_idsrentry.forms import getNextStepId
 from accelidsr.mod_idsrentry.forms import newIdsrEntryForm
 from accelidsr.mod_idsrentry.forms import loadIdsrEntryForm
 from accelidsr.mod_idsrentry.json import IdsrJson
@@ -81,13 +82,15 @@ def step(step):
             if idsrobj:
                 idsrobj.update(formdict)
                 if save(idsrobj):
-                    flash('Saved!')
-                    #TODO Redirect to next step?
-                    url = url_for('idsrentry.step', step=step)
-                    return redirect(url)
+                    nextstep = getNextStepId(step)
+                    if nextstep:
+                        url = url_for('idsrentry.step', step=nextstep, id=idsrobj.getId())
+                        return redirect(url)
 
         # Oops, unable to save the form
-        flash('Cannot save!')
+        message = 'Cannot save!'
+        flash(message)
+
         urltemplate = 'idsrentry/index.html'
         return render_template(urltemplate, form=form,
             steps=getAvailableSteps())

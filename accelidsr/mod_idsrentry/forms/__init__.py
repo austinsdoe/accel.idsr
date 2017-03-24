@@ -30,11 +30,35 @@ def getStepTitle(step):
         return title[0]
     return ''
 
-def loadIdsrEntryForm(reqform):
+def getNextStepId(step):
+    if not step:
+        raise NotImplementedError("No step passed in")
+    avsteps = getAvailableSteps()
+    nexts = False
+    for st in avsteps:
+        if nexts:
+            return st['id']
+        nexts = st['id'] == step.lower()
+    return None
+
+def getPrevStepId(step):
+    if not step:
+        raise NotImplementedError("No step passed in")
+    avsteps = getAvailableSteps()
+    prevs = None
+    for st in avsteps:
+        if st['id'] == step.lower() and prevs:
+            return prevs
+        if st['id'] == step.lower() and not prevs:
+            return None
+        prevs = st['id']
+    return None
+
+def loadIdsrEntryForm(reqform, formstep=None):
     if reqform is None:
         raise NotImplementedError("No form object passed in")
 
-    step = reqform.get('formstep')
+    step = reqform.get('formstep') if not formstep else formstep
     if step.lower() == 'a':
         from accelidsr.mod_idsrentry.forms.a import IdsrEntryStepAForm
         form = IdsrEntryStepAForm(reqform)
@@ -158,3 +182,10 @@ class AbstractIdsrEntryStepForm(FlaskForm):
                 kvals[field.name] = field.data
         kvals['_id'] = self.idobj.data
         return kvals
+
+    def getPrevStepId(self):
+        import pdb;pdb.set_trace()
+        return getPrevStepId(self.step)
+
+    def getNextStepId(self):
+        return getNextStepId(self.step)
