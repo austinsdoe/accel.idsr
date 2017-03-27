@@ -5,6 +5,7 @@ from flask import redirect
 from flask import render_template
 from flask import request
 from flask import url_for
+from flask_login import current_user
 from flask_login import login_required
 from accelidsr.mod_idsrentry.models import save
 from accelidsr.mod_idsrentry.models.idsr import Idsr
@@ -80,10 +81,13 @@ def step(step):
             # Seems the data is correct. Get the Idsr object filled
             # with the post data and try to save
             formdict = form.getDict()
-            objid = formdict.get('_id','')
+            objid = formdict.get('_id', '')
             idsrobj = idsrobj if not objid else Idsr.fetch(objid)
             if idsrobj:
                 formdict = form.getDict(idsrobj)
+                if not objid:
+                    formdict['createdby'] = current_user.get_username()
+                formdict['modifiedby'] = current_user.get_username()
                 idsrobj.update(formdict)
                 if save(idsrobj):
                     nextstep = form.getNextStepId()
