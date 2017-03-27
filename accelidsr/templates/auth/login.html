@@ -4,6 +4,17 @@
     <meta charset="UTF-8">
     <title>Title</title>
     <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/index.css') }}"/>
+    <style>
+    p.info {
+        border-radius: 6px;
+        color: #fff;
+        font-size: 1.2em;
+        line-height: 160%;
+        margin: 20px auto;
+        max-width: 400px;
+        text-align: center;
+    }
+    </style>
 </head>
 <body>
 
@@ -22,8 +33,11 @@
         {{ form.submit }}
     </div>
 </form>
+      {% if firstaccess %}
+        <p class='info'>{{ firstaccess }}</p>
+      {% endif %}
       {% if error %}
-        <p class="error"><strong>Error:</strong> {{ error }}
+        <p class="error"><strong>Error:</strong> {{ error }}</p>
       {% endif %}
 </body>
 </html>

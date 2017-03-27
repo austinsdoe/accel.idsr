@@ -42,10 +42,18 @@ def createuser():
 
 @mod_auth.route('/login', methods=['GET', 'POST'])
 def login():
-    # If no users are available in the database yet, redirect the user to
-    # the user creation page
+    # If no users are available in the database yet, create a new admin/admin
+    # user by default
+    firstaccess = ''
     if db.users.find().count() == 0:
-        return redirect(url_for('auth.createuser'))
+        db.users.insert({
+            'username': 'admin',
+            'password': User.generate_hash('admin'),
+            'email': 'admin@example.com'
+        })
+        firstaccess = 'Congrats! This is the first time you load the ' \
+                      'application. Use admin/admin to access with super ' \
+                      'privileges.'
 
     next = utils.get_redirect_target()
     form = LoginForm()
@@ -68,7 +76,8 @@ def login():
             return redirect(next or url_for('index'))
 
         flash("Invalid Credentials. Please try again.", category='error')
-    return render_template('auth/login.html', form=form)
+    return render_template('auth/login.html', form=form,
+                           firstaccess=firstaccess)
 
 @mod_auth.route('/logout')
 def logout():
