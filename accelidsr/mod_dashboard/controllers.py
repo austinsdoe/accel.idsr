@@ -12,9 +12,9 @@ from accelidsr.mod_idsrentry.models import find_all
 # Define the blueprint: 'auth', set its url prefix: app.url/dashboard
 mod_dashboard = Blueprint('dashboard', __name__, url_prefix='/dashboard')
 
-@mod_dashboard.route('/')
+@mod_dashboard.route('/idsrlist')
 @login_required
-def dashboard():
+def idsrlist():
     items = Idsr.findAll()
     urltemplate = 'dashboard/index.html'
     return render_template(urltemplate, items=items)

@@ -104,7 +104,8 @@
 .form-footer input[type="submit"]:hover {
     opacity:0.8;
 }
-.form-footer a.prev {
+.form-footer a.prev,
+.form-footer a.cancel {
     background-color:#999;
 }
 .form-footer input[type="submit"] {
@@ -223,7 +224,6 @@ div.buttons-bar  {
 #footer {
     margin-top:40px;
     padding:20px 0;
-    background-color:#efefef;
     font-size:0.9em;
     color:#333;
 }

@@ -24,6 +24,8 @@ db = mongo.connect(cfg)
 
 import flask_login
 from jsonapi import JSONAPI
+from flask import url_for
+from flask import redirect
 from flask_login import LoginManager
 from flask_login import login_required
 
@@ -69,7 +71,8 @@ def index():
     """
     Main page of the app
     """
-    return render_template('index.html')
+    url = url_for('dashboard.idsrlist')
+    return redirect(url)
 
 @app.errorhandler(404)
 def not_found(error):

@@ -39,6 +39,7 @@
 {% endmacro %}
 
 {% macro render_formfooter(form) %}
+<a class='cancel' href='/'>Cancel</a>
 {% if not form.isFirstSubstep() %}
     <a class='prev' href='/idsrentry/{{ form.getPrevStepId() }}{% if form.idobj.data %}?id={{ form.idobj.data }} {% endif %}'>Previous</a>
 {% endif %}

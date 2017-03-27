@@ -90,6 +90,9 @@ def step(step):
                     if nextstep:
                         url = url_for('idsrentry.step', step=nextstep, id=idsrobj.getId())
                         return redirect(url)
+                    else:
+                        # This is the last step. Redirect to main page
+                        return redirect(url_for('index'))
 
         # Oops, unable to save the form
         message = 'Cannot save!'
