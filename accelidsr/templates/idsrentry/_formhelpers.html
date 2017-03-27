@@ -1,7 +1,7 @@
 {% macro render_field(field) %}
   {% if field.type == "HiddenField" %}
     {{ field(**kwargs)|safe }}
-  {% else %}
+  {% elif field.name != 'csrf_token' %}
       {% if field.flags.required %}
       <div class="formline required">
       {% else %}
@@ -46,14 +46,16 @@
 {% endmacro %}
 
 {% macro render_stepsnav(form, steps) %}
+{% set idsrdict = form.getIdsrObject().getDict() if form.getIdsrObject() else {} %}
 <div class='stepsnav'>
     <ul>
 {% for step in steps %}
-    {% if form.step.lower() == step['id'] %}
-        <li class='current'><a href="/idsrentry/{{ step['id'] }}"><span class='number'>{{ step['id'].upper() }}</span><span class='small'><br/>{{ step['title'] }}</span></a></li>
-    {% else %}
-        <li><a href="/idsrentry/{{ step['id'] }}"><span class='number'>{{ step['id'].upper() }}</span><span class='small'><br/>{{ step['title'] }}</span></a></li>
-    {% endif %}
+    {% set cssstatus = idsrdict.get('idsr-status-'+step['id'].lower(), 'empty') %}
+    {% set csscurrent = 'current' if form.step.lower() == step['id'].lower() else '' %}
+    {% set cssname = ' '.join([cssstatus, csscurrent]) %}
+    {% set idobj = form.getDict().get('_id', '') %}
+    {% set urlparams = '?id='+idobj if idobj else '' %}
+    <li class='{{ cssname }}'><a href="/idsrentry/{{ ''.join([step['id'],urlparams]) }}"><span class='number'>{{ step['id'].upper() }}</span><span class='small'><br/>{{ step['title'] }}</span></a></li>
 {% endfor %}
     </ul>
 </div>
@@ -62,12 +64,14 @@
 {% macro render_substepsnav(form) %}
 <div class='substepsnav'>
     <ul>
+{% set idsrdict = form.getIdsrObject().getDict() if form.getIdsrObject() else {} %}
 {% for substep in form.getSubstepIds() %}
-    {% if form.substep.lower() == substep %}
-        <li class='current'><a href="/idsrentry/{{ form.step.upper()+'_'+substep }}">{{ form.step.upper() }}.{{ substep }}</a></li>
-    {% else %}
-        <li><a href="/idsrentry/{{ form.step.upper()+'_'+substep }}">{{ form.step.upper() }}.{{ substep }}</a></li>
-    {% endif %}
+    {% set cssstatus = idsrdict.get('idsr-status-'+form.step.lower()+'_'+substep, 'empty') %}
+    {% set csscurrent = 'current' if form.substep.lower() == substep else '' %}
+    {% set cssname = ' '.join([cssstatus, csscurrent]) %}
+    {% set idobj = form.getDict().get('_id', '') %}
+    {% set urlparams = '?id='+idobj if idobj else '' %}
+    <li class='{{ cssname }}'><a href="/idsrentry/{{ ''.join([form.step.lower()+'_'+substep, urlparams]) }}">{{ form.step.upper() }}.{{ substep }}</a></li>
 {% endfor %}
     </ul>
 </div>

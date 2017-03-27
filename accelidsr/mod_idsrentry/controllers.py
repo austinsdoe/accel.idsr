@@ -76,7 +76,6 @@ def step(step):
             if field.type == "SelectField" and dname in fdict:
                 choices = fdict.get(dname)
                 field.choices = [(c, c) for c in choices.split('|')]
-
         if form.validate():
             # Seems the data is correct. Get the Idsr object filled
             # with the post data and try to save
@@ -84,6 +83,7 @@ def step(step):
             objid = formdict.get('_id','')
             idsrobj = idsrobj if not objid else Idsr.fetch(objid)
             if idsrobj:
+                formdict = form.getDict(idsrobj)
                 idsrobj.update(formdict)
                 if save(idsrobj):
                     nextstep = form.getNextStepId()

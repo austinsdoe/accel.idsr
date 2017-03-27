@@ -57,7 +57,7 @@ def getNextStepId(step, substep=None):
     steps = [k['id'] for k in getAvailableSteps()]
     pos = [i for i, x in enumerate(steps) if x == str(step)]
     if pos and pos[0] < (len(steps) - 1):
-        return '{0}'.format(step.lower())
+        return '{0}'.format(steps[pos[0]+1])
     # Ooops, we reached the end of the wizard form. No further step, return 0
     return ''
 

@@ -51,6 +51,14 @@
 .substepsnav ul li.current a  {
     background-color:#ffa100
 }
+.stepsnav ul li.incomplete a,
+.substepsnav ul li.incomplete a {
+    background-color:red;
+}
+.stepsnav ul li.complete a,
+.substepsnav ul li.complete a {
+    background-color: green;
+}
 .stepsnav ul li a span.number {
     font-weight:bold;
 }

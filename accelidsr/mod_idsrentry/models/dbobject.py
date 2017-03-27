@@ -6,7 +6,7 @@ import bson
 class MongoDbBaseObject(object):
 
     _collection = ''
-    _dict = { }
+    _dict = {}
 
     def __init__(self, id=None):
         self._dict = { }
@@ -26,7 +26,8 @@ class MongoDbBaseObject(object):
         return self._dict.get(key, default)
 
     def getId(self):
-        return self._dict.get('_id', None)
+        objid = self._dict.get('_id', None)
+        return str(objid) if objid else None
 
     def getDict(self):
         return self._dict

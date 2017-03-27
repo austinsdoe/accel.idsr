@@ -1,5 +1,7 @@
 from accelidsr import db
 from bson import ObjectId
+from flask import flash
+import sys
 import bson
 
 def fetch_by_id(id, collection):
@@ -18,7 +20,7 @@ def fetch_by_id(id, collection):
 
 def save(dbobj):
     if not dbobj or not dbobj.getCollection():
-        print "No object or collection specifed"
+        flash("No object or collection specifed")
         return None
     col = db.get_collection(dbobj.getCollection())
     objid = dbobj.getId()
@@ -28,32 +30,32 @@ def save(dbobj):
     # without updating the value for _id
     del objdict['_id']
     if objid:
-        try:
-            out = col.update_one(
-               { "_id" : ObjectId(str(objid)) },
-               { "$set": objdict },
-               upsert=True)
-            modifcount = out.modified_count
-            if modifcount == 0:
-                newid = out.upserted_id
-                if newid:
-                    newid = str(newid)
-                    objdict['_id'] = newid.toString()
-                    dbobj.update(objdict)
-                    return dbobj
-                objdict['_id'] = objid
-                return None
-            if modifcount == 1:
-                objdict['_id'] = objid
+        #try:
+        out = col.update_one(
+           {"_id": ObjectId(str(objid))},
+           {"$set": objdict },
+           upsert=True)
+        modifcount = out.modified_count
+        if modifcount == 0:
+            newid = out.upserted_id
+            if newid:
+                newid = str(newid)
+                objdict['_id'] = newid.toString()
+                dbobj.update(objdict)
                 return dbobj
-            else:
-                # More than one record updated?
-                objdict['_id'] = objid
-                print("More than one record updated!")
-                return None
-        except:
-           print(e);
-           return None
+            objdict['_id'] = objid
+            return None
+        if modifcount == 1:
+            objdict['_id'] = objid
+            return dbobj
+        else:
+            # More than one record updated?
+            objdict['_id'] = objid
+            flash("More than one record updated!")
+            return None
+        #except:
+        #    flash('Unexpected error: %s' % sys.exc_info()[0])
+        #    return None
     else:
         # This is a new object. Needs to be inserted
         out = col.insert_one(objdict)

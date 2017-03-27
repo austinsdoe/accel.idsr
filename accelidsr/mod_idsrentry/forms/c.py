@@ -21,9 +21,9 @@ class IdsrEntryStepC1Form(AbstractIdsrEntryStepForm):
     patient_client_patientid = TextField('Client Patient ID', validators=[DataRequired(), Length(min=3)])
     patient_gender = RadioField('Patient Gender',  default='u', choices=[('u', 'Unknown'), ('m', 'Male'), ('f', 'Female')])
     patient_dateofbirth = DateField('Date of Birth', format='%d/%m/%Y', validators=[DataRequired(), ])
-    patient_age_years = IntegerField('Patient Age. Years', validators=[DataRequired(), Length(min=4, max=4)])
-    patient_age_months = IntegerField('Patient Age. Months', validators=[DataRequired(), Length(min=1, max=2)])
-    patient_age_days = IntegerField('Patient Age. Days', validators=[DataRequired(), Length(min=1, max=2)])
+    patient_age_years = IntegerField('Patient Age. Years', validators=[DataRequired(),])
+    patient_age_months = IntegerField('Patient Age. Months', validators=[DataRequired(),])
+    patient_age_days = IntegerField('Patient Age. Days', validators=[DataRequired(),])
 
 registerStepForm(clazz=IdsrEntryStepC1Form, step=STEP, substep=1)
 

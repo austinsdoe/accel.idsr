@@ -14,6 +14,7 @@ class AbstractIdsrEntryStepForm(FlaskForm):
     """
     step = ''
     substep = ''
+    idsrobj = None
     stepform = HiddenField('')
     substepform = HiddenField('')
     idobj = HiddenField('')
@@ -46,6 +47,7 @@ class AbstractIdsrEntryStepForm(FlaskForm):
                 field.data = objval if objval else field.data
         if idsrobj.getId():
             self.idobj.data = idsrobj.getId()
+        self.idsrobj = idsrobj
         self.stepform.data = self.step
         self.substepform.data = self.substep
 
@@ -59,6 +61,7 @@ class AbstractIdsrEntryStepForm(FlaskForm):
                 field.data = field.default
         self.stepform.data = self.step
         self.substepform.data = self.substep
+        self.idsrobj = None
         #raise NotImplementedError("Not implemented 'initDefaults(idsrobj)'")
 
     def getFields(self):
@@ -90,7 +93,11 @@ class AbstractIdsrEntryStepForm(FlaskForm):
         """
         return getStepTitle(self.step)
 
-    def getDict(self):
+    def getIdsrObject(self):
+        return self.idsrobj
+
+    def getDict(self, idsr_object=None):
+        idsrobj = self.idsrobj if not idsr_object else idsr_object
         kvals = {}
         substeps = self.getSubsteps()
         fields = []
@@ -98,6 +105,30 @@ class AbstractIdsrEntryStepForm(FlaskForm):
             for field in s:
                 kvals[field.name] = field.data
         kvals['_id'] = self.idobj.data
+        status = 'idsr-status-{0}'.format(self.step)
+        substatus = 'idsr-status-{0}_{1}'.format(self.step, self.substep)
+        iscomplete = self.isComplete()
+        kvals[substatus] = 'complete' if iscomplete else 'incomplete'
+        # Now, try to infere the top-level step status
+        if idsrobj:
+            incomplete = False
+            substepids = self.getSubstepIds()
+            objdict = idsrobj.getDict()
+            for s in substepids:
+                if s == self.substep:
+                    continue
+                key = 'idsr-status-{0}_{1}'.format(self.step, self.substep)
+                completed = objdict.get(key, '')
+                if completed != 'complete':
+                    incomplete = True
+                    break
+            if incomplete:
+                incomplete = True
+            elif not iscomplete:
+                incomplete = True
+            kvals[status] = 'incomplete' if incomplete else 'complete'
+        else:
+            kvals[status] = 'incomplete'
         return kvals
 
     def getPrevStepId(self):
@@ -121,3 +152,7 @@ class AbstractIdsrEntryStepForm(FlaskForm):
     def isLastSubstep(self):
         nstep = self.getNextStepId()
         return not nstep or nstep.split('_')[0].lower() != self.step.lower()
+
+    def isComplete(self):
+        miss = [f for f in self.getFields() if f.flags.required and not f.data]
+        return len(miss) == 0
