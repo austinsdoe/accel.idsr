@@ -227,3 +227,7 @@ div.buttons-bar  {
     font-size:0.9em;
     color:#333;
 }
+#header div.container-fluid {
+    max-width: 1024px;
+    padding-left:0px;
+}

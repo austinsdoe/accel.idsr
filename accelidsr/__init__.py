@@ -63,7 +63,9 @@ def load_user(user_id):
     u = db.users.find_one({"_id": ObjectId(user_id)})
     if not u:
         return None
-    return User(user_id)
+    return User(id=user_id,
+                username=u.get('username'),
+                role=u.get('role'))
 
 @app.route('/', methods=['GET', 'POST'])
 @login_required
