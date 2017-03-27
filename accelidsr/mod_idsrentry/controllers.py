@@ -93,7 +93,7 @@ def step(step):
 
         # Oops, unable to save the form
         message = 'Cannot save!'
-        flash(message)
+        flash(message, category='error')
 
         urltemplate = 'idsrentry/index.html'
         return render_template(urltemplate, form=form,
@@ -110,7 +110,7 @@ def step(step):
             #TODO Check the user has enough privileges if previously data is available
             pass
         else:
-            flash("No IDSR Form found")
+            flash("No IDSR Form found", category='error')
             url = url_for('idsrentry.step', step=rawstep)
             return redirect(url)
 

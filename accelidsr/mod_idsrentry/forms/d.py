@@ -70,7 +70,8 @@ registerStepForm(clazz=IdsrEntryStepD2Form, step=STEP, substep=2)
 
 class IdsrEntryStepD3Form(AbstractIdsrEntryStepForm):
     health_worker_comments = TextAreaField(
-        'Comments')
+        'Comments',
+        render_kw={'rows': '5', 'cols': '50'})
 
     facility_code = TextField(
         'Facility Code',

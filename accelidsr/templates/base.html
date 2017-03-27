@@ -42,11 +42,22 @@
             </div>
         </nav>
     </div>
-    {% with messages = get_flashed_messages() %}
+    {% with messages = get_flashed_messages(category_filter=['info']) %}
       {% if messages %}
-    <div id="flash-messages">
+    <div id="flash-messages" class='info'>
         <ul>
         {% for message in messages %}
+            <li>{{ message }} </li>
+        {% endfor %}
+        </ul>
+    </div>
+      {% endif %}
+    {% endwith %}
+    {% with errors = get_flashed_messages(category_filter=['error']) %}
+      {% if errors %}
+    <div id="flash-messages" class='error'>
+        <ul>
+        {% for message in errors %}
             <li>{{ message }} </li>
         {% endfor %}
         </ul>

@@ -58,7 +58,7 @@ def login():
         if user and User.validate_login(user['password'], form.password.data):
             user_obj = User(str(user['_id']))
             login_user(user_obj)
-            flash("Logged in successfully", category='success')
+            flash("Logged in successfully", category='info')
 
             next = request.args.get('next')
             # is_safe_url should check if the url is safe for redirects.
@@ -67,7 +67,7 @@ def login():
                 return abort(400)
             return redirect(next or url_for('index'))
 
-        flash("Invalid Credentials. Please try again.")
+        flash("Invalid Credentials. Please try again.", category='error')
     return render_template('auth/login.html', form=form)
 
 @mod_auth.route('/logout')

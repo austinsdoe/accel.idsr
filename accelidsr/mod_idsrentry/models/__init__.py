@@ -20,7 +20,7 @@ def fetch_by_id(id, collection):
 
 def save(dbobj):
     if not dbobj or not dbobj.getCollection():
-        flash("No object or collection specifed")
+        flash("No object or collection specifed", category='error')
         return None
     col = db.get_collection(dbobj.getCollection())
     objid = dbobj.getId()
@@ -51,7 +51,7 @@ def save(dbobj):
         else:
             # More than one record updated?
             objdict['_id'] = objid
-            flash("More than one record updated!")
+            flash("More than one record updated!", category='error')
             return None
         #except:
         #    flash('Unexpected error: %s' % sys.exc_info()[0])

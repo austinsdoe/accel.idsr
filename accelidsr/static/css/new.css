@@ -127,9 +127,14 @@ h1 {
     padding-bottom: 5px;
 }
 div#flash-messages {
-    background-color: red;
     margin: 0;
     padding: 0;
+}
+div#flash-messages.error {
+    background-color:red;
+}
+div#flash-messages.info {
+    background-color:green;
 }
 #flash-messages ul {
     color: #fff;
