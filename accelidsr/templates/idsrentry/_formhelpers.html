@@ -1,4 +1,4 @@
-{% macro render_field(field) %}
+{% macro render_field(form, field) %}
   {% if field.type == "HiddenField" %}
     {{ field(**kwargs)|safe }}
   {% elif field.name != 'csrf_token' %}
@@ -16,7 +16,7 @@
             {{ field.label }}: {{ field(**kwargs)|safe }}
         {% endif %}
         {% if field.flags.dynamic %}
-            <input type="hidden" name="{{ field.id }}_dynamic" id="{{ field.id }}_dynamic" />
+            <input type="hidden" name="{{ field.id }}_dynamic" id="{{ field.id }}_dynamic" value="{{ form.stringify(field.choices) }}"/>
         {% endif %}
       {% endif %}
       {% if field.errors %}
@@ -33,7 +33,7 @@
 {% macro render_fields(form, steps) %}
     {% for field in form.getFields() %}
         {% if field.type != 'SubmitField' %}
-            {{ render_field(field) }}
+            {{ render_field(form, field) }}
         {% endif %}
     {% endfor %}
 {% endmacro %}
