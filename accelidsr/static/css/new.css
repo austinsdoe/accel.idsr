@@ -46,10 +46,16 @@
     padding: 20px;
     text-decoration:none;
     line-height:130%;
+    opacity:0.3;
+}
+.stepsnav ul li a:hover,
+.substepsnav ul li a:hover {
+    opacity:0.7;
 }
 .stepsnav ul li.current a,
 .substepsnav ul li.current a  {
-    background-color:#ffa100
+    background-color:#ffa100;
+    opacity:1;
 }
 .stepsnav ul li.incomplete a,
 .substepsnav ul li.incomplete a {
@@ -62,8 +68,8 @@
 .stepsnav ul li a span.number {
     font-weight:bold;
 }
-.stepsnav ul li a.small {
-    font-size:0.6em;
+.stepsnav ul li a span.small {
+    font-size: 0.7em;
 }
 
 .substepsnav ul li {
@@ -92,6 +98,11 @@
     font-size: 1.3em;
     margin-left: 10px;
     padding:10px 20px;
+    text-decoration:none;
+}
+.form-footer a:hover,
+.form-footer input[type="submit"]:hover {
+    opacity:0.8;
 }
 .form-footer a.prev {
     background-color:#999;
@@ -101,4 +112,37 @@
 }
 .form-footer {
     text-align: right;
+}
+ul.errors {
+    color: red;
+    font-weight: bold;
+    list-style-type: none;
+    margin: 0;
+    padding: 0 0 5px 10px;
+    list-style-type:none;
+}
+h1 {
+    font-size: 2.3em;
+    font-weight: normal;
+    padding-bottom: 5px;
+}
+div#flash-messages {
+    background-color: red;
+    margin: 0;
+    padding: 0;
+}
+#flash-messages ul {
+    color: #fff;
+    font-size: 1.4em;
+    font-weight: bold;
+    list-style-type: none;
+    margin: 0 auto;
+    max-width: 1024px;
+    padding: 0;
+}
+#flash-messages li {
+    padding: 7px 0;
+}
+div#header nav {
+    margin: 0;
 }

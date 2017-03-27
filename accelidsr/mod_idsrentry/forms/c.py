@@ -6,6 +6,7 @@ from accelidsr.mod_idsrentry import getCountiesChoices
 from accelidsr.mod_idsrentry import getDistrictChoices
 from accelidsr.mod_idsrentry.forms import registerStepForm
 from accelidsr.mod_idsrentry.forms.baseform import AbstractIdsrEntryStepForm
+from accelidsr.mod_idsrentry.validators import DynamicDataValidator
 
 STEP = ('C', 'Patient Basic information')
 
@@ -62,9 +63,28 @@ class IdsrEntryStepC2Form(AbstractIdsrEntryStepForm):
     """
     Form for "Step C - Patient Basic information" from IDSR Form.
     """
-    patient_county_of_residence = SelectField('Patient County of Residence', choices=getCountiesChoices(), validators=[DataRequired(), ])
-    patient_district_of_residence = SelectField('Patient District of Residence', choices=getDistrictChoices(), validators=[DataRequired(), ])
-    patient_community_of_residence = TextField('Patient Community of Residence', validators=[DataRequired(), Length(min=3)])
+    patient_county_of_residence = SelectField(
+        'Patient County of Residence',
+        choices=getCountiesChoices(),
+        validators=[DataRequired(), ])
+
+    patient_district_of_residence = SelectField(
+        'Patient District of Residence',
+        choices=getDistrictChoices(),
+        validators=[DataRequired(), DynamicDataValidator(), ],)
+
+    patient_community_of_residence = TextField(
+        'Patient Community of Residence',
+        validators=[DataRequired(), Length(min=3)])
+
+    def initFromIdsrObject(self, idsrobj=None):
+        super(IdsrEntryStepC2Form, self).initFromIdsrObject(idsrobj)
+        # We need first to assign the choices to fields their values are
+        # rendered dynamically
+        county = self.patient_county_of_residence.data
+        district = self.patient_district_of_residence.data
+        districts = getDistrictChoices(county)
+        self.patient_district_of_residence.choices = districts
 
 registerStepForm(clazz=IdsrEntryStepC2Form, step=STEP, substep=2)
 

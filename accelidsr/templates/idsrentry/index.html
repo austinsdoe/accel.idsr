@@ -46,6 +46,25 @@ IDSR Input Form
                 }, "json");
             });
 
+            // Updates the selection list of district in accordance with the
+            // selected option from the reporting county selection list
+            $('select[id="patient_county_of_residence"]').change(function (e) {
+                var country = $(this).val();
+                $.post( "/idsrentry/@@json/getDistrictChoices", { county: country, }, function(data) {
+                    $('select[id="patient_district_of_residence"] option').remove();
+                    $('input[id="patient_district_of_residence_dynamic"]').val('');
+                    vals = []
+                    $.each(data, function( i, val ) {
+                        var option = '<option value='+val[0]+'>'+val[1]+'</option>';
+                        $('select[id="patient_district_of_residence"]').append(option);
+                        if (val[0] != '') {
+                            vals.push(val[0]);
+                        }
+                    });
+                    $('input[id="patient_district_of_residence_dynamic"]').val(vals.join('|'));
+                }, "json");
+            });
+
             // Updates the selection list of facilities in accordance with the
             // selected option from the reporting county and district selection
             // lists
@@ -79,6 +98,7 @@ IDSR Input Form
 {% endblock %}
 
 {% block content %}
+<h1>IDSR Form Submission</h1>
 {% from "idsrentry/_formhelpers.html" import render_stepsnav %}
 {% from "idsrentry/_formhelpers.html" import render_substepsnav %}
 {% from "idsrentry/_formhelpers.html" import render_fields %}
