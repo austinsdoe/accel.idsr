@@ -2,8 +2,16 @@ from werkzeug.security import check_password_hash, generate_password_hash
 
 class User():
 
-    def __init__(self, id):
+    def __init__(self, id, username, role):
         self.id = id
+        self.username = username
+        self.role = role
+
+    def is_admin(self):
+        return self.role == 'admin'
+
+    def get_username(self):
+        return self.username
 
     def is_authenticated(self):
         return True

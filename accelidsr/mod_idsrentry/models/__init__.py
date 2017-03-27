@@ -1,31 +1,78 @@
 from accelidsr import db
 from bson import ObjectId
-from idsr import Idsr
+from flask import flash
+import sys
 import bson
 
-def fetch_idsr(id):
-    """
-    Fetch an idsrform from the database and returns its Idsr object.
-    If id is empty, no idsrform found for the given id or more than one
-    record for the given, id returns None.
+def find_all(collection, sort='desc'):
+    if not collection:
+        return None
+    col = db.get_collection(collection)
+    sortorder = 1 if sort == 'asc' else -1
+    docs = col.find().sort('$natural', sortorder)
+    return docs
 
-    :param id: Unique identifier for the idsrform to be retrieved
-    :type id: 12-byte input or a 24-character hex string
-    :returns: The Idsr object that corresponds to the given id
-    """
-    if not id:
+
+def fetch_by_id(id, collection):
+    if not id or not collection:
         return None
 
-    doc = None
+    col = db.get_collection(collection)
     try:
-        doc = db.idsrform.find_one({'_id':  ObjectId(str(id))})
+        doc = col.find_one({'_id':  ObjectId(str(id))})
+        if doc:
+            return doc
+        return None
     except bson.errors.InvalidId:
         # Ops, the id provided is not valid
         return None
 
-    if not doc or len(doc) > 1:
+def save(dbobj):
+    if not dbobj or not dbobj.getCollection():
+        flash("No object or collection specifed", category='error')
         return None
-
-    idsr = Idsr(id)
-    # TODO Initialize the object values with db data
-    return idsr
+    col = db.get_collection(dbobj.getCollection())
+    objid = dbobj.getId()
+    objdict = dbobj.getDict()
+    # Remove the _id from the dict to save. We want mongoDB to create the
+    # ids automatically (if record doesn't exist yet) or update the record
+    # without updating the value for _id
+    del objdict['_id']
+    if objid:
+        #try:
+        out = col.update_one(
+           {"_id": ObjectId(str(objid))},
+           {"$set": objdict },
+           upsert=True)
+        modifcount = out.modified_count
+        if modifcount == 0:
+            newid = out.upserted_id
+            if newid:
+                newid = str(newid)
+                objdict['_id'] = newid.toString()
+                dbobj.update(objdict)
+                return dbobj
+            objdict['_id'] = objid
+            return None
+        if modifcount == 1:
+            objdict['_id'] = objid
+            return dbobj
+        else:
+            # More than one record updated?
+            objdict['_id'] = objid
+            flash("More than one record updated!", category='error')
+            return None
+        #except:
+        #    flash('Unexpected error: %s' % sys.exc_info()[0])
+        #    return None
+    else:
+        # This is a new object. Needs to be inserted
+        out = col.insert_one(objdict)
+        newid = out.inserted_id
+        if out:
+            newid = str(newid)
+            objdict['_id'] = newid
+            dbobj.update(objdict)
+            return dbobj
+        objdict['_id'] = objid
+        return False

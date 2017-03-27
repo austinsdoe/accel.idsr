@@ -1,14 +1,31 @@
-<html>
-<head>
-    <title>User Creation Page</title>
-</head>
-<body>
-<form action="" method="post" name="createuser">
-    {{ form.hidden_tag() }}
-    <div>{{ form.username.label }}: {{ form.username(class="css_class") }}</div>
-    <div>{{ form.password.label }}: {{ form.password() }}</div>
-    <div>{{ form.email.label }}: {{ form.email }}</div>
-    <div>{{ form.submit.label }}: {{ form.submit }}</div>
+{% extends "base.html" %}
+
+{% block title %}
+IDSR Input Form
+{% endblock %}
+
+{% block head %}
+    {{ super() }}
+    <!-- JQuery and JQueryUI -->
+    <script type="text/javascript" src="{{ url_for('static', filename='js/jquery-3.1.1.min.js') }} "></script>
+    <script type="text/javascript" src="{{ url_for('static', filename='jqueryui/jquery-ui.min.js') }} "></script>
+    <script type="text/javascript" src="{{ url_for('static', filename='js/jquery.validate.js') }}"></script>
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='jqueryui/jquery-ui.min.css') }}"/>
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='jqueryui/jquery-ui.structure.min.css') }}"/>
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/new.css') }}"/>
+{% endblock %}
+
+{% block content %}
+<h1>New user</h1>
+
+<form action="" method="post" id="createuser" name="createuser">
+    <div class='form'>
+      {{ form.hidden_tag() }}
+      <div class="formline required">{{ form.username.label }}: {{ form.username() }}</div>
+      <div class="formline required">{{ form.password.label }}: {{ form.password() }}</div>
+      <div class="formline required">{{ form.email.label }}: {{ form.email() }}</div>
+      <div class="formline required">{{ form.role.label }}: {{ form.role() }}</div>
+    </div>
+    <div>{{ form.submit }}</div>
 </form>
-</body>
-</html>
+{% endblock %}

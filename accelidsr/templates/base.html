@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    {% block head %}
+    <title>{% block title %}{% endblock %} - ACCEL IDSR</title>
+    <!-- JQuery and JQueryUI -->
+    <script type="text/javascript" src="{{ url_for('static', filename='js/jquery-3.1.1.min.js') }} "></script>
+    <script type="text/javascript" src="{{ url_for('static', filename='jqueryui/jquery-ui.min.js') }} "></script>
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='jqueryui/jquery-ui.min.css') }}"/>
+    <link rel="stylesheet" type="text/css"
+          href="{{ url_for('static', filename='jqueryui/jquery-ui.structure.min.css') }}"/>
+
+    <!-- Bootstrap things -->
+    <script type="text/javascript" src="{{ url_for('static', filename='bootstrap/js/bootstrap.min.js') }} "></script>
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='bootstrap/css/bootstrap.min.css') }}"/>
+
+    <!-- This contains the configuration of the entire steps-form -->
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/dataclerk_task_selection.css') }}"/>
+    {% endblock %}
+</head>
+<body>
+    <div id='header'>
+        <nav class="navbar navbar-inverse">
+            <div class="container-fluid">
+                {% if current_user.is_authenticated %}
+                <ul class="nav navbar-nav">
+                    <li><a href="/dashboard/idsrlist">Dashboard</a></li>
+                    <li><a href="/idsrentry">New IDSR</a></li>
+                    {%if current_user.is_admin() %}
+                    <li><a href="/auth/users">Users</a></li>
+                    {% endif %}
+                </ul>
+                {% endif %}
+                <ul class="nav navbar-nav navbar-right">
+                    {% if current_user.is_authenticated %}
+                        <li><a href="/"><span class="glyphicon glyphicon-user"></span> {{ current_user.username }}</a></li>
+                         <li><a href="/auth/logout"><span class="glyphicon glyphicon-log-in"></span> Logout</a></li>
+                    {% endif %}
+                    {% if not current_user.is_authenticated %}
+                        <li><a href="#"><span class="glyphicon glyphicon-log-in"></span> Login</a></li>
+                    {% endif %}
+                </ul>
+            </div>
+        </nav>
+    </div>
+    {% with messages = get_flashed_messages(category_filter=['info']) %}
+      {% if messages %}
+    <div id="flash-messages" class='info'>
+        <ul>
+        {% for message in messages %}
+            <li>{{ message }} </li>
+        {% endfor %}
+        </ul>
+    </div>
+      {% endif %}
+    {% endwith %}
+    {% with errors = get_flashed_messages(category_filter=['error']) %}
+      {% if errors %}
+    <div id="flash-messages" class='error'>
+        <ul>
+        {% for message in errors %}
+            <li>{{ message }} </li>
+        {% endfor %}
+        </ul>
+    </div>
+      {% endif %}
+    {% endwith %}
+    <div id="content">
+        {% block content %}{% endblock %}
+    </div>
+    <div id="footer">
+        {% block footer %}
+        ACCEL IDSR Project, 2017
+        {% endblock %}
+    </div>
+</body>
+</html>

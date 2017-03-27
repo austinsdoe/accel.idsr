@@ -13,18 +13,6 @@ import flask_login
 import bcrypt
 import json
 
-
-@app.route('/', methods=['GET', 'POST'])
-@login_required
-def index():
-    return render_template('dataclerk_task_selection.html')
-
-@app.route('/dataclerk-task-selection')
-@login_required
-def dataclerk_task_selection():
-    return render_template("dataclerk_task_selection.html")
-
-
 @app.route('/idsr-partial')
 @login_required
 def idsr_partial():

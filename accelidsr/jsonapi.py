@@ -63,8 +63,6 @@ class JSONAPI(object):
 
     def update(self, **kwargs):
         url = '/'.join([self.jsonapi_url, 'update'])
-        import pdb;
-        pdb.set_trace();
         pass
         f = self.opener.open(url, data=urllib.urlencode(kwargs))
         data = f.read()

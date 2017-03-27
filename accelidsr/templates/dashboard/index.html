@@ -1,0 +1,72 @@
+{% extends "base.html" %}
+
+{% block title %}
+IDSR Input Form
+{% endblock %}
+
+{% block head %}
+    {{ super() }}
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/new.css') }}"/>
+    <script type='text/javascript'>
+    (function ($) {
+        $(document).ready(function () {
+            $('#filter-my').click(function(e){
+                e.preventDefault();
+                $('div.items-table table tr[data-created]').hide();
+                $('div.items-table table tr[data-created="{{ current_user.get_username() }}"]').show();
+                $(this).addClass('current');
+                $('#filter-all').removeClass('current');
+            });
+            $('#filter-all').click(function(e){
+                e.preventDefault();
+                $('div.items-table table tr[data-created]').show();
+                $(this).addClass('current');
+                $('#filter-my').removeClass('current');
+            });
+        });
+    })(jQuery);
+    </script>
+{% endblock %}
+
+{% block content %}
+<h1>Dashboard</h1>
+<div class='buttons-bar'>
+    <a href="/idsrentry/a">New IDSR Form</a>
+</div>
+<div class='filters'>
+    <a id='filter-all' class='current' href="#">All IDSRs</a>
+    <a id='filter-my' href="#">My IDSRs</a>
+</div>
+<div class='items-table'>
+{% from "dashboard/macros.html" import render_idsr_table_header %}
+{% from "dashboard/macros.html" import render_idsr_row %}
+<table>
+    <thead>
+        {{ render_idsr_table_header(items) }}
+    </thead>
+    <tbody>
+        {% for idsrobj in items %}
+        {% set idsrdict = idsrobj.getDict() %}
+        {% set idobj = idsrobj.getId() %}
+        {% set statuses = ['a', 'b', 'c', 'd'] %}
+        <tr class="{{ loop.cycle('odd', 'even') }}" data-created="{{ idsrdict.get('createdby', 'unk') }}">
+            <td class='status'>
+                {% for st in statuses %}
+                    <a href="/idsrentry/{{ st }}?id={{ idobj }}" class="{{ idsrdict.get('idsr-status-'+st, 'empty') }}">{{ st }}</a>
+                {% endfor %}
+            </td>
+            {% set repdate = idsrdict.get('reporting_date', '') %}
+            {% set repdatf = repdate.strftime('%d/%m/%Y') if repdate else '' %}
+            <td>{{ repdatf }}</td>
+            <td>{{ idsrdict.get('case_id', '') }}</td>
+            <td>{{ idsrdict.get('reporting_country', '') }}</td>
+            <td>{{ idsrdict.get('reporting_district', '') }}</td>
+            <td>{{ idsrdict.get('reporting_health_facility', '') }}</td>
+            <td>{{ idsrdict.get('createdby', '')}}</td>
+            <td>{{ idsrobj.created() }}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+</div>
+{% endblock %}

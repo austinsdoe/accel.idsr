@@ -1,0 +1,249 @@
+#content {
+    margin: 0 auto;
+    padding: 0;
+    width: 1024px;
+}
+#footer {
+    text-align:center;
+    color:#333;
+    font-size:0.9em;
+}
+.stepsnav ul,
+.substepsnav ul {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+}
+.stepsnav ul:after,
+.substepsnav ul:after {
+    visibility: hidden;
+    display: block;
+    font-size: 0;
+    content: " ";
+    clear: both;
+    height: 0;
+}
+.stepsnav ul li {
+    float: left;
+    font-size: 1.8em;
+    padding: 10px;
+}
+.stepsnav ul li:first-child,
+.substepsnav ul li:first-child {
+    padding-left:0;
+}
+.stepsnav ul li:last-child,
+.substepsnav ul li:last-child {
+    padding-right:0;
+}
+.stepsnav ul li a,
+.substepsnav ul li a {
+    background-color:#aaa;
+    border-radius: 5px;
+    color: #fff;
+    display: block;
+    line-height: 100%;
+    padding: 20px;
+    text-decoration:none;
+    line-height:130%;
+    opacity:0.3;
+}
+.stepsnav ul li a:hover,
+.substepsnav ul li a:hover {
+    opacity:0.7;
+}
+.stepsnav ul li.current a,
+.substepsnav ul li.current a  {
+    background-color:#ffa100;
+    opacity:1;
+}
+.stepsnav ul li.incomplete a,
+.substepsnav ul li.incomplete a {
+    background-color:red;
+}
+.stepsnav ul li.complete a,
+.substepsnav ul li.complete a {
+    background-color: green;
+}
+.stepsnav ul li a span.number {
+    font-weight:bold;
+}
+.stepsnav ul li a span.small {
+    font-size: 0.7em;
+}
+
+.substepsnav ul li {
+    float:left;
+    font-size:1.2em;
+    padding:5px;
+    width:70px;
+}
+.substepsnav ul li a {
+    padding:10px;
+}
+.form,
+.form-footer {
+    padding:30px;
+    border-radius:5px;
+    background-color:#efefef;
+    margin:20px 0;
+}
+
+.form-footer a,
+.form-footer input[type="submit"] {
+    background-color: green;
+    border: medium none;
+    border-radius: 5px;
+    color: #fff;
+    font-size: 1.3em;
+    margin-left: 10px;
+    padding:10px 20px;
+    text-decoration:none;
+}
+.form-footer a:hover,
+.form-footer input[type="submit"]:hover {
+    opacity:0.8;
+}
+.form-footer a.prev,
+.form-footer a.cancel {
+    background-color:#999;
+}
+.form-footer input[type="submit"] {
+    padding: 8px 20px;
+}
+.form-footer {
+    text-align: right;
+}
+ul.errors {
+    color: red;
+    font-weight: bold;
+    list-style-type: none;
+    margin: 0;
+    padding: 0 0 5px 10px;
+    list-style-type:none;
+}
+h1 {
+    font-weight: normal;
+    padding-bottom: 5px;
+}
+div#flash-messages {
+    margin: 0;
+    padding: 0;
+}
+div#flash-messages.error {
+    background-color:red;
+}
+div#flash-messages.info {
+    background-color:green;
+}
+#flash-messages ul {
+    color: #fff;
+    font-size: 1.4em;
+    font-weight: bold;
+    list-style-type: none;
+    margin: 0 auto;
+    max-width: 1024px;
+    padding: 0;
+}
+#flash-messages li {
+    padding: 7px 0;
+}
+div#header nav {
+    margin: 0;
+}
+
+div.formline {
+    padding:5px;
+}
+div.required::before {
+    color:red;
+    content: "*";
+}
+.items-table table {
+    width:100%
+}
+.items-table table tr td {
+    padding: 5px 5px 5px 0;
+}
+.items-table table tr td.status a {
+    color: #fff;
+    font-size: 0.9em;
+    font-weight: bold;
+    padding: 2px 4px;
+    text-decoration: none;
+    text-transform: uppercase;
+}
+.items-table table tr td.status a:hover {
+    opacity:0.7;
+}
+.items-table table tr td.status a.empty {
+    background-color:#999;
+}
+.items-table table tr td.status a.complete {
+    background-color:green;
+}
+.items-table table tr td.status a.incomplete {
+    background-color:red;
+}
+.items-table table tr.even {
+    background-color: #e9e9e9;
+}
+.items-table table tr th {
+    border-bottom:1px solid #cdcdcd;
+}
+.items-table table tr th {
+    padding:4px 0;
+}
+div.buttons-bar {
+    margin-bottom: 10px;
+    margin-left: 860px;
+    position: absolute;
+    top: 80px;
+}
+div.buttons-bar a, div.buttons-bar input[type="submit"] {
+    background-color: green;
+    border: medium none;
+    border-radius: 5px;
+    color: #fff;
+    font-size: 1.1em;
+    line-height: 35px;
+    margin-left: 10px;
+    padding: 7px 20px;
+    text-decoration: none;
+}
+div.buttons-bar a:hover,
+div.buttons-bar input[type="submit"]:hover {
+    opacity:0.8;
+}
+div.buttons-bar input[type="submit"] {
+    padding: 8px 20px;
+}
+div.buttons-bar  {
+    text-align: right;
+}
+#footer {
+    margin-top:40px;
+    padding:20px 0;
+    font-size:0.9em;
+    color:#333;
+}
+#header div.container-fluid {
+    max-width: 1024px;
+    padding-left:0px;
+}
+div.filters > a {
+    border: 1px solid #337ab7;
+    border-radius: 5px;
+    line-height: 140%;
+    margin-right: 5px;
+    padding: 3px 10px;
+    text-decoration: none;
+}
+div.filters {
+    padding-bottom:10px;
+}
+div.filters > a:hover,
+div.filters > a.current {
+    background-color: #337ab7;
+    color: #fff;
+}

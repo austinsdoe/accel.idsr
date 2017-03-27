@@ -1,0 +1,79 @@
+{% macro render_field(form, field) %}
+  {% if field.type == "HiddenField" %}
+    {{ field(**kwargs)|safe }}
+  {% elif field.name != 'csrf_token' %}
+      {% if field.flags.required %}
+      <div class="formline required">
+      {% else %}
+      <div class="formline">
+      {% endif %}
+      {% if field.type == "BooleanField" %}
+        {{ field(**kwargs)|safe }} {{ field.label }}
+      {% else %}
+        {% if field.flags.required %}
+            {{ field.label }}: {{ field(required='', **kwargs)|safe }}
+        {% else %}
+            {{ field.label }}: {{ field(**kwargs)|safe }}
+        {% endif %}
+        {% if field.flags.dynamic %}
+            <input type="hidden" name="{{ field.id }}_dynamic" id="{{ field.id }}_dynamic" value="{{ form.stringify(field.choices) }}"/>
+        {% endif %}
+      {% endif %}
+      {% if field.errors %}
+        <ul class=errors>
+        {% for error in field.errors %}
+          <li>{{ error }}</li>
+        {% endfor %}
+        </ul>
+      {% endif %}
+      </div>
+  {% endif %}
+{% endmacro %}
+
+{% macro render_fields(form, steps) %}
+    {% for field in form.getFields() %}
+        {% if field.type != 'SubmitField' %}
+            {{ render_field(form, field) }}
+        {% endif %}
+    {% endfor %}
+{% endmacro %}
+
+{% macro render_formfooter(form) %}
+<a class='cancel' href='/'>Cancel</a>
+{% if not form.isFirstSubstep() %}
+    <a class='prev' href='/idsrentry/{{ form.getPrevStepId() }}{% if form.idobj.data %}?id={{ form.idobj.data }} {% endif %}'>Previous</a>
+{% endif %}
+{{ form.submit }}
+{% endmacro %}
+
+{% macro render_stepsnav(form, steps) %}
+{% set idsrdict = form.getIdsrObject().getDict() if form.getIdsrObject() else {} %}
+<div class='stepsnav'>
+    <ul>
+{% for step in steps %}
+    {% set cssstatus = idsrdict.get('idsr-status-'+step['id'].lower(), 'empty') %}
+    {% set csscurrent = 'current' if form.step.lower() == step['id'].lower() else '' %}
+    {% set cssname = ' '.join([cssstatus, csscurrent]) %}
+    {% set idobj = form.getDict().get('_id', '') %}
+    {% set urlparams = '?id='+idobj if idobj else '' %}
+    <li class='{{ cssname }}'><a href="/idsrentry/{{ ''.join([step['id'],urlparams]) }}"><span class='number'>{{ step['id'].upper() }}</span><span class='small'><br/>{{ step['title'] }}</span></a></li>
+{% endfor %}
+    </ul>
+</div>
+{% endmacro %}
+
+{% macro render_substepsnav(form) %}
+<div class='substepsnav'>
+    <ul>
+{% set idsrdict = form.getIdsrObject().getDict() if form.getIdsrObject() else {} %}
+{% for substep in form.getSubstepIds() %}
+    {% set cssstatus = idsrdict.get('idsr-status-'+form.step.lower()+'_'+substep, 'empty') %}
+    {% set csscurrent = 'current' if form.substep.lower() == substep else '' %}
+    {% set cssname = ' '.join([cssstatus, csscurrent]) %}
+    {% set idobj = form.getDict().get('_id', '') %}
+    {% set urlparams = '?id='+idobj if idobj else '' %}
+    <li class='{{ cssname }}'><a href="/idsrentry/{{ ''.join([form.step.lower()+'_'+substep, urlparams]) }}">{{ form.step.upper() }}.{{ substep }}</a></li>
+{% endfor %}
+    </ul>
+</div>
+{% endmacro%}
