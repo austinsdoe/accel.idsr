@@ -27,9 +27,9 @@ class Idsr(MongoDbBaseObject):
         return None
 
     @staticmethod
-    def findAll():
+    def findAll(sort='desc'):
         outitems = []
-        docs = find_all('idsrform')
+        docs = find_all('idsrform', sort=sort)
         for doc in docs:
             idsr = Idsr(str(doc['_id']))
             idsr.update(doc)

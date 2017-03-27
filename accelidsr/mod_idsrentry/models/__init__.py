@@ -4,11 +4,12 @@ from flask import flash
 import sys
 import bson
 
-def find_all(collection):
+def find_all(collection, sort='desc'):
     if not collection:
         return None
     col = db.get_collection(collection)
-    docs = col.find()
+    sortorder = 1 if sort == 'asc' else -1
+    docs = col.find().sort('$natural', sortorder)
     return docs
 
 
