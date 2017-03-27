@@ -26,6 +26,12 @@ class CreateUserForm(Form):
 
 
 class LoginForm(Form):
-    username = StringField('Username', validators=[DataRequired(), Length(min=4)])
-    password = PasswordField('Password', validators=[DataRequired(), Length(min=4)])
+    username = StringField(
+        'Username',
+        validators=[DataRequired(), Length(min=4)])
+
+    password = PasswordField(
+        'Password',
+        validators=[DataRequired(), Length(min=4)])
+
     submit = SubmitField("Submit")

@@ -18,6 +18,7 @@ from accelidsr.mod_idsrentry.forms import loadStepFormInstance
 # Define the blueprint: 'idsrentry', set its url prefix: app.url/idsrentry
 mod_idsrentry = Blueprint('idsrentry', __name__, url_prefix='/idsrentry')
 
+
 @mod_idsrentry.route('/')
 @login_required
 def idsrentry():
@@ -28,9 +29,23 @@ def idsrentry():
     url = url_for('idsrentry.step', step='a')
     return redirect(url)
 
+
 @mod_idsrentry.route('/@@json/<func>', methods=['GET', 'POST'])
 @login_required
 def json(func):
+    """
+    Perform a call to the passed in function and returns the result in JSON
+    format. It is commonly used for the retrieval of dynamic data via ajax
+    calls, like the districts from a county, the health facilities for a
+    given district, etc.
+    Only accepts requests via POST method, otherwise will return an error
+    message. Any other argument apart from the func param itself will be passed
+    in during the func call as **args. Allowed funcs: any public function
+    declared in accelidsr.mod_idsrentry.json.IdsrJson
+
+    :param func: function to call
+    :type func: string (the name of the function)
+    """
     results = {'error': 'Not a valid function'}
     if request.method == 'POST':
         cargs = request.form.to_dict()
@@ -38,11 +53,14 @@ def json(func):
         results = getattr(json, func)(**cargs)
     return jsonify(results)
 
+
 @mod_idsrentry.route('/<step>', methods=['GET', 'POST'])
 @login_required
 def step(step):
     """
-    Renders the IDSR's form wizard at the step indicated.
+    Renders the IDSR's form wizard at the step (and substep) indicated. For
+    example, if step='a', it will load its first substep (A.1). If the value
+    for the step param is 'd_4', the function will load the form D.4.
     If a parameter 'id' is provided via get or post, the form is displayed with
     the input fields filled with previously submitted data that corresponds to
     the given id, but only if the logged user has enough privileges (the user
@@ -51,10 +69,14 @@ def step(step):
     If an 'id' is provided and the conditions explained above are met but the
     form was already transferred to Bika, then all fields will be filled, but
     in readonly mode.
+    This function is also in charge of saving the form loaded and if so,
+    redirect the user to the next substep within the current step or, if the
+    current substep is the last one, to the next step. In turn, if the current
+    step is the last step from the wizard form, returns to the idsrlist view.
 
-    :param step: the step to load
+    :param step: the step (and/or substep) to load (e.g 'a', 'b_2')
     :param type: string
-    :returns: the html of the form for the passed in step
+    :returns: the html of the form for the passed in step (and/or substep)
     """
     idsrobj = Idsr()
     rawstep = step
@@ -92,7 +114,9 @@ def step(step):
                 if save(idsrobj):
                     nextstep = form.getNextStepId()
                     if nextstep:
-                        url = url_for('idsrentry.step', step=nextstep, id=idsrobj.getId())
+                        url = url_for('idsrentry.step',
+                                      step=nextstep,
+                                      id=idsrobj.getId())
                         return redirect(url)
                     else:
                         # This is the last step. Redirect to main page
@@ -104,7 +128,7 @@ def step(step):
 
         urltemplate = 'idsrentry/index.html'
         return render_template(urltemplate, form=form,
-            steps=getAvailableSteps())
+                               steps=getAvailableSteps())
 
     # No Post submission, check if this is a previously created IDSR record
     id = request.args.get('id')

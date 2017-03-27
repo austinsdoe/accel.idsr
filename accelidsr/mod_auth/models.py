@@ -1,8 +1,19 @@
 from werkzeug.security import check_password_hash, generate_password_hash
 
 class User():
-
+    """
+    Class that represents a user
+    """
     def __init__(self, id, username, role):
+        """
+        Initializes the User object
+        :param id: the unique identifier of the user
+        :type id: string
+        :param username: the username of the user
+        :type username: string
+        :param role: the role of the user
+        :type role: string
+        """
         self.id = id
         self.username = username
         self.role = role

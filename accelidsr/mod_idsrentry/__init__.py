@@ -51,6 +51,7 @@ analysis_profiles = [
     ('genexpert_evd', 'GeneXpert EVD')
 ]
 
+
 def getCountiesChoices():
     """
     Returns a list of 2-tuples that contains the countries available in the
@@ -61,8 +62,8 @@ def getCountiesChoices():
     An additional tuple is added in the first position:
     [(''), 'Select...']
 
-    :return: A list of 2-tuples with the counties sorted by name ascending, with
-        an additional item in position 0: ('', 'Select...')
+    :return: A list of 2-tuples with the counties sorted by name ascending,
+        with an additional item in position 0: ('', 'Select...')
     :rtype: A list of 2-tuples
     """
     # TODO Get available counties from Bika instance
@@ -71,6 +72,7 @@ def getCountiesChoices():
     choices = [(c, c) for c in counties]
     choices.insert(0, ('', 'Select...'))
     return choices
+
 
 def getDistrictChoices(county=None):
     """
@@ -98,6 +100,7 @@ def getDistrictChoices(county=None):
     choices = [(d, d) for d in districts]
     choices.insert(0, ('', 'Select...'))
     return choices
+
 
 def getFacilityChoices(county=None, district=None):
     """
