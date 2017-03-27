@@ -1,5 +1,5 @@
 from wtforms import BooleanField, TextField, TextAreaField, PasswordField, \
-                    validators, HiddenField, DateField, SelectField, \
+                    validators, HiddenField, DateTimeField, SelectField, \
                     SubmitField, RadioField, IntegerField
 from wtforms.validators import DataRequired, Email, Length
 from accelidsr.mod_idsrentry import getCountiesChoices
@@ -14,16 +14,46 @@ class IdsrEntryStepC1Form(AbstractIdsrEntryStepForm):
     """
     Form for "Step C - Patient Basic information" from IDSR Form.
     """
-    patient_anonymous = BooleanField('Anonymous Patient')
-    patient_firstname = TextField('Patient First Name', validators=[DataRequired(), Length(min=3)])
-    patient_middlename = TextField('Patient Middle Name')
-    patient_lastname = TextField('Patient Last Name', validators=[DataRequired(), Length(min=3)])
-    patient_client_patientid = TextField('Client Patient ID', validators=[DataRequired(), Length(min=3)])
-    patient_gender = RadioField('Patient Gender',  default='u', choices=[('u', 'Unknown'), ('m', 'Male'), ('f', 'Female')])
-    patient_dateofbirth = DateField('Date of Birth', format='%d/%m/%Y', validators=[DataRequired(), ])
-    patient_age_years = IntegerField('Patient Age. Years', validators=[DataRequired(),])
-    patient_age_months = IntegerField('Patient Age. Months', validators=[DataRequired(),])
-    patient_age_days = IntegerField('Patient Age. Days', validators=[DataRequired(),])
+    patient_anonymous = BooleanField(
+        'Anonymous Patient')
+
+    patient_firstname = TextField(
+        'Patient First Name',
+        validators=[DataRequired(), Length(min=3)])
+
+    patient_middlename = TextField(
+        'Patient Middle Name')
+
+    patient_lastname = TextField(
+        'Patient Last Name',
+        validators=[DataRequired(), Length(min=3)])
+
+    patient_client_patientid = TextField(
+        'Client Patient ID',
+        validators=[DataRequired(), Length(min=3)])
+
+    patient_gender = RadioField(
+        'Patient Gender',
+        default='u',
+        choices=[('u', 'Unknown'), ('m', 'Male'), ('f', 'Female')])
+
+    patient_dateofbirth = DateTimeField(
+        'Date of Birth',
+        format='%d/%m/%Y',
+        validators=[DataRequired(), ],
+        render_kw={'type': 'date'})
+
+    patient_age_years = IntegerField(
+        'Patient Age. Years',
+        validators=[DataRequired(), ])
+
+    patient_age_months = IntegerField(
+        'Patient Age. Months',
+        validators=[DataRequired(), ])
+
+    patient_age_days = IntegerField(
+        'Patient Age. Days',
+        validators=[DataRequired(), ])
 
 registerStepForm(clazz=IdsrEntryStepC1Form, step=STEP, substep=1)
 

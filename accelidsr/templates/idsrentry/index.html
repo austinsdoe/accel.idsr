@@ -25,7 +25,7 @@ IDSR Input Form
     <script type="text/javascript">
     (function ($) {
         $(document).ready(function () {
-            $("input[type='date']").datepicker();
+            $("input[type='date']").datepicker({ dateFormat: 'dd/mm/yy' });
 
             // Updates the selection list of district in accordance with the
             // selected option from the reporting county selection list

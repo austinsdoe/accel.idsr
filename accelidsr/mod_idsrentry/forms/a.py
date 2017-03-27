@@ -18,7 +18,7 @@ class IdsrEntryStepA1Form(AbstractIdsrEntryStepForm):
     """
     reporting_date = DateTimeField(
         'Reporting Date',
-        format='%d/%M/%Y',
+        format='%d/%m/%Y',
         validators=[DataRequired() ],
         render_kw={'type': 'date'})
 

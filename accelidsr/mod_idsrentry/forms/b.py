@@ -1,5 +1,5 @@
 from wtforms import BooleanField, TextField, TextAreaField, PasswordField, \
-                    validators, HiddenField, DateField, SelectField, \
+                    validators, HiddenField, DateTimeField, SelectField, \
                     SubmitField, RadioField
 from wtforms.validators import DataRequired, Email, Length
 from accelidsr.mod_idsrentry import getDiagnosisChoices
