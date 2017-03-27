@@ -3,19 +3,21 @@ from wtforms import BooleanField, TextField, TextAreaField, PasswordField, \
                     SubmitField, RadioField
 from wtforms.validators import DataRequired, Email, Length
 from accelidsr.mod_idsrentry import getDiagnosisChoices
-from accelidsr.mod_idsrentry.forms import AbstractIdsrEntryStepForm
+from accelidsr.mod_idsrentry.forms import registerStepForm
+from accelidsr.mod_idsrentry.forms.baseform import AbstractIdsrEntryStepForm
 
-class IdsrEntryStepBForm(AbstractIdsrEntryStepForm):
+STEP = ('B', 'Diagnosis information')
+
+
+class IdsrEntryStepB1Form(AbstractIdsrEntryStepForm):
     """
     Form for "Step B - Diagnosis information" from IDSR Form.
     """
-    step = 'B'
+    diagnosis = RadioField(
+        'Diagnosis or Condition',
+        choices=getDiagnosisChoices(),
+        validators=[DataRequired(), ])
 
-    # Step B.1
-    diagnosis = RadioField('Diagnosis or Condition', choices=getDiagnosisChoices(), validators=[DataRequired(), ])
     diagnosis_other = TextField('Other diagnosis')
 
-    def getSubsteps(self):
-        return [
-            [self.diagnosis, self.diagnosis_other],
-        ]
+registerStepForm(clazz=IdsrEntryStepB1Form, step=STEP, substep=1)

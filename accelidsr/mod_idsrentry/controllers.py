@@ -8,11 +8,11 @@ from flask import url_for
 from flask_login import login_required
 from accelidsr.mod_idsrentry.models import save
 from accelidsr.mod_idsrentry.models.idsr import Idsr
+from accelidsr.mod_idsrentry.json import IdsrJson
 from accelidsr.mod_idsrentry.forms import getAvailableSteps
 from accelidsr.mod_idsrentry.forms import getNextStepId
-from accelidsr.mod_idsrentry.forms import newIdsrEntryForm
-from accelidsr.mod_idsrentry.forms import loadIdsrEntryForm
-from accelidsr.mod_idsrentry.json import IdsrJson
+from accelidsr.mod_idsrentry.forms import newStepFormInstance
+from accelidsr.mod_idsrentry.forms import loadStepFormInstance
 
 # Define the blueprint: 'idsrentry', set its url prefix: app.url/idsrentry
 mod_idsrentry = Blueprint('idsrentry', __name__, url_prefix='/idsrentry')
@@ -56,11 +56,15 @@ def step(step):
     :returns: the html of the form for the passed in step
     """
     idsrobj = Idsr()
+    rawstep = step
+    tokens = step.split('_')
+    step = tokens[0] if tokens else step
+    substep = tokens[1] if len(tokens) > 1 else 1
     # Is this a post and form submission?
     if request.method == 'POST':
         # Get the form that suits with the current step, loaded
         # with the vars from request.form
-        form = loadIdsrEntryForm(reqform=request.form)
+        form = loadStepFormInstance(requestform=request.form)
         # We need first to assign the choices to fields their values have been
         # rendered dynamically to prevent the validation to fail.
         # Used for fields like District SelectField, loaded dynamically when
@@ -82,7 +86,7 @@ def step(step):
             if idsrobj:
                 idsrobj.update(formdict)
                 if save(idsrobj):
-                    nextstep = getNextStepId(step)
+                    nextstep = form.getNextStepId()
                     if nextstep:
                         url = url_for('idsrentry.step', step=nextstep, id=idsrobj.getId())
                         return redirect(url)
@@ -107,11 +111,12 @@ def step(step):
             pass
         else:
             flash("No IDSR Form found")
-            url = url_for('idsrentry.step', step=step)
+            url = url_for('idsrentry.step', step=rawstep)
             return redirect(url)
 
     # Get the suitable form in accordance with the step
-    form = newIdsrEntryForm(idsrobj, step)
+    form = newStepFormInstance(step, substep)
+    form.initFromIdsrObject(idsrobj)
 
     # Render the Html template
     urltemplate = 'idsrentry/index.html'

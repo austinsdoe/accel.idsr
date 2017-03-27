@@ -12,6 +12,7 @@ IDSR Input Form
     <script type="text/javascript" src="{{ url_for('static', filename='js/jquery.validate.js') }}"></script>
     <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='jqueryui/jquery-ui.min.css') }}"/>
     <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='jqueryui/jquery-ui.structure.min.css') }}"/>
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/new.css') }}"/>
     <style>
         div.formline {
             padding:5px;
@@ -79,14 +80,18 @@ IDSR Input Form
 
 {% block content %}
 {% from "idsrentry/_formhelpers.html" import render_stepsnav %}
-{% from "idsrentry/_formhelpers.html" import render_substeps %}
+{% from "idsrentry/_formhelpers.html" import render_substepsnav %}
+{% from "idsrentry/_formhelpers.html" import render_fields %}
+{% from "idsrentry/_formhelpers.html" import render_formfooter %}
 {{ render_stepsnav(form, steps) }}
+{{ render_substepsnav(form)}}
 <form action="" method="post" id="{{ form.step }}" name="{{ form.step }}">
+    <div class='form'>
     {{ form.hidden_tag() }}
-    {{ render_substeps(form, steps) }}
-    <div>
-        {{ form.formstep(value=form.step.lower()) }}
-        {{ form.idobj(value='1') }}
+    {{ render_fields(form, steps) }}
+    </div>
+    <div class="form-footer">
+    {{ render_formfooter(form) }}
     </div>
 </form>
 {% endblock %}

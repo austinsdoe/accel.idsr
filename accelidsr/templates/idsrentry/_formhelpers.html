@@ -1,53 +1,48 @@
 {% macro render_field(field) %}
-  {% if field.flags.required %}
-  <div class="formline required">
+  {% if field.type == "HiddenField" %}
+    {{ field(**kwargs)|safe }}
   {% else %}
-  <div class="formline">
+      {% if field.flags.required %}
+      <div class="formline required">
+      {% else %}
+      <div class="formline">
+      {% endif %}
+      {% if field.type == "BooleanField" %}
+        {{ field(**kwargs)|safe }} {{ field.label }}
+      {% else %}
+        {% if field.flags.required %}
+            {{ field.label }}: {{ field(required='', **kwargs)|safe }}
+        {% else %}
+            {{ field.label }}: {{ field(**kwargs)|safe }}
+        {% endif %}
+        {% if field.flags.dynamic %}
+            <input type="hidden" name="{{ field.id }}_dynamic" id="{{ field.id }}_dynamic" />
+        {% endif %}
+      {% endif %}
+      {% if field.errors %}
+        <ul class=errors>
+        {% for error in field.errors %}
+          <li>{{ error }}</li>
+        {% endfor %}
+        </ul>
+      {% endif %}
+      </div>
   {% endif %}
-  {% if field.type == "BooleanField" %}
-    {{ field(**kwargs)|safe }} {{ field.label }}
-  {% else %}
-    {% if field.flags.required %}
-        {{ field.label }}: {{ field(required='', **kwargs)|safe }}
-    {% else %}
-        {{ field.label }}: {{ field(**kwargs)|safe }}
-    {% endif %}
-    {% if field.flags.dynamic %}
-        <input type="hidden" name="{{ field.id }}_dynamic" id="{{ field.id }}_dynamic" />
-    {% endif %}
-  {% endif %}
-  {% if field.errors %}
-    <ul class=errors>
-    {% for error in field.errors %}
-      <li>{{ error }}</li>
-    {% endfor %}
-    </ul>
-  {% endif %}
-  </div>
 {% endmacro %}
 
-{% macro render_substeps(form, steps) %}
-{% for step in form.getSubsteps() %}
-    <div id='substep-{{ loop.index }}' class="substep" {% if not loop.first %} style="display:none" {% endif %}>
-    <h2>{{ form.step }}.{{ loop.index }}</h2>
-    {% for field in step %}
-        {{ render_field(field) }}
+{% macro render_fields(form, steps) %}
+    {% for field in form.getFields() %}
+        {% if field.type != 'SubmitField' %}
+            {{ render_field(field) }}
+        {% endif %}
     {% endfor %}
-    <div class="form-footer">
-    {% if not loop.first %}
-        <a class='prev navlink' href='#substep-{{ loop.index - 1 }}'>Previous</a>
-    {% elif form.idobj.data %}
-        {# Is the first substep, but not from the first step of the serie #}
-        <a class='prev' href='/idsrentry/{{ form.getPrevStepId() }}{% if form.idobj.data %}?id={{ form.idobj.data }} {% endif %}'>Previous</a>
-    {% endif %}
-    {% if loop.last %}
-        {{ form.submit }}
-    {% else %}
-        <a class='next navlink' href='#substep-{{ loop.index + 1 }}'>Next</a>
-    {% endif %}
-    </div>
-    </div>
-{% endfor %}
+{% endmacro %}
+
+{% macro render_formfooter(form) %}
+{% if not form.isFirstSubstep() %}
+    <a class='prev' href='/idsrentry/{{ form.getPrevStepId() }}{% if form.idobj.data %}?id={{ form.idobj.data }} {% endif %}'>Previous</a>
+{% endif %}
+{{ form.submit }}
 {% endmacro %}
 
 {% macro render_stepsnav(form, steps) %}
@@ -55,11 +50,25 @@
     <ul>
 {% for step in steps %}
     {% if form.step.lower() == step['id'] %}
-        <li class='current'><a href="/idsrentry/{{ step['id'] }}">{{ step['id'].upper()+'. '+step['title'] }}</a></li>
+        <li class='current'><a href="/idsrentry/{{ step['id'] }}"><span class='number'>{{ step['id'].upper() }}</span><span class='small'><br/>{{ step['title'] }}</span></a></li>
     {% else %}
-        <li><a href="/idsrentry/{{ step['id'] }}">{{ step['id'].upper()+'. '+step['title'] }}</a></li>
+        <li><a href="/idsrentry/{{ step['id'] }}"><span class='number'>{{ step['id'].upper() }}</span><span class='small'><br/>{{ step['title'] }}</span></a></li>
     {% endif %}
 {% endfor %}
     </ul>
 </div>
 {% endmacro %}
+
+{% macro render_substepsnav(form) %}
+<div class='substepsnav'>
+    <ul>
+{% for substep in form.getSubstepIds() %}
+    {% if form.substep.lower() == substep %}
+        <li class='current'><a href="/idsrentry/{{ form.step.upper()+'_'+substep }}">{{ form.step.upper() }}.{{ substep }}</a></li>
+    {% else %}
+        <li><a href="/idsrentry/{{ form.step.upper()+'_'+substep }}">{{ form.step.upper() }}.{{ substep }}</a></li>
+    {% endif %}
+{% endfor %}
+    </ul>
+</div>
+{% endmacro%}
