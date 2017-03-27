@@ -122,7 +122,6 @@ ul.errors {
     list-style-type:none;
 }
 h1 {
-    font-size: 2.3em;
     font-weight: normal;
     padding-bottom: 5px;
 }
@@ -150,4 +149,81 @@ div#flash-messages.info {
 }
 div#header nav {
     margin: 0;
+}
+
+div.formline {
+    padding:5px;
+}
+div.required::before {
+    color:red;
+    content: "*";
+}
+.items-table table {
+    width:100%
+}
+.items-table table tr td {
+    padding: 5px 5px 5px 0;
+}
+.items-table table tr td.status a {
+    color: #fff;
+    font-size: 0.9em;
+    font-weight: bold;
+    padding: 2px 4px;
+    text-decoration: none;
+    text-transform: uppercase;
+}
+.items-table table tr td.status a:hover {
+    opacity:0.7;
+}
+.items-table table tr td.status a.empty {
+    background-color:#999;
+}
+.items-table table tr td.status a.complete {
+    background-color:green;
+}
+.items-table table tr td.status a.incomplete {
+    background-color:red;
+}
+.items-table table tr.even {
+    background-color: #e9e9e9;
+}
+.items-table table tr th {
+    border-bottom:1px solid #cdcdcd;
+}
+.items-table table tr th {
+    padding:4px 0;
+}
+div.buttons-bar {
+    margin-bottom: 10px;
+    margin-left: 860px;
+    position: absolute;
+    top: 70px;
+}
+div.buttons-bar a, div.buttons-bar input[type="submit"] {
+    background-color: green;
+    border: medium none;
+    border-radius: 5px;
+    color: #fff;
+    font-size: 1.1em;
+    line-height: 35px;
+    margin-left: 10px;
+    padding: 7px 20px;
+    text-decoration: none;
+}
+div.buttons-bar a:hover,
+div.buttons-bar input[type="submit"]:hover {
+    opacity:0.8;
+}
+div.buttons-bar input[type="submit"] {
+    padding: 8px 20px;
+}
+div.buttons-bar  {
+    text-align: right;
+}
+#footer {
+    margin-top:40px;
+    padding:20px 0;
+    background-color:#efefef;
+    font-size:0.9em;
+    color:#333;
 }

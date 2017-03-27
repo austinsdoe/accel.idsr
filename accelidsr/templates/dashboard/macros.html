@@ -1,0 +1,74 @@
+{% macro render_idsr_table_header(items) %}
+<ul class='hidden'>
+    {% for k in items[25].getDict().keys() %}
+    <li>{{ k }}</li>
+    {% endfor %}
+<ul>
+    <tr>
+        <th>Status</th>
+        <th>Reporting date</th>
+        <th>County code</th>
+        <th>Facility code</th>
+        <th>Case ID</th>
+        <th>Reporting County</th>
+        <th>Reporting District</th>
+        <th>Reporting Facility</th>
+    </tr>
+{% endmacro %}
+
+
+<!--
+idsr-status-b_1
+csrf_token
+idsr-status-c_1
+idsr-status-d_3
+idsr-status-c_3
+idsr-status-c_2
+idsr-status-c_4
+patient_age_months
+health_worker_comments
+patient_case_detected_community
+substepform
+diagnosis
+county_code
+patient_head_of_household
+patient_cross_border
+idsr-status-a
+idsr-status-c
+idsr-status-b
+patient_anonymous
+idsr-status-d
+reporting_date
+submit
+reporting_health_facility
+case_id
+patient_record_id
+reporting_district
+idsr-status-d_1
+patient_phone_number
+patient_age_years
+patient_age_days
+patient_community_of_residence
+patient_county_of_residence
+case_inout_patient
+stepform
+patient_gender
+case_outcome
+case_classification
+patient_middlename
+reporting_country
+diagnosis_other
+patient_district_of_residence
+patient_lastname
+patient_firstname
+case_date_seen
+case_date_of_onset
+patient_client_patientid
+idobj
+facility_code
+idsr-status-a_2
+idsr-status-a_1
+patient_dateofbirth
+patient_parents_name
+_id
+-->

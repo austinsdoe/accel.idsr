@@ -35,6 +35,9 @@ app.register_blueprint(mod_auth)
 from accelidsr.mod_idsrentry.controllers import mod_idsrentry
 app.register_blueprint(mod_idsrentry)
 
+from accelidsr.mod_dashboard.controllers import mod_dashboard
+app.register_blueprint(mod_dashboard)
+
 lm = LoginManager()
 lm.init_app(app)
 # Fall-back page if the user is not logged in and the request view has the

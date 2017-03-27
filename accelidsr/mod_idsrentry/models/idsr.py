@@ -1,4 +1,5 @@
 from accelidsr import db
+from accelidsr.mod_idsrentry.models import find_all
 from accelidsr.mod_idsrentry.models import fetch_by_id
 from accelidsr.mod_idsrentry.models.dbobject import MongoDbBaseObject
 from bson import ObjectId
@@ -24,3 +25,13 @@ class Idsr(MongoDbBaseObject):
             idsr.update(doc)
             return idsr
         return None
+
+    @staticmethod
+    def findAll():
+        outitems = []
+        docs = find_all('idsrform')
+        for doc in docs:
+            idsr = Idsr(str(doc['_id']))
+            idsr.update(doc)
+            outitems.append(idsr)
+        return outitems

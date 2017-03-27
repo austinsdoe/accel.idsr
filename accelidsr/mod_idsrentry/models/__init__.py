@@ -4,6 +4,14 @@ from flask import flash
 import sys
 import bson
 
+def find_all(collection):
+    if not collection:
+        return None
+    col = db.get_collection(collection)
+    docs = col.find()
+    return docs
+
+
 def fetch_by_id(id, collection):
     if not id or not collection:
         return None
