@@ -25,18 +25,19 @@ mod_auth = Blueprint('auth', __name__, url_prefix='/auth')
 @mod_auth.route('/createuser', methods=['GET', 'POST'])
 @login_required
 def createuser():
+    """
+    Displays a form for the creation of a new user. If the logged user has no
+    admin privileges, it redirects to the frontpage of the application (index)
+    """
     # Only allow the creation of a new user if the current user has admin
     # privileges. Otherwise, redirect to frontpage
     if not current_user.is_admin():
         flash("Not enough privileges", category='info')
         return redirect(url_for('index'))
 
-    # Current user is authenticated or there are no users registered in
-    # the database yet, so render the form for user creation.
     if request.method == 'POST':
         form = CreateUserForm(request.form)
         if form.validate():
-            import pdb;pdb.set_trace()
             db.users.insert({
                 "username": form.username.data,
                 "password": User.generate_hash(form.password.data),
@@ -50,12 +51,19 @@ def createuser():
     form = CreateUserForm()
     return render_template('auth/createuser.html', form=form)
 
+
 @mod_auth.route('/login', methods=['GET', 'POST'])
 def login():
-    # If no users are available in the database yet, create a new admin/admin
-    # user by default
+    """
+    Displays the login page. If this is the first run of the application, this
+    function creates an admin user by default and displays an informative
+    message to the current user. This function is also in charge of validating
+    the credentials of a user login in the app.
+    """
     firstaccess = ''
     if db.users.find().count() == 0:
+        # If no users are available in the database yet, create a new
+        # admin/admin user by default
         db.users.insert({
             'username': 'admin',
             'password': User.generate_hash('admin'),
@@ -95,15 +103,20 @@ def login():
 
 @mod_auth.route('/logout')
 def logout():
+    """
+    Logouts the current user and redirect to the login page
+    """
     logout_user()
-    return redirect(url_for('index'))
+    return redirect(url_for('auth.login'))
 
 
 @mod_auth.route('/users')
 @login_required
 def users():
-    # Only allow the creation of a new user if the current user has admin
-    # privileges. Otherwise, redirect to frontpage
+    """
+    Displays the list of users registered in the system. If the logged user has
+    no admin privileges, redirects to the frontpage (index)
+    """
     if not current_user.is_admin():
         flash("Not enough privileges", category='info')
         return redirect(url_for('index'))
