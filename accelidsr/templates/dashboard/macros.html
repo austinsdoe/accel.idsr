@@ -1,9 +1,4 @@
 {% macro render_idsr_table_header(items) %}
-<ul class='hidden'>
-    {% for k in items[25].getDict().keys() %}
-    <li>{{ k }}</li>
-    {% endfor %}
-<ul>
     <tr>
         <th>Status</th>
         <th>Reporting date</th>
