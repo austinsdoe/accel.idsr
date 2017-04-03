@@ -31,4 +31,5 @@ intervals = {
     "aprofile": int(config.get("intervals", "analysisprofile"))*60,
     "sampletype": int(config.get("intervals", "sampletype"))*60,
     "disease": int(config.get("intervals", "disease"))*60,
+    "idsrform": int(config.get("intervals", "idsrform"))*60,
 }

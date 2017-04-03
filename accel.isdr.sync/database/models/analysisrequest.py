@@ -3,12 +3,12 @@ class AnalysisRequest():
     """
     Class that represents AnalysisRequest.
     """
-    def __init__(self, contact, cc_contact, sampler_phone, case_id,
+    def __init__(self, contact_uid, cc_contact, sampler_phone, case_id,
                  patient_record_id, reporting_health_facility, patient_uid,
                  sampling_date, sample_type, analysis_specification,
                  analyses_requested, client_order_number):
         # Contact UID
-        self.contact = contact
+        self.contact_uid = contact_uid
         # CC Contact UID
         self.cc_contact = cc_contact
         # CCEmails in Bika
@@ -19,7 +19,7 @@ class AnalysisRequest():
         # Client in Bika
         self.reporting_health_facility = reporting_health_facility
         # Patient UID in Bika
-        self.patient = patient
+        self.patient_uid = patient_uid
         self.sampling_date = sampling_date
         self.sample_type = sample_type
         # Specification UID
@@ -64,9 +64,12 @@ class AnalysisRequest():
     def setPatientUid(self, patient_uid):
         self.patient_uid = patient_uid
 
+    def setPatientUid(self, contact_uid):
+        self.contact_uid = contact_uid
+
     def get_api_format(self):
         result = {}
-        result["0"] = {'Contact': self.contact,
+        result["0"] = {'Contact': self.contact_uid,
                        'CCContact': self.cc_contact,
                        'CCEmails': self.sampler_phone,
                        'Client': self.reporting_health_facility,

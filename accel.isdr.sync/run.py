@@ -36,8 +36,6 @@ class Run:
         # ar = AnalysisRequest('f250cdc98e274b3f9dda6a3b631339e8','','test2','','test4','f792373127944054bd1ff847015bb9b8','0f8dc35f79684ab09e6c48809f5e7cc5','2017-04-01 17:17',
         # '0a83e9783bc3435aaeafd9ccf9365430','','','test7',)
         # print self.api.createAR(ar)
-        result = self.api.createContact('client-1116', 'Test', 'NM')
-        print self.api.getContactUID('client-1116', result['obj_id'])
 
     def processCountries(self):
         try:
@@ -155,9 +153,10 @@ class Run:
         try:
             forms = self.db.get_waiting_forms()
             for f in forms:
+                # To create a new AR, Patient UID and Contact UID are required
+
                 # PATIENT CREATION
                 p_result = self.api.createPatient(f.getPatient())
-                # If patient creation is successfull, we are creating AR too
                 if not p_result['success']:
                     message = p_result['message']
                     status = 'Fail'
@@ -188,11 +187,10 @@ class Run:
                                 'Contact', f.getId())
                 c_uid = self.api.getContactUID(c_id)
 
-                # AR CREATION
-                # To create a new AR, Patient UID is required
-                p_uid = p_result['obj_uid']
+                # FINALLY AR CREATION
                 ar = f.getAR()
                 ar.setPatientUid(p_uid)
+                ar.setContactUid(c_uid)
                 ar_result = self.api.createAR(ar)
                 if not ar_result['success']:
                     message = ar_result['errors']
@@ -213,7 +211,7 @@ class Run:
             status = 'Fail'
             print message
             self.insert_log(status, message, 'AR & Patient')
-        # threading.Timer(intervals['disease'], self.processForms).start()
+        threading.Timer(intervals['idsrform'], self.processForms).start()
 
     def insert_log(self, status, message, content_type, idsr_id=None):
         log = SyncJob(log_time=time.time(),

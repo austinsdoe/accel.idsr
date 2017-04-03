@@ -79,6 +79,7 @@ class Database:
         for c in coll:
             form_id = c['idobj']
             facility_code = c['facility_code']
+
             # Setting up Patient
             p_clientPatientId = c['patient_client_patientid']
             p_surname = c['patient_lastname']
@@ -89,14 +90,15 @@ class Database:
             patient = Patient(p_clientPatientId, p_surname, p_firstname,
                               p_birthDate, p_gender, p_phone,
                               facility_code)
+
             # Setting up Contact
             c_firstname = c['reporting_person_firstname']
             c_surname = c['reporting_person_lastname']
             contact = Contact(facility_code, c_firstname, c_surname)
 
             # Setting up AR
-            ar_contact = 'c['']'
-            ar_cc_contact = 'c['']'
+            ar_contact_uid = ''
+            ar_cc_contact = ''
             ar_sampler_phone = c['sampler_phone']
             ar_case_id = c['case_id']
             ar_patient_record_id = c['patient_record_id']
@@ -105,7 +107,7 @@ class Database:
             ar_sampling_date = c['date_sampled'].strftime("%y-%m-%d %H:%M")
             # TODO make sure that sample_type is UID
             ar_sample_type = c['sample_type']
-            ar_analysis_specification = c['']
+            ar_analysis_specification = ''
             ar_analyses_requested = c['analyses_requested']
             ar_client_order_number = c['patient_record_id']
 
