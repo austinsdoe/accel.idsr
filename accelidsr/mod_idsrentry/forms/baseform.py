@@ -6,6 +6,7 @@ from accelidsr.mod_idsrentry.forms import getNextStepId as nextstep
 from accelidsr.mod_idsrentry.forms import getStepIds
 from accelidsr.mod_idsrentry.forms import getStepTitle
 from accelidsr.mod_idsrentry.forms import getAvailableSubsteps
+from accelidsr.mod_idsrentry.forms import getAvailableSteps
 
 
 class AbstractIdsrEntryStepForm(FlaskForm):
@@ -129,6 +130,15 @@ class AbstractIdsrEntryStepForm(FlaskForm):
             kvals[status] = 'incomplete' if incomplete else 'complete'
         else:
             kvals[status] = 'incomplete'
+
+        # Get the status of the full IDSR
+        idsrstatus = 'complete'
+        for s in getAvailableSteps():
+            stat = 'idsr-status-{0}'.format(s)
+            if kvals.get(stat, 'incomplete') != 'complete':
+                idsrstatus = 'incomplete'
+                break
+        kvals['idsr-status'] = idsrstatus
         return kvals
 
     def getPrevStepId(self):
