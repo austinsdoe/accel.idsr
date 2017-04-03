@@ -99,6 +99,20 @@ class PloneApi:
         f.close()
         return json.loads(data)
 
+    def createContact(self, contact):
+        url = self.jsonapi_url + '/create'
+        # Setting some obligatory parameters
+        params = urllib.urlencode({
+            "obj_path": '/Plone/clients/'+contact.getClientId(),
+            "obj_type": 'Contact',
+            "Surname": contact.getSurname(),
+            "Firstname": contact.getFirstname()
+        })
+        f = self.opener.open(url, params)
+        data = f.read()
+        f.close()
+        return json.loads(data)
+
     def createAR(self, ar):
         url = self.plone_site_url + '/analysisrequest_submit'
         # Setting some obligatory parameters
@@ -112,3 +126,20 @@ class PloneApi:
             return json.loads(data)
         except Exception, e:
             return {"errors": str(e)}
+
+    def getPatientUID(self, obj_id):
+        url = self.jsonapi_url + '/plone/api/1.0/search?id='+obj_id
+        f = self.opener.open(url)
+        data = f.read()
+        f.close()
+        result = json.loads(data)
+        return result['items'][0]['uid']
+
+    def getContactUID(self, client_id, obj_id):
+        url = self.jsonapi_url + '/plone/api/1.0/search?id='+obj_id + \
+            '&folder='+client_id
+        f = self.opener.open(url)
+        data = f.read()
+        f.close()
+        result = json.loads(data)
+        return result['items'][0]['uid']

@@ -2,6 +2,7 @@ from pymongo import MongoClient
 from utils.config import settings
 from models.patient import Patient
 from models.idsrform import IDSRForm
+from models.contact import Contact
 from models.analysisrequest import AnalysisRequest
 
 
@@ -77,6 +78,7 @@ class Database:
         coll = self._db['idsrform'].find(query)
         for c in coll:
             form_id = c['idobj']
+            facility_code = c['facility_code']
             # Setting up Patient
             p_clientPatientId = c['patient_client_patientid']
             p_surname = c['patient_lastname']
@@ -84,10 +86,14 @@ class Database:
             p_birthDate = c['patient_dateofbirth']
             p_gender = c['patient_gender']
             p_phone = c['patient_phone_number']
-            p_facility_code = c['facility_code']
             patient = Patient(p_clientPatientId, p_surname, p_firstname,
                               p_birthDate, p_gender, p_phone,
-                              p_facility_code)
+                              facility_code)
+            # Setting up Contact
+            c_firstname = c['reporting_person_firstname']
+            c_surname = c['reporting_person_lastname']
+            contact = Contact(facility_code, c_firstname, c_surname)
+
             # Setting up AR
             ar_contact = 'c['']'
             ar_cc_contact = 'c['']'

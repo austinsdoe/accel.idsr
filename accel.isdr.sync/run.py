@@ -36,6 +36,8 @@ class Run:
         # ar = AnalysisRequest('f250cdc98e274b3f9dda6a3b631339e8','','test2','','test4','f792373127944054bd1ff847015bb9b8','0f8dc35f79684ab09e6c48809f5e7cc5','2017-04-01 17:17',
         # '0a83e9783bc3435aaeafd9ccf9365430','','','test7',)
         # print self.api.createAR(ar)
+        result = self.api.createContact('client-1116', 'Test', 'NM')
+        print self.api.getContactUID('client-1116', result['obj_id'])
 
     def processCountries(self):
         try:
@@ -163,10 +165,28 @@ class Run:
                     self.insert_log(status, message,
                                     'Patient', f.getId())
                     continue
-                message = 'Patient Created. ID: '+p_result['obj_id']
+                p_id = p_result['obj_id']
+                message = 'Patient Created. ID: '+p_id
                 status = 'Success'
                 self.insert_log(status, message,
                                 'Patient', f.getId())
+                p_uid = self.api.getPatientUID(p_id)
+
+                # CLIENT CONTACT CREATION
+                c_result = self.api.createContact(f.getContact())
+                if not c_result['success']:
+                    message = c_result['message']
+                    status = 'Fail'
+                    self.db.update_status(f.getId(), 'failed')
+                    self.insert_log(status, message,
+                                    'Contact', f.getId())
+                    continue
+                c_id = c_result['obj_id']
+                message = 'Contact Created. ID: '+c_id
+                status = 'Success'
+                self.insert_log(status, message,
+                                'Contact', f.getId())
+                c_uid = self.api.getContactUID(c_id)
 
                 # AR CREATION
                 # To create a new AR, Patient UID is required

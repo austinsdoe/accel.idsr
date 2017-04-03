@@ -6,10 +6,11 @@ class IDSRForm():
     and assign them to one IDSRForm object in order not to lose AR-Patient
     relationship.
     """
-    def __init__(self, form_id, patient, ar):
+    def __init__(self, form_id, patient, contact, ar):
         self.form_id = form_id
         self.patient = patient
         self.ar = ar
+        self.contact = contact
 
     def getId(self):
         return self.form_id
@@ -19,3 +20,6 @@ class IDSRForm():
 
     def getAR(self):
         return self.ar
+
+    def getContact():
+        return self.contact
