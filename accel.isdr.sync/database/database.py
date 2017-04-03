@@ -56,24 +56,59 @@ class Database:
             results.append(c.get('title'))
         return results
 
+    def update_status(self, form_id, status):
+        result = db._db['idsrform'].update_one(
+                    {"idobj": form_id},
+                    {
+                        "$set": {
+                            "bika-status": status
+                        }
+                    }
+                )
+
     def get_waiting_forms(self):
+        """
+        This function returns set of IDSR forms which are in_queue status.
+        Each IDSR form object has a Patient and an AR objects created from
+        Form's data.
+        """
         idsr_forms = []
-        coll = self._db['idsrform'].find({"idsr-status-a_1": "complete"})
+        query = {"idsr-status-a_1": "complete"}
+        coll = self._db['idsrform'].find(query)
         for c in coll:
             form_id = c['idobj']
-
+            # Setting up Patient
             p_clientPatientId = c['patient_client_patientid']
             p_surname = c['patient_lastname']
             p_firstname = c['patient_firstname']
             p_birthDate = c['patient_dateofbirth']
             p_gender = c['patient_gender']
             p_phone = c['patient_phone_number']
-            healthCareFacility = c['facility_code']
+            p_facility_code = c['facility_code']
             patient = Patient(p_clientPatientId, p_surname, p_firstname,
                               p_birthDate, p_gender, p_phone,
-                              healthCareFacility)
+                              p_facility_code)
+            # Setting up AR
+            ar_contact = 'c['']'
+            ar_cc_contact = 'c['']'
+            ar_sampler_phone = c['sampler_phone']
+            ar_case_id = c['case_id']
+            ar_patient_record_id = c['patient_record_id']
+            ar_reporting_health_facility = c['reporting_health_facility']
+            ar_patient_uid = ''
+            ar_sampling_date = c['date_sampled'].strftime("%y-%m-%d %H:%M")
+            # TODO make sure that sample_type is UID
+            ar_sample_type = c['sample_type']
+            ar_analysis_specification = c['']
+            ar_analyses_requested = c['analyses_requested']
+            ar_client_order_number = c['patient_record_id']
 
-            ar = AnalysisRequest('Test')
+            ar = AnalysisRequest(ar_contact, ar_cc_contact, ar_sampler_phone,
+                                 ar_case_id, ar_patient_record_id,
+                                 ar_reporting_health_facility, ar_patient_uid,
+                                 ar_sampling_date, ar_sample_type,
+                                 ar_analysis_specification,
+                                 ar_analyses_requested, ar_client_order_number)
             idsr_form = IDSRForm(form_id, patient, ar)
             idsr_forms.append(idsr_form)
 

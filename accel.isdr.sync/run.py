@@ -33,8 +33,9 @@ class Run:
         # '12346', '123@3321.com', 'client-1116')
         # result = self.api.createPatient(patient)
         # print result
-        print self.api.createAR()
-
+        # ar = AnalysisRequest('f250cdc98e274b3f9dda6a3b631339e8','','test2','','test4','f792373127944054bd1ff847015bb9b8','0f8dc35f79684ab09e6c48809f5e7cc5','2017-04-01 17:17',
+        # '0a83e9783bc3435aaeafd9ccf9365430','','','test7',)
+        # print self.api.createAR(ar)
 
     def processCountries(self):
         try:
@@ -141,26 +142,52 @@ class Run:
     def processForms(self):
         """
         This function gets all newly created IDSR forms and sends requests to
-        API to create Patient and ARs. If API response is success then it
-        updates Form's 'bika-status'.
+        API to create Patient and ARs.
+        If API response of Patient creation is fail, it doesn't try to create
+        an AR.
+        If API response of AR creation is success, then it updates Form's
+        'bika-status'.
         For each IDSR Form, 2 logs are inserted (one for Patient and one for
         AR).
         """
         try:
             forms = self.db.get_waiting_forms()
             for f in forms:
+                # PATIENT CREATION
                 p_result = self.api.createPatient(f.getPatient())
-                if p_result['success']:
-                    message = 'Patient Created. ID: '+p_result['obj_id']
-                    status = 'Success'
-                    self.insert_log(status, message,
-                                    'Patient', f.getId())
-                else:
+                # If patient creation is successfull, we are creating AR too
+                if not p_result['success']:
                     message = p_result['message']
                     status = 'Fail'
+                    self.db.update_status(f.getId(), 'failed')
                     self.insert_log(status, message,
                                     'Patient', f.getId())
-            status = 'Success'
+                    continue
+                message = 'Patient Created. ID: '+p_result['obj_id']
+                status = 'Success'
+                self.insert_log(status, message,
+                                'Patient', f.getId())
+
+                # AR CREATION
+                # To create a new AR, Patient UID is required
+                p_uid = p_result['obj_uid']
+                ar = f.getAR()
+                ar.setPatientUid(p_uid)
+                ar_result = self.api.createAR(ar)
+                if not ar_result['success']:
+                    message = ar_result['errors']
+                    status = 'Fail'
+                    self.db.update_status(f.getId(), 'failed')
+                    self.insert_log(status, message,
+                                    'AnalysisRequest', f.getId())
+                    continue
+                message = 'AR Created. UID: '+ar_result['stickers']
+                status = 'Success'
+                self.db.update_status(f.getId(), 'inserted')
+                self.insert_log(status, message,
+                                'AnalysisRequest', f.getId())
+
+            print 'Process Forms finished...'
         except Exception, e:
             message = str(e)
             status = 'Fail'

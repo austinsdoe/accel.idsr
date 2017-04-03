@@ -4,14 +4,14 @@ class Patient():
     Class that represents Patient
     """
     def __init__(self, clientPatientId, surname, firstname, birthDate,
-                 gender, phone, healthCareFacility):
+                 gender, phone, facility_code):
         self.clientPatientId = clientPatientId
         self.surname = surname
         self.firstname = firstname
         self.birthDate = birthDate
         self.gender = gender
         self.phone = phone
-        self.healthCareFacility = healthCareFacility
+        self.facility_code = facility_code
 
     def getClientPatientId(self):
         return self.clientPatientId
@@ -31,5 +31,5 @@ class Patient():
     def getPhone(self):
         return self.phone
 
-    def getHealthCareFacility(self):
-        return self.healthCareFacility
+    def getFacilityCode(self):
+        return self.facility_code

@@ -99,14 +99,16 @@ class PloneApi:
         f.close()
         return json.loads(data)
 
-    def createAR(self):
+    def createAR(self, ar):
         url = self.plone_site_url + '/analysisrequest_submit'
         # Setting some obligatory parameters
-        state ={"0": {"test": "test"}}
         params = urllib.urlencode({
-            "state": json.dumps(state)
+            "state": json.dumps(ar.get_api_format())
         })
-        f = self.opener.open(url, params)
-        data = f.read()
-        f.close()
-        return json.loads(data)
+        try:
+            f = self.opener.open(url, params)
+            data = f.read()
+            f.close()
+            return json.loads(data)
+        except Exception, e:
+            return {"errors": str(e)}
