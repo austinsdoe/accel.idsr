@@ -152,3 +152,17 @@ def step(step):
     # Render the Html template
     urltemplate = 'idsrentry/index.html'
     return render_template(urltemplate, form=form, steps=getAvailableSteps())
+
+
+@mod_idsrentry.route('/preview', methods=['GET', 'POST'])
+@login_required
+def preview():
+    id = request.args.get('id')
+    if not id:
+        return render_template('404.html'), 404
+    idsrobj = Idsr.fetch(id)
+    if not idsrobj:
+        return render_template('404.html'), 404
+
+    urltemplate = 'idsrentry/preview.html'
+    return render_template(urltemplate, idsrobj=idsrobj)
