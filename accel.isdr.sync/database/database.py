@@ -74,7 +74,7 @@ class Database:
         Form's data.
         """
         idsr_forms = []
-        query = {"idsr-status-a_1": "complete"}
+        query = {"bika-status": "in_queue"}
         coll = self._db['idsrform'].find(query)
         for c in coll:
             form_id = c['idobj']

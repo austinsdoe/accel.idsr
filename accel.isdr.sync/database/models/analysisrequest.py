@@ -7,6 +7,9 @@ class AnalysisRequest():
                  patient_record_id, reporting_health_facility, patient_uid,
                  sampling_date, sample_type, analysis_specification,
                  analyses_requested, client_order_number):
+        """
+        Initializes the AnalysisRequest object.
+        """
         # Contact UID
         self.contact_uid = contact_uid
         # CC Contact UID

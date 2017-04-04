@@ -33,3 +33,22 @@ class Patient():
 
     def getFacilityCode(self):
         return self.facility_code
+
+    def get_api_format(self):
+        result = {
+            "obj_path": '/Plone/patients',
+            "obj_type": 'Patient',
+            "ClientPatientID": self.clientPatientId,
+            "Surname": self.surname,
+            "Firstname": self.firstname,
+            "BirthDate": self.birthDate = birthDate,
+            "BirthDateEstimated": False,
+            "Gender": self.gender = gender,
+            "HomePhone": self.phone,
+            "MobilePhone": '',
+            "BusinessPhone": '',
+            "EmailAddress": '',
+            "PatientAsGuarantor": False,
+            "PrimaryReferrer": self.self.facility_code
+        }
+        return result

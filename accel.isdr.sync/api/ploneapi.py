@@ -46,63 +46,30 @@ class PloneApi:
             + content_type
         for key, value in kwargs.iteritems():
             url += "&%s=%s" % (key, value)
-        f = self.opener.open(url)
-        data = f.read()
-        f.close()
-        return json.loads(data)
+        result = self.send_request(url)
+        return result
 
-    def getCounties(self):
-        url = self.plone_site_url + '/getGeoStates?country=Liberia'
-        f = self.opener.open(url)
-        data = f.read()
-        f.close()
-        return json.loads(data)
+    def getGeo(self, content):
+        """
+        Getting Geo objects from Bika Instance using JsonAPi
+        :param content: can be 'Districts' or 'States' for now.
+        :type content: String
+        """
+        url = self.plone_site_url + '/getGeo'+content
+        url += '?country=Liberia'
+        result = self.send_request(url)
+        return result
 
-    def getDistricts(self):
-        # Getting all districts without state
-        url = self.plone_site_url + '/getGeoDistricts?country=Liberia'
-        f = self.opener.open(url)
-        data = f.read()
-        f.close()
-        return json.loads(data)
-
-    def createPatient(self, patient):
+    def create(self, obj):
+        """
+        Creates an object using Plone Api Routing.
+        :param obj: object to be created
+        :type obj: any object type with get_api_format function
+        """
         url = self.jsonapi_url + '/create'
-        # Setting some obligatory parameters
-        params = urllib.urlencode({
-            "obj_path": '/Plone/patients',
-            "obj_type": 'Patient',
-            "ClientPatientID": patient.getClientPatientId(),
-            "Surname": patient.getSurname(),
-            "Firstname": patient.getFirstname(),
-            "BirthDate": patient.getBirthDate(),
-            "BirthDateEstimated": False,
-            "Gender": patient.getGender(),
-            "HomePhone": patient.getPhone(),
-            "MobilePhone": '',
-            "BusinessPhone": '',
-            "EmailAddress": '',
-            "PatientAsGuarantor": False,
-            "PrimaryReferrer": patient.getHealthCareFacility()
-        })
-        f = self.opener.open(url, params)
-        data = f.read()
-        f.close()
-        return json.loads(data)
-
-    def createContact(self, contact):
-        url = self.jsonapi_url + '/create'
-        # Setting some obligatory parameters
-        params = urllib.urlencode({
-            "obj_path": '/Plone/clients/'+contact.getClientId(),
-            "obj_type": 'Contact',
-            "Surname": contact.getSurname(),
-            "Firstname": contact.getFirstname()
-        })
-        f = self.opener.open(url, params)
-        data = f.read()
-        f.close()
-        return json.loads(data)
+        params = urllib.urlencode(obj.get_api_format())
+        result = self.send_request(url, params)
+        return result
 
     def createAR(self, ar):
         url = self.plone_site_url + '/analysisrequest_submit'
@@ -110,20 +77,25 @@ class PloneApi:
         params = urllib.urlencode({
             "state": json.dumps(ar.get_api_format())
         })
-        try:
-            f = self.opener.open(url, params)
-            data = f.read()
-            f.close()
-            return json.loads(data)
-        except Exception, e:
-            return {"errors": str(e)}
+        result = self.send_request(url, params)
+        return result
 
     def getUID(self, obj_id, folder=None):
         url = self.jsonapi_url + '/plone/api/1.0/search?id='+obj_id
         if folder:
             url += '&folder='+folder
-        f = self.opener.open(url)
-        data = f.read()
-        f.close()
-        result = json.loads(data)
+        result = self.send_request(url)
         return result['items'][0]['uid']
+
+    def send_request(self, url, params=None):
+        try:
+            if params:
+                f = self.opener.open(url, params)
+            else:
+                f = self.opener.open(url)
+            data = f.read()
+            f.close()
+            return json.loads(data)
+        except Exception, e:
+            return {"errors": str(e),
+                    "message": str(e)}

@@ -23,27 +23,30 @@ class Run:
         self.api = PloneApi()
         self.db = Database()
         # We are running different methods for each content type because time
-        # intervals of diverse content type can differ.
-        # self.processAnalysisProfiles()
-        # self.processSampleTypes()
-        # self.processDiseases()
+        # intervals of diverse content types can differ.
+        self.processAnalysisProfiles()
+        self.processSampleTypes()
+        self.processDiseases()
         self.processFacilities()
-        # self.processCounties()
-        # self.processDistricts()
-        # self.processForms()
+        self.processCounties()
+        self.processDistricts()
+        self.processForms()
         # patient = Patient('test', 'test', 'test', time.time(),
         # '12346', '123@3321.com', 'client-1116')
-        # result = self.api.createPatient(patient)
+        # result = self.api.create(patient)
         # print result
         # ar = AnalysisRequest('f250cdc98e274b3f9dda6a3b631339e8','','test2','','test4','f792373127944054bd1ff847015bb9b8','0f8dc35f79684ab09e6c48809f5e7cc5','2017-04-01 17:17',
         # '0a83e9783bc3435aaeafd9ccf9365430','','','test7',)
         # print self.api.createAR(ar)
 
     def processCounties(self):
+        """
+        Updates Counties (States/Provinces in Bika) from Bika Instace.
+        """
         try:
             imported = 0
             db_codes = self.db.get_codes('counties')
-            api_counties = self.api.getCounties()
+            api_counties = self.api.getGeo('States')
             new_counties = [County(code=c[1],
                                    title=c[2])
                             for c in api_counties
@@ -56,14 +59,18 @@ class Run:
         except Exception, e:
             message = str(e)
             status = 'Fail'
+        # For Geo Objects we insert only one log when Sync Job is finished.
         self.insert_log(status, message, 'County')
         threading.Timer(intervals['county'], self.processCounties).start()
 
     def processDistricts(self):
+        """
+        Updates Districts from Bika Instace.
+        """
         try:
             imported = 0
             db_titles = self.db.get_districts()
-            api_districts = self.api.getDistricts()
+            api_districts = self.api.getGeo('Districts')
             new_districts = [District(cocode=d[1],
                                       title=d[2])
                              for d in api_districts
@@ -76,10 +83,14 @@ class Run:
         except Exception, e:
             message = str(e)
             status = 'Fail'
+        # For Geo Objects we insert only one log when Sync Job is finished.
         self.insert_log(status, message, 'District')
         threading.Timer(intervals['district'], self.processDistricts).start()
 
     def processAnalysisProfiles(self):
+        """
+        Updates AnalysisProfiles from Bika Instace.
+        """
         try:
             imported = 0
             db_uids = self.db.get_uids('analysisprofiles')
@@ -101,6 +112,9 @@ class Run:
                         self.processAnalysisProfiles).start()
 
     def processSampleTypes(self):
+        """
+        Updates SampleTypes from Bika Instace.
+        """
         try:
             imported = 0
             db_uids = self.db.get_uids('sampletypes')
@@ -122,6 +136,9 @@ class Run:
                         self.processSampleTypes).start()
 
     def processDiseases(self):
+        """
+        Updates Diseases from Bika Instace.
+        """
         try:
             imported = 0
             db_uids = self.db.get_uids('diseases')
@@ -143,7 +160,7 @@ class Run:
 
     def processFacilities(self):
         """
-        Facilities or Health Care Facilities are Clients from Bika.
+        Updates Facilities (Clients in Bika) from Bika Instace.
         """
         try:
             imported = 0
@@ -166,7 +183,7 @@ class Run:
             message = str(e)
             status = 'Fail'
         self.insert_log(status, message, 'Facility')
-        # threading.Timer(intervals['facility'], self.processFacilities).start()
+        threading.Timer(intervals['facility'], self.processFacilities).start()
 
     def processForms(self):
         """
@@ -185,7 +202,7 @@ class Run:
                 # To create a new AR, Patient UID and Contact UID are required
 
                 # PATIENT CREATION
-                p_result = self.api.createPatient(f.getPatient())
+                p_result = self.api.create(f.getPatient())
                 if not p_result['success']:
                     message = p_result['message']
                     status = 'Fail'
@@ -201,7 +218,7 @@ class Run:
                 p_uid = self.api.getUID(p_id)
 
                 # CLIENT CONTACT CREATION
-                c_result = self.api.createContact(f.getContact())
+                c_result = self.api.create(f.getContact())
                 if not c_result['success']:
                     message = c_result['message']
                     status = 'Fail'
@@ -243,6 +260,9 @@ class Run:
         threading.Timer(intervals['idsrform'], self.processForms).start()
 
     def insert_log(self, status, message, content_type, idsr_id=None):
+        """
+        Inserts log of Sync Job to MongoDB.
+        """
         log = SyncJob(log_time=time.time(),
                       status=status,
                       message=message,

@@ -16,3 +16,12 @@ class Contact():
 
     def getClientId(self):
         return self.client_id
+
+    def get_api_format(self):
+        result = {
+            "obj_path": '/Plone/clients/'+self.client_id,
+            "obj_type": 'Contact',
+            "Surname": self.surname,
+            "Firstname": self.firstname
+        }
+        return result
