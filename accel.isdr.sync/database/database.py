@@ -40,7 +40,7 @@ class Database:
         return results
 
     def get_codes(self, collection):
-        # For now we use this function to get Country codes.
+        # For now we use this function to get County codes.
         results = []
         if not collection:
             return results

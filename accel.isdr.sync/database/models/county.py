@@ -1,14 +1,14 @@
 
-class Country():
+class County():
     """
-    Class that represents Country
+    Class that represents County(Province/State)
     """
     def __init__(self, code, title):
         """
-        Initializes the Country object
-        :param code: the code of the Country
+        Initializes the County object
+        :param code: the code of the County
         :type code: string
-        :param title: the title of the Country
+        :param title: the title of the County
         :type title: string
         """
         self.code = code

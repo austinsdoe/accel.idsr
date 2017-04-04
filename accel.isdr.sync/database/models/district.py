@@ -6,7 +6,7 @@ class District():
     def __init__(self, cocode, title):
         """
         Initializes the District object
-        :param cocode: the country code of the District
+        :param cocode: the county(province/state) code of the District
         :type cocode: string
         :param title: the title of the District
         :type title: string
@@ -22,6 +22,6 @@ class District():
 
     def get_db_format(self):
         return {
-            'country_code': self.cocode,
+            'county_code': self.cocode,
             'title': self.title
         }

@@ -26,7 +26,7 @@ settings = {
 }
 
 intervals = {
-    "country": int(config.get("intervals", "country"))*60,
+    "county": int(config.get("intervals", "county"))*60,
     "district": int(config.get("intervals", "district")*60),
     "aprofile": int(config.get("intervals", "analysisprofile"))*60,
     "sampletype": int(config.get("intervals", "sampletype"))*60,

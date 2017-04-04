@@ -3,7 +3,7 @@ from database.database import Database
 from database.models.analysisprofile import AnalysisProfile
 from database.models.sampletype import SampleType
 from database.models.disease import Disease
-from database.models.country import Country
+from database.models.county import County
 from database.models.district import District
 from database.models.syncjob import SyncJob
 from database.models.patient import Patient
@@ -26,8 +26,8 @@ class Run:
         # self.processAnalysisProfiles()
         # self.processSampleTypes()
         # self.processDiseases()
-        # self.processCountries()
-        # self.processDistricts()
+        self.processCounties()
+        self.processDistricts()
         # self.processForms()
         # patient = Patient('test', 'test', 'test', time.time(),
         # '12346', '123@3321.com', 'client-1116')
@@ -37,33 +37,33 @@ class Run:
         # '0a83e9783bc3435aaeafd9ccf9365430','','','test7',)
         # print self.api.createAR(ar)
 
-    def processCountries(self):
+    def processCounties(self):
         try:
             imported = 0
-            db_codes = self.db.get_codes('countries')
-            api_countries = self.api.getCountries().get('rows')
-            new_countries = [Country(code=co['Code'],
-                                     title=co['Country'])
-                             for co in api_countries
-                             if co['Code'] not in db_codes]
-            imported = len(new_countries)
-            for c in new_countries:
-                self.db.insert('countries', c.get_db_format())
-            message = str(imported) + ' New Country imported.'
+            db_codes = self.db.get_codes('counties')
+            api_counties = self.api.getCounties()
+            new_counties = [County(code=c[1],
+                                   title=c[2])
+                            for c in api_counties
+                            if c[1] not in db_codes]
+            imported = len(new_counties)
+            for c in new_counties:
+                self.db.insert('counties', c.get_db_format())
+            message = str(imported) + ' New County imported.'
             status = 'Success'
         except Exception, e:
             message = str(e)
             status = 'Fail'
-        self.insert_log(status, message, 'Country')
-        threading.Timer(intervals['country'], self.processCountries).start()
+        self.insert_log(status, message, 'County')
+        # threading.Timer(intervals['county'], self.processCounties).start()
 
     def processDistricts(self):
         try:
             imported = 0
             db_titles = self.db.get_districts()
             api_districts = self.api.getDistricts()
-            new_districts = [District(cocode=d[0],
-                                      title=d[1])
+            new_districts = [District(cocode=d[1],
+                                      title=d[2])
                              for d in api_districts
                              if d[1] not in db_titles]
             imported = len(new_districts)
@@ -75,7 +75,7 @@ class Run:
             message = str(e)
             status = 'Fail'
         self.insert_log(status, message, 'District')
-        threading.Timer(intervals['district'], self.processDistricts).start()
+        # threading.Timer(intervals['district'], self.processDistricts).start()
 
     def processAnalysisProfiles(self):
         try:
@@ -169,7 +169,7 @@ class Run:
                 status = 'Success'
                 self.insert_log(status, message,
                                 'Patient', f.getId())
-                p_uid = self.api.getPatientUID(p_id)
+                p_uid = self.api.getUID(p_id)
 
                 # CLIENT CONTACT CREATION
                 c_result = self.api.createContact(f.getContact())
@@ -185,7 +185,7 @@ class Run:
                 status = 'Success'
                 self.insert_log(status, message,
                                 'Contact', f.getId())
-                c_uid = self.api.getContactUID(c_id)
+                c_uid = self.api.getUID(c_id)
 
                 # FINALLY AR CREATION
                 ar = f.getAR()

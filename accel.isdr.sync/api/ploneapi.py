@@ -49,28 +49,17 @@ class PloneApi:
         f.close()
         return json.loads(data)
 
-    def getCountries(self):
-        url = self.plone_site_url + '/getCountries'
-        # Setting some obligatory parameters
-        params = urllib.urlencode({
-            "searchTerm": '',
-            "page": 1,
-            "rows": 1000,
-            "sord": '',
-            "sidx": ''
-        })
-        f = self.opener.open(url, params)
+    def getCounties(self):
+        url = self.plone_site_url + '/getGeoStates?country=Liberia'
+        f = self.opener.open(url)
         data = f.read()
         f.close()
         return json.loads(data)
 
     def getDistricts(self):
-        url = self.plone_site_url + '/getGeoDistricts'
-        # Getting all districts without setting any country or state
-        params = urllib.urlencode({
-            "getAll": 1,
-        })
-        f = self.opener.open(url, params)
+        # Getting all districts without state
+        url = self.plone_site_url + '/getGeoDistricts?country=Liberia'
+        f = self.opener.open(url)
         data = f.read()
         f.close()
         return json.loads(data)
@@ -127,17 +116,10 @@ class PloneApi:
         except Exception, e:
             return {"errors": str(e)}
 
-    def getPatientUID(self, obj_id):
+    def getUID(self, obj_id, folder=None):
         url = self.jsonapi_url + '/plone/api/1.0/search?id='+obj_id
-        f = self.opener.open(url)
-        data = f.read()
-        f.close()
-        result = json.loads(data)
-        return result['items'][0]['uid']
-
-    def getContactUID(self, client_id, obj_id):
-        url = self.jsonapi_url + '/plone/api/1.0/search?id='+obj_id + \
-            '&folder='+client_id
+        if folder:
+            url += '&folder='+folder
         f = self.opener.open(url)
         data = f.read()
         f.close()
