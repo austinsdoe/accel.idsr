@@ -7,6 +7,7 @@ from database.models.county import County
 from database.models.district import District
 from database.models.syncjob import SyncJob
 from database.models.patient import Patient
+from database.models.facility import Facility
 from database.models.analysisrequest import AnalysisRequest
 from utils.config import intervals
 import threading
@@ -26,8 +27,9 @@ class Run:
         # self.processAnalysisProfiles()
         # self.processSampleTypes()
         # self.processDiseases()
-        self.processCounties()
-        self.processDistricts()
+        self.processFacilities()
+        # self.processCounties()
+        # self.processDistricts()
         # self.processForms()
         # patient = Patient('test', 'test', 'test', time.time(),
         # '12346', '123@3321.com', 'client-1116')
@@ -55,7 +57,7 @@ class Run:
             message = str(e)
             status = 'Fail'
         self.insert_log(status, message, 'County')
-        # threading.Timer(intervals['county'], self.processCounties).start()
+        threading.Timer(intervals['county'], self.processCounties).start()
 
     def processDistricts(self):
         try:
@@ -75,13 +77,13 @@ class Run:
             message = str(e)
             status = 'Fail'
         self.insert_log(status, message, 'District')
-        # threading.Timer(intervals['district'], self.processDistricts).start()
+        threading.Timer(intervals['district'], self.processDistricts).start()
 
     def processAnalysisProfiles(self):
         try:
             imported = 0
             db_uids = self.db.get_uids('analysisprofiles')
-            api_profiles = self.api.getContents('AnalysisProfile').get('items')
+            api_profiles = self.api.getContent('AnalysisProfile').get('items')
             new_profiles = [AnalysisProfile(uid=prof['uid'],
                                             title=prof['title'])
                             for prof in api_profiles
@@ -102,7 +104,7 @@ class Run:
         try:
             imported = 0
             db_uids = self.db.get_uids('sampletypes')
-            api_samtypes = self.api.getContents('SampleType').get('items')
+            api_samtypes = self.api.getContent('SampleType').get('items')
             new_samtypes = [SampleType(uid=st['uid'],
                                        title=st['title'])
                             for st in api_samtypes
@@ -123,7 +125,7 @@ class Run:
         try:
             imported = 0
             db_uids = self.db.get_uids('diseases')
-            api_diss = self.api.getContents('Disease').get('items')
+            api_diss = self.api.getContent('Disease').get('items')
             new_diseases = [Disease(uid=d['uid'],
                                     title=d['title'])
                             for d in api_diss
@@ -138,6 +140,33 @@ class Run:
             status = 'Fail'
         self.insert_log(status, message, 'Disease')
         threading.Timer(intervals['disease'], self.processDiseases).start()
+
+    def processFacilities(self):
+        """
+        Facilities or Health Care Facilities are Clients from Bika.
+        """
+        try:
+            imported = 0
+            db_uids = self.db.get_uids('facilities')
+            api_facs = self.api.getContent('Client', review_state='active'
+                                           ).get('items')
+            new_facs = [Facility(uid=f['uid'],
+                                 code=f['id'],
+                                 title=f['title'],
+                                 county=f['getProvince'],
+                                 district=f['getDistrict'])
+                        for f in api_facs
+                        if f['uid'] not in db_uids]
+            imported = len(new_facs)
+            for f in new_facs:
+                self.db.insert('facilities', f.get_db_format())
+            message = str(imported) + ' New Facility imported.'
+            status = 'Success'
+        except Exception, e:
+            message = str(e)
+            status = 'Fail'
+        self.insert_log(status, message, 'Facility')
+        # threading.Timer(intervals['facility'], self.processFacilities).start()
 
     def processForms(self):
         """

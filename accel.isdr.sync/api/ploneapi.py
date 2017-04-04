@@ -41,9 +41,11 @@ class PloneApi:
                     "Bika LIMS server at '%s' cannot be contacted (111)." %
                     self.plone_site_url)
 
-    def getContents(self, content_type):
+    def getContent(self, content_type, **kwargs):
         url = self.jsonapi_url + '/plone/api/1.0/search?portal_type='\
             + content_type
+        for key, value in kwargs.iteritems():
+            url += "&%s=%s" % (key, value)
         f = self.opener.open(url)
         data = f.read()
         f.close()
