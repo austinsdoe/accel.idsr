@@ -1,0 +1,106 @@
+{% extends "base.html" %}
+
+{% block title %}
+IDSR Input Form
+{% endblock %}
+
+{% block head %}
+    {{ super() }}
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/idsrprint.css') }}"/>
+    <style>
+        .todo { color: red; }
+    </style>
+{% endblock %}
+
+{% block content %}
+<div id='idsr-pf-paperform'>
+    <div class='idsr-pf-header'>
+        <table>
+            <tr>
+                <td><img width="60mm" src='/static/pictures/flag.png'/></td>
+                <td class='form-title'>Liberia IDSR Case Alert and Lab Submission Form</td>
+                <td><img width="50mm" src='/static/pictures/moh.png'/></td>
+            </tr>
+        </table>
+        <div class='form-title-note'>
+            NOTE: Send a copy of this form to the DSO. A copy of this form should also accompany every lab sample
+        </div>
+    </div>
+    <div>
+        <table>
+            <tr>
+                <td>
+                    <div class='idsr-pf-label'>Reporting Date:</div>
+                    <div class='idsr-pf-field-container idsr-pf-field-container-first idsr-pf-reporting-date todo'>
+                        {% set repdate = idsrobj.get('reporting_date') %}
+                        {% set day = repdate.day if repdate else '??' %}
+                        {% set month = repdate.month if repdate else '??' %}
+                        {% set year = repdate.year if repdate else '????' %}
+                        <span class='idsr-pf-reporting-date-day'>{{ day }}</span> /
+                        <span class='idsr-pf-reporting-date-month'>{{ month }}</span> /
+                        <span class='idsr-pf-reporting-date-year'>{{ year }}</span>
+                    </div>
+                    <div class='idsr-pf-field-sub'>
+                        <span class='idsr-pf-field-sublabel idsr-pf-sub-reporting-date-day'>Day</span>
+                        <span class='idsr-pf-field-sublabel idsr-pf-sub-reporting-date-month'>Month</span>
+                        <span class='idsr-pf-field-sublabel idsr-pf-sub-reporting-date-year'>Year</span>
+                    </div>
+                </td>
+                <td>
+                    <div class='idsr-pf-label'>Reporting Date:</div>
+                    <div class='idsr-pf-field-container idsr-pf-idsrid todo'>
+                        {% set countycode = idsrobj.get('county_code') %}
+                        {% set facilitycode = idsrobj.get('facility_code') %}
+                        {% set caseid = idsrobj.get('case_id') %}
+                        {% set cc = countycode if countycode else 'XXXXX' %}
+                        {% set fc = facilitycode if facility_code else 'XXXXX' %}
+                        {% set ci = caseid if caseid else 'XXXXX' %}
+                        <span class='idsr-pf-idsrid-countycode'>{{ cc }}</span> -
+                        <span class='idsr-pf-idsrid-facilitycode'>{{ fc }}</span> -
+                        <span class='idsr-pf-idsrid-caseid'>{{ ci }}</span>
+                    </div>
+                    <div class='idsr-pf-field-sub'>
+                        <span class='idsr-pf-field-sublabel idsr-pf-sub-idsrid-countycode'>County Code</span>
+                        <span class='idsr-pf-field-sublabel idsr-pf-sub-idsrid-countycode'>Facility Code</span>
+                        <span class='idsr-pf-field-sublabel idsr-pf-sub-idsrid-countycode'>Case ID</span>
+                    </div>
+                </td>
+                <td>
+                    <div class='idsr-pf-label'>Patient Record ID:</div>
+                    <div class='idsr-pf-field-container idsr-pf-field-container-last idsr-pf-patient-recordid todo'>
+                        {{ idsrobj.get('patient_client_patientid', '?????') }}
+                    </div>
+                    <div class='idsr-pf-field-sub'>&nbsp;</div>
+                </td>
+            </tr>
+        </table>
+    </div>
+    <div class='idsr-pf-section-container'>
+        <div class='section-title'>Disease reporting</div>
+        <div class='idsr-pf-section'>
+            <table>
+                <tr>
+                    <td>
+                        <div class='idsr-pf-label'>Reporting Health Facility:</div>
+                        <div class='idsr-pf-field-container idsr-pf-field-container-first idsr-pf-reporting-facility todo'>
+                            {{ idsrobj.get('reporting_health_facility', '?????') }}
+                        </div>
+                    </td>
+                    <td>
+                        <div class='idsr-pf-label'>Reporting District:</div>
+                        <div class='idsr-pf-field-container idsr-pf-reporting-district todo'>
+                            {{ idsrobj.get('reporting_district', '?????') }}
+                        </div>
+                    </td>
+                    <td>
+                        <div class='idsr-pf-label'>Reporting County:</div>
+                        <div class='idsr-pf-field-container idsr-pf-field-container-last idsr-pf-reporting-county todo'>
+                            {{ idsrobj.get('reporting_county', '?????') }}
+                        </div>
+                    </td>
+                </tr>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %}
