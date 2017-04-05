@@ -1,3 +1,6 @@
+from accelidsr import db
+import pymongo
+
 counties_districts = {
     "Bomi": ["Dewoin", "Klay", "Mecca", "Senjeh"],
     "Bong": ["Fuamah", "Jorquelleh", "Kokoyah", "Panta-Kpa", "Salala", "Sanayea ", "Suakoko", "Zota"],
@@ -54,8 +57,8 @@ analysis_profiles = [
 
 def getCountiesChoices():
     """
-    Returns a list of 2-tuples that contains the countries available in the
-    system, sorted by the country name asc. Each element within the list is a
+    Returns a list of 2-tuples that contains the counties available in the
+    system, sorted by the county name asc. Each element within the list is a
     2-tuple, where the first element is the value to be used in the html
     control and the second item is the text to be displayed:
     [('val1', 'text1'), (val2, text2)]
@@ -66,10 +69,10 @@ def getCountiesChoices():
         with an additional item in position 0: ('', 'Select...')
     :rtype: A list of 2-tuples
     """
-    # TODO Get available counties from Bika instance
-    counties = counties_districts.keys()
-    counties.sort()
-    choices = [(c, c) for c in counties]
+    records = db['counties'].find().sort([
+                    ("title", pymongo.ASCENDING)
+                ])
+    choices = [(r['code'], r['title']) for r in records]
     choices.insert(0, ('', 'Select...'))
     return choices
 
@@ -87,17 +90,19 @@ def getDistrictChoices(county=None):
     If no county is passed in, a list with only the first record 'Select...'
     is returned.
 
-    :param county: A single string that identifies a county
+    :param county: A single string that identifies a county code
     :type county: string
     :return: A list of 2-tuples with the districts sorted by name ascending,
         with an additional item in position 0: ('', 'Select...')
     :rtype: A list of 2-tuples
     """
-    districts = []
+    choices = []
     if county:
-        # TODO Get available districts from Bika instance
-        districts = counties_districts.get(county, [])
-    choices = [(d, d) for d in districts]
+        query = {'county_code': county}
+        records = db['districts'].find(query).sort([
+                        ("title", pymongo.ASCENDING)
+                    ])
+        choices = [(r['title'], r['title']) for r in records]
     choices.insert(0, ('', 'Select...'))
     return choices
 
@@ -123,14 +128,16 @@ def getFacilityChoices(county=None, district=None):
         with an additional item in position 0: ('', 'Select...')
     :rtype: A list of 2-tuples
     """
-    facilities = []
+    choices = []
     if county and district:
-        # TODO Get available facilities from Bika instance
-        facilities = [{'uid': 'fake-1', 'title': 'Facility fake 1'},
-                      {'uid': 'fake-2', 'title': 'Facility fake 2'}]
-    choices = [(f['uid'], f['title']) for f in facilities]
+        query = {'county': county, 'district': district}
+        records = db['facilities'].find(query).sort([
+                        ("code", pymongo.ASCENDING)
+                    ])
+        choices = [(r['uid'], r['code']) for r in records]
     choices.insert(0, ('', 'Select...'))
     return choices
+
 
 def getDiagnosisChoices():
     """
@@ -146,8 +153,14 @@ def getDiagnosisChoices():
         with an additional item in last position ('_other', 'Other')
     :rtype: A list of 2-tuples
     """
-    # TODO Get available diagnosis from Bika instance
-    return diseases
+    choices = []
+    records = db['diseases'].find().sort([
+                    ("title", pymongo.ASCENDING)
+                ])
+    choices = [(r['uid'], r['title']) for r in records]
+    choices.append(('_other', 'Other'))
+    return choices
+
 
 def getCaseOutcomeChoices():
     """
@@ -160,8 +173,14 @@ def getCaseOutcomeChoices():
     :return: A list of 2-tuples with the counties sorted by name ascending
     :rtype: A list of 2-tuples
     """
-    # TODO Get available case outcomes from Bika instance
-    return case_outcomes
+    choices = []
+    records = db['caseoutcomes'].find().sort([
+                    ("title", pymongo.ASCENDING)
+                ])
+    choices = [(r['uid'], r['title']) for r in records]
+    choices.append(('_other', 'Other'))
+    return choices
+
 
 def getCaseClassificationChoices():
     """
@@ -180,6 +199,7 @@ def getCaseClassificationChoices():
     # TODO Get available case classifications from Bika instance
     return case_classifications
 
+
 def getSpecimenTypeChoices():
     """
     Returns a list of 2-tuples that contains the specimen types (sample types)
@@ -194,8 +214,13 @@ def getSpecimenTypeChoices():
         by name ascending, with an additional item in position 0: ('', 'Select...')
     :rtype: A list of 2-tuples
     """
-    # TODO Get available case classifications from Bika instance
-    return specimen_types
+    choices = []
+    records = db['sampletypes'].find().sort([
+                    ("title", pymongo.ASCENDING)
+                ])
+    choices = [(r['uid'], r['title']) for r in records]
+    choices.insert(0, ('', 'Select...'))
+    return choices
 
 def getAnalysisProfileChoices():
     """
@@ -211,5 +236,10 @@ def getAnalysisProfileChoices():
         by name ascending, with an additional item in position 0: ('', 'Select...')
     :rtype: A list of 2-tuples
     """
-    # TODO Get available case classifications from Bika instance
-    return analysis_profiles
+    choices = []
+    records = db['analysisprofiles'].find().sort([
+                    ("title", pymongo.ASCENDING)
+                ])
+    choices = [(r['uid'], r['title']) for r in records]
+    choices.insert(0, ('', 'Select...'))
+    return choices

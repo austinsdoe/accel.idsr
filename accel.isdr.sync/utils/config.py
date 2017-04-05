@@ -33,4 +33,5 @@ intervals = {
     "disease": int(config.get("intervals", "disease"))*60,
     "facility": int(config.get("intervals", "facility"))*60,
     "idsrform": int(config.get("intervals", "idsrform"))*60,
+    "caseoutcome": int(config.get("intervals", "caseoutcome"))*60
 }
