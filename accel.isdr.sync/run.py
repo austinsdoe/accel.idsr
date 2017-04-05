@@ -8,6 +8,7 @@ from database.models.district import District
 from database.models.syncjob import SyncJob
 from database.models.patient import Patient
 from database.models.facility import Facility
+from database.models.caseoutcome import CaseOutcome
 from database.models.analysisrequest import AnalysisRequest
 from utils.config import intervals
 import threading
@@ -31,6 +32,7 @@ class Run:
         self.processCounties()
         self.processDistricts()
         self.processForms()
+        self.processOutcomes()
         # patient = Patient('test', 'test', 'test', time.time(),
         # '12346', '123@3321.com', 'client-1116')
         # result = self.api.create(patient)
@@ -157,6 +159,30 @@ class Run:
             status = 'Fail'
         self.insert_log(status, message, 'Disease')
         threading.Timer(intervals['disease'], self.processDiseases).start()
+
+    def processOutcomes(self):
+        """
+        Updates Case Outcomes from Bika Instance.
+        """
+        try:
+            imported = 0
+            db_uids = self.db.get_uids('caseoutcomes')
+            api_cos = self.api.getContent('CaseOutcome').get('items')
+            new_cos = [CaseOutcome(uid=co['uid'],
+                                   id=co['id'],
+                                   title=co['title'])
+                       for co in api_cos
+                       if co['uid'] not in db_uids]
+            imported = len(new_cos)
+            for co in new_cos:
+                self.db.insert('caseoutcomes', co.get_db_format())
+            message = str(imported) + ' New CaseOutcome imported.'
+            status = 'Success'
+        except Exception, e:
+            message = str(e)
+            status = 'Fail'
+        self.insert_log(status, message, 'CaseOutcome')
+        threading.Timer(intervals['caseoutcome'], self.processOutcomes).start()
 
     def processFacilities(self):
         """
