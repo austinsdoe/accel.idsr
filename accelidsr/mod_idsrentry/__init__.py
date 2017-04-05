@@ -173,8 +173,13 @@ def getCaseOutcomeChoices():
     :return: A list of 2-tuples with the counties sorted by name ascending
     :rtype: A list of 2-tuples
     """
-    # TODO Get available case outcomes from Bika instance
-    return case_outcomes
+    choices = []
+    records = db['caseoutcomes'].find().sort([
+                    ("title", pymongo.ASCENDING)
+                ])
+    choices = [(r['uid'], r['title']) for r in records]
+    choices.append(('_other', 'Other'))
+    return choices
 
 
 def getCaseClassificationChoices():
