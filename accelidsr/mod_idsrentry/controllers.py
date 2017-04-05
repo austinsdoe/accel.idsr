@@ -98,7 +98,7 @@ def step(step):
             dname = field.name + '_dynamic'
             if field.type == "SelectField" and dname in fdict:
                 choices = fdict.get(dname)
-                field.choices = [(c, c) for c in choices.split('|')]
+                field.choices = [(c, fdict.get(field.name+'_text', c)) for c in choices.split('|')]
         if form.validate():
             # Seems the data is correct. Get the Idsr object filled
             # with the post data and try to save

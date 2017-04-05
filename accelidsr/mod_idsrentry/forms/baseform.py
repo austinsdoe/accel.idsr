@@ -101,9 +101,15 @@ class AbstractIdsrEntryStepForm(FlaskForm):
         kvals = {}
         substeps = self.getSubsteps()
         fields = []
+        valuedfields = ['RadioField', 'SelectField']
         for s in substeps:
             for field in s:
                 kvals[field.name] = field.data
+                if field.type in valuedfields:
+                    seltext = [choice[1] for choice in field.choices \
+                               if choice[0]==field.data]
+                    seltext = seltext[0] if (seltext and field.data) else ''
+                    kvals[field.name+'_text'] = seltext
         kvals['_id'] = self.idobj.data
         status = 'idsr-status-{0}'.format(self.step)
         substatus = 'idsr-status-{0}_{1}'.format(self.step, self.substep)

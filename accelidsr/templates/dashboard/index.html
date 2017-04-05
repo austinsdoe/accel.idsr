@@ -59,9 +59,9 @@ IDSR Input Form
             {% set repdatf = repdate.strftime('%d/%m/%Y') if repdate else '' %}
             <td>{{ repdatf }}</td>
             <td>{{ idsrdict.get('case_id', '') }}</td>
-            <td>{{ idsrdict.get('reporting_country', '') }}</td>
-            <td>{{ idsrdict.get('reporting_district', '') }}</td>
-            <td>{{ idsrdict.get('reporting_health_facility', '') }}</td>
+            <td>{{ idsrdict.get('reporting_country_text', '') }}</td>
+            <td>{{ idsrdict.get('reporting_district_text', '') }}</td>
+            <td>{{ idsrdict.get('reporting_health_facility_text', '') }}</td>
             <td>{{ idsrdict.get('createdby', '')}}</td>
             <td>{{ idsrobj.created() }}</td>
         </tr>
