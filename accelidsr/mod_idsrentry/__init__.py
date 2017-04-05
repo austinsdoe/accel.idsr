@@ -153,8 +153,13 @@ def getDiagnosisChoices():
         with an additional item in last position ('_other', 'Other')
     :rtype: A list of 2-tuples
     """
-    # TODO Get available diagnosis from Bika instance
-    return diseases
+    choices = []
+    records = db['diseases'].find().sort([
+                    ("title", pymongo.ASCENDING)
+                ])
+    choices = [(r['uid'], r['title']) for r in records]
+    choices.append(('_other', 'Other'))
+    return choices
 
 
 def getCaseOutcomeChoices():
