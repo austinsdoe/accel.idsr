@@ -213,11 +213,12 @@ class Run:
                                  county=f['getProvince'],
                                  district=f['getDistrict'])
                         for f in api_facs
-                        if f['uid'] not in db_uids]
+                        if (f['uid'] not in db_uids \
+                            and f['getCountry']=='Liberia')]
             imported = len(new_facs)
             for f in new_facs:
                 self.db.insert('facilities', f.get_db_format())
-            message = str(imported) + ' New Facility imported.'
+            message = str(imported) + ' New Facilities imported.'
             status = 'Success'
         except Exception, e:
             message = str(e)

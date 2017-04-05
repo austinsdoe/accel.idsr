@@ -46,6 +46,8 @@ class PloneApi:
             + content_type
         for key, value in kwargs.iteritems():
             url += "&%s=%s" % (key, value)
+        if 'limit' not in kwargs:
+            url += '&limit=9999'
         result = self.send_request(url)
         return result
 

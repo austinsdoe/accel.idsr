@@ -130,11 +130,17 @@ def getFacilityChoices(county=None, district=None):
     """
     choices = []
     if county and district:
-        query = {'county': county, 'district': district}
+        records = db['counties'].find({'code': county}).sort([
+                        ("title", pymongo.ASCENDING)
+                    ])
+        title = county
+        if records:
+            title = records[0]['title']
+        query = {'county': title, 'district': district}
         records = db['facilities'].find(query).sort([
                         ("code", pymongo.ASCENDING)
                     ])
-        choices = [(r['uid'], r['code']) for r in records]
+        choices = [(r['uid'], r['title']) for r in records]
     choices.insert(0, ('', 'Select...'))
     return choices
 
