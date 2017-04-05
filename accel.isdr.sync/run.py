@@ -80,7 +80,7 @@ class Run:
             new_districts = [District(cocode=d[1],
                                       title=d[2])
                              for d in api_districts
-                             if d[1] not in db_titles]
+                             if d[2] not in db_titles]
             imported = len(new_districts)
             for d in new_districts:
                 self.db.insert('districts', d.get_db_format())
