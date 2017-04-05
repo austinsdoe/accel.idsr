@@ -49,6 +49,8 @@ class Run:
             imported = 0
             db_codes = self.db.get_codes('counties')
             api_counties = self.api.getGeo('States')
+            if not api_counties or len(api_counties) == 0:
+                print '[WARN] No counties found in Bika'
             new_counties = [County(code=c[1],
                                    title=c[2])
                             for c in api_counties
@@ -56,7 +58,7 @@ class Run:
             imported = len(new_counties)
             for c in new_counties:
                 self.db.insert('counties', c.get_db_format())
-            message = str(imported) + ' New County imported.'
+            message = str(imported) + ' Counties imported.'
             status = 'Success'
         except Exception, e:
             message = str(e)
@@ -73,6 +75,8 @@ class Run:
             imported = 0
             db_titles = self.db.get_districts()
             api_districts = self.api.getGeo('Districts')
+            if not api_districts or len(api_districts) == 0:
+                print '[WARN] No districts found in Bika'
             new_districts = [District(cocode=d[1],
                                       title=d[2])
                              for d in api_districts
@@ -80,7 +84,7 @@ class Run:
             imported = len(new_districts)
             for d in new_districts:
                 self.db.insert('districts', d.get_db_format())
-            message = str(imported) + ' New District imported.'
+            message = str(imported) + ' Districts imported.'
             status = 'Success'
         except Exception, e:
             message = str(e)
@@ -96,7 +100,9 @@ class Run:
         try:
             imported = 0
             db_uids = self.db.get_uids('analysisprofiles')
-            api_profiles = self.api.getContent('AnalysisProfile').get('items')
+            api_profiles = self.api.getContent('AnalysisProfile').get('items',{})
+            if not api_profiles or len(api_profiles) == 0:
+                print '[WARN] No Analysis Profiles found in Bika'
             new_profiles = [AnalysisProfile(uid=prof['uid'],
                                             title=prof['title'])
                             for prof in api_profiles
@@ -104,7 +110,7 @@ class Run:
             imported = len(new_profiles)
             for p in new_profiles:
                 self.db.insert('analysisprofiles', p.get_db_format())
-            message = str(imported) + ' New Profile imported.'
+            message = str(imported) + ' Analysis Profiles imported.'
             status = 'Success'
         except Exception, e:
             message = str(e)
@@ -120,7 +126,9 @@ class Run:
         try:
             imported = 0
             db_uids = self.db.get_uids('sampletypes')
-            api_samtypes = self.api.getContent('SampleType').get('items')
+            api_samtypes = self.api.getContent('SampleType').get('items', {})
+            if not api_samtypes or len(api_samtypes) == 0:
+                print '[WARN] No Sample Types found in Bika'
             new_samtypes = [SampleType(uid=st['uid'],
                                        title=st['title'])
                             for st in api_samtypes
@@ -128,7 +136,7 @@ class Run:
             imported = len(new_samtypes)
             for st in new_samtypes:
                 self.db.insert('sampletypes', st.get_db_format())
-            message = str(imported) + ' New Sample Type imported.'
+            message = str(imported) + ' Sample Types imported.'
             status = 'Success'
         except Exception, e:
             message = str(e)
@@ -144,7 +152,9 @@ class Run:
         try:
             imported = 0
             db_uids = self.db.get_uids('diseases')
-            api_diss = self.api.getContent('Disease').get('items')
+            api_diss = self.api.getContent('Disease').get('items', {})
+            if not api_diss or len(api_diss) == 0:
+                print '[WARN] No Diseases found in Bika'
             new_diseases = [Disease(uid=d['uid'],
                                     title=d['title'])
                             for d in api_diss
@@ -167,7 +177,9 @@ class Run:
         try:
             imported = 0
             db_uids = self.db.get_uids('caseoutcomes')
-            api_cos = self.api.getContent('CaseOutcome').get('items')
+            api_cos = self.api.getContent('CaseOutcome').get('items', {})
+            if not api_cos or len(api_cos) == 0:
+                print '[WARN] No Case Outcomes found in Bika'
             new_cos = [CaseOutcome(uid=co['uid'],
                                    id=co['id'],
                                    title=co['title'])
@@ -176,7 +188,7 @@ class Run:
             imported = len(new_cos)
             for co in new_cos:
                 self.db.insert('caseoutcomes', co.get_db_format())
-            message = str(imported) + ' New CaseOutcome imported.'
+            message = str(imported) + ' Case Outcomes imported.'
             status = 'Success'
         except Exception, e:
             message = str(e)
@@ -192,7 +204,9 @@ class Run:
             imported = 0
             db_uids = self.db.get_uids('facilities')
             api_facs = self.api.getContent('Client', review_state='active'
-                                           ).get('items')
+                                           ).get('items', {})
+            if not api_facs or len(api_facs) == 0:
+                print '[WARN] No Health Facilities found in Bika'
             new_facs = [Facility(uid=f['uid'],
                                  code=f['id'],
                                  title=f['title'],
@@ -222,6 +236,7 @@ class Run:
         For each IDSR Form, 2 logs are inserted (one for Patient and one for
         AR).
         """
+        print 'Submitting IDSR Forms to Bika...'
         try:
             forms = self.db.get_waiting_forms()
             for f in forms:
@@ -276,12 +291,9 @@ class Run:
                 self.db.update_status(f.getId(), 'inserted')
                 self.insert_log(status, message,
                                 'AnalysisRequest', f.getId())
-
-            print 'Process Forms finished...'
         except Exception, e:
             message = str(e)
             status = 'Fail'
-            print message
             self.insert_log(status, message, 'AR & Patient')
         threading.Timer(intervals['idsrform'], self.processForms).start()
 
@@ -289,6 +301,7 @@ class Run:
         """
         Inserts log of Sync Job to MongoDB.
         """
+        print '{0}. {1}'.format(status, message)
         log = SyncJob(log_time=time.time(),
                       status=status,
                       message=message,
