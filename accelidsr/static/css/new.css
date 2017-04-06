@@ -246,3 +246,27 @@ div.filters > a.current {
     background-color: #337ab7;
     color: #fff;
 }
+
+.bika-status {
+    color: #fff;
+    font-size: 0.85em;
+    font-weight: bold;
+    padding: 3px 5px 2px;
+}
+
+
+.bika-status.bika-status-pending {
+    background-color: #999;
+}
+
+.bika-status.bika-status-in_queue {
+    background-color: #ffa100;
+}
+
+.bika-status.bika-status-failed {
+    background-color: red;
+}
+
+.bika-status.bika-status-inserted {
+    background-color: green;
+}

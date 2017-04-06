@@ -49,11 +49,13 @@ IDSR Input Form
         {% set idsrdict = idsrobj.getDict() %}
         {% set idobj = idsrobj.getId() %}
         {% set statuses = ['a', 'b', 'c', 'd'] %}
+        {% set bikastatus = idsrdict.get('bika-status', 'pending') %}
         <tr class="{{ loop.cycle('odd', 'even') }}" data-created="{{ idsrdict.get('createdby', 'unk') }}">
             <td class='status'>
                 {% for st in statuses %}
                     <a href="/idsrentry/{{ st }}?id={{ idobj }}" class="{{ idsrdict.get('idsr-status-'+st, 'empty') }}">{{ st }}</a>
                 {% endfor %}
+                <span class="bika-status bika-status-{{ bikastatus }}">{{ bikastatus|replace("_", " ") }}</span>
             </td>
             {% set repdate = idsrdict.get('reporting_date', '') %}
             {% set repdatf = repdate.strftime('%d/%m/%Y') if repdate else '' %}

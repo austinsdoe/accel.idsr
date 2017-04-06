@@ -5,6 +5,7 @@ from accelidsr.mod_idsrentry.forms import getPrevStepId as prevstep
 from accelidsr.mod_idsrentry.forms import getNextStepId as nextstep
 from accelidsr.mod_idsrentry.forms import getStepIds
 from accelidsr.mod_idsrentry.forms import getStepTitle
+from accelidsr.mod_idsrentry.forms import getAvailableSteps
 from accelidsr.mod_idsrentry.forms import getAvailableSubsteps
 
 
@@ -140,11 +141,30 @@ class AbstractIdsrEntryStepForm(FlaskForm):
             if objdict.get(key, '') != 'complete':
                 # One sub-step found in an incomplete state, that's enough
                 kvals[status] = 'incomplete'
-                return kvals;
+                return kvals
 
         # All checks passed. Assume the status for the top-level step is
         # complete
         kvals[status] = 'complete'
+
+        bs = objdict.get('bika-status', '')
+        if bs and bs in ['failed', 'inserted']:
+            return kvals
+
+        # Now, try to stablish the status for the whole idsr, with all the
+        # steps included, suitable for being submitted to bika
+        for s in getAvailableSteps():
+            stepstatus = 'idsr-status-{0}'.format(s.get('id','')).lower()
+            sstat = kvals.get(stepstatus, '')
+            sstat = objdict.get(stepstatus, '') if not sstat else sstat
+            if sstat != 'complete':
+                kvals['idsr-status'] = 'incomplete'
+                kvals['bika-status'] = 'pending'
+                return kvals
+
+        kvals['idsr-status'] = 'complete'
+        # TODO If we don't want automatic submission of ARs into Bika, comment
+        kvals['bika-status'] = 'in_queue'
         return kvals
 
     def getDict(self, idsr_object=None):
