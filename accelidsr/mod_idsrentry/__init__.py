@@ -1,4 +1,5 @@
 from accelidsr import db
+from flask import flash
 import pymongo
 
 counties_districts = {
@@ -72,7 +73,15 @@ def getCountiesChoices():
     records = db['counties'].find().sort([
                     ("title", pymongo.ASCENDING)
                 ])
-    choices = [(r['code'], r['title']) for r in records]
+    if records.count() > 0:
+        choices = [(r['code'], r['title']) for r in records]
+        choices.insert(0, ('', 'Select...'))
+        return choices
+
+    # Oops, seems the database hasn't been populated with counties yet
+    flash("No counties found in Bika. Be sure the sync tool is running. " +
+          "Using a predefined list of counties loaded. Please c")
+    choices = [(k,k) for k in counties_districts.keys()]
     choices.insert(0, ('', 'Select...'))
     return choices
 
@@ -102,7 +111,8 @@ def getDistrictChoices(county=None):
         records = db['districts'].find(query).sort([
                         ("title", pymongo.ASCENDING)
                     ])
-        choices = [(r['title'], r['title']) for r in records]
+        if records.count() > 0:
+            choices = [(r['title'], r['title']) for r in records]
     choices.insert(0, ('', 'Select...'))
     return choices
 
@@ -134,7 +144,7 @@ def getFacilityChoices(county=None, district=None):
                         ("title", pymongo.ASCENDING)
                     ])
         title = county
-        if records:
+        if records.count() > 0:
             title = records[0]['title']
         query = {'county': title, 'district': district}
         records = db['facilities'].find(query).sort([
@@ -163,7 +173,8 @@ def getDiagnosisChoices():
     records = db['diseases'].find().sort([
                     ("title", pymongo.ASCENDING)
                 ])
-    choices = [(r['uid'], r['title']) for r in records]
+    if records.count() > 0:
+        choices = [(r['uid'], r['title']) for r in records]
     choices.append(('_other', 'Other'))
     return choices
 
@@ -183,7 +194,8 @@ def getCaseOutcomeChoices():
     records = db['caseoutcomes'].find().sort([
                     ("title", pymongo.ASCENDING)
                 ])
-    choices = [(r['uid'], r['title']) for r in records]
+    if records.count() > 0:
+        choices = [(r['uid'], r['title']) for r in records]
     choices.append(('_other', 'Other'))
     return choices
 
@@ -224,7 +236,8 @@ def getSpecimenTypeChoices():
     records = db['sampletypes'].find().sort([
                     ("title", pymongo.ASCENDING)
                 ])
-    choices = [(r['uid'], r['title']) for r in records]
+    if records.count() > 0:
+        choices = [(r['uid'], r['title']) for r in records]
     choices.insert(0, ('', 'Select...'))
     return choices
 
@@ -246,6 +259,7 @@ def getAnalysisProfileChoices():
     records = db['analysisprofiles'].find().sort([
                     ("title", pymongo.ASCENDING)
                 ])
-    choices = [(r['uid'], r['title']) for r in records]
+    if records.count():
+        choices = [(r['uid'], r['title']) for r in records]
     choices.insert(0, ('', 'Select...'))
     return choices
