@@ -39,12 +39,9 @@ class AbstractIdsrEntryStepForm(FlaskForm):
         if idsrobj is None:
             self.initDefaults()
             return
-
-        substeps = self.getSubsteps()
-        for s in substeps:
-            for field in s:
-                objval = idsrobj.get(field.name,'')
-                field.data = objval if objval else field.data
+        for field in self.getFields():
+            objval = idsrobj.get(field.name, '')
+            field.data = objval if objval else field.data
         if idsrobj.getId():
             self.idobj.data = idsrobj.getId()
         self.idsrobj = idsrobj
@@ -55,16 +52,19 @@ class AbstractIdsrEntryStepForm(FlaskForm):
         """
         Initializes the fields of the current form with default values.
         """
-        substeps = self.getSubsteps()
-        for s in substeps:
-            for field in s:
-                field.data = field.default
+        for field in self.getFields():
+            field.data = field.default
         self.stepform.data = self.step
         self.substepform.data = self.substep
         self.idsrobj = None
-        #raise NotImplementedError("Not implemented 'initDefaults(idsrobj)'")
 
     def getFields(self):
+        """
+        Return a list with the fields (html controls to be rendered) in the
+        current form, not sorted.
+        :returns: The list of fields to be rendered
+        :rtype: list
+        """
         return [v for k,v in self._fields.items()]
 
     # TODO: Remove
@@ -82,6 +82,16 @@ class AbstractIdsrEntryStepForm(FlaskForm):
         return [[v for k,v in self._fields.items()]]
 
     def getSubstepIds(self):
+        """
+        Returns the ids of the substeps associated to the same step to which
+        the current (substep) form is attached, sorted asc.
+        As an example, if the current substep is A.1, this function will
+        return as many substeps as the top-level step A has: A.1, A.2, A.3,...
+
+        :returns: Substeps associated to the step to which the current form
+            belongs to.
+        :rtype: A list
+        """
         return (sorted(getAvailableSubsteps(self.step).keys()))
 
     def getStepTitle(self):
@@ -96,45 +106,71 @@ class AbstractIdsrEntryStepForm(FlaskForm):
     def getIdsrObject(self):
         return self.idsrobj
 
-    def getDict(self, idsr_object=None):
-        idsrobj = self.idsrobj if not idsr_object else idsr_object
-        kvals = {}
-        substeps = self.getSubsteps()
-        fields = []
-        valuedfields = ['RadioField', 'SelectField']
-        for s in substeps:
-            for field in s:
-                kvals[field.name] = field.data
-                if field.type in valuedfields:
-                    seltext = [choice[1] for choice in field.choices \
-                               if choice[0]==field.data]
-                    seltext = seltext[0] if (seltext and field.data) else ''
-                    kvals[field.name+'_text'] = seltext
-        kvals['_id'] = self.idobj.data
+    def _infereStatus(self, idsr_object=None, kvals={}):
         status = 'idsr-status-{0}'.format(self.step)
         substatus = 'idsr-status-{0}_{1}'.format(self.step, self.substep)
-        iscomplete = self.isComplete()
-        kvals[substatus] = 'complete' if iscomplete else 'incomplete'
-        # Now, try to infere the top-level step status
-        if idsrobj:
-            incomplete = False
-            substepids = self.getSubstepIds()
-            objdict = idsrobj.getDict()
-            for s in substepids:
-                if s == self.substep:
-                    continue
-                key = 'idsr-status-{0}_{1}'.format(self.step, self.substep)
-                completed = objdict.get(key, '')
-                if completed != 'complete':
-                    incomplete = True
-                    break
-            if incomplete:
-                incomplete = True
-            elif not iscomplete:
-                incomplete = True
-            kvals[status] = 'incomplete' if incomplete else 'complete'
-        else:
+        if not self.isComplete():
+            # If this substep is not complete, then we assume that the whole
+            # top-level step will be in an incompleted state too
+            kvals[substatus] = 'incomplete'
             kvals[status] = 'incomplete'
+            return kvals
+
+        kvals[substatus] = 'complete'
+        idsrobj = self.idsrobj if not idsr_object else idsr_object
+        if not idsrobj:
+            # If there is no idsrobj, we assume this form has been loaded for
+            # the first time for the creation of a new Idsr, so obviously, the
+            # rest of sub-steps and top-level steps are empty. Set the status
+            # for the top-level step as incomplete
+            kvals[status] = 'incomplete'
+            return kvals
+
+        # At this point, the current sub-step is ok and other sub-steps might
+        # been filled previously, so we need to ensure the top-level status is
+        # consistent with the rest of sub-steps statuses
+        incompleted = 0
+        substepids = self.getSubstepIds()
+        objdict = idsrobj.getDict()
+        for s in substepids:
+            if s == self.substep:
+                # This is the current substep, omit
+                continue
+            key = 'idsr-status-{0}_{1}'.format(self.step, self.substep)
+            if objdict.get(key, '') != 'complete':
+                # One sub-step found in an incomplete state, that's enough
+                kvals[status] = 'incomplete'
+                return kvals;
+
+        # All checks passed. Assume the status for the top-level step is
+        # complete
+        kvals[status] = 'complete'
+        return kvals
+
+    def getDict(self, idsr_object=None):
+        kvals = {}
+        idsrobj = self.idsrobj if not idsr_object else idsr_object
+        kvals['_id'] = self.idobj.data
+
+        # We need to fill the value-text fields with both information, so
+        # we can use later the text rather than the value to display the info
+        # in lists. Example. The value for HealthFacility field corresponds to
+        # the uid from Bika instance, but although the text will not be
+        # submitted to the Bika instance, we also need it to display it later
+        # in lists as human-readable without the need to querying the db
+        valuedfields = ['RadioField', 'SelectField']
+        for field in self.getFields():
+            kvals[field.name] = field.data
+            if field.type in valuedfields:
+                seltext = [choice[1] for choice in field.choices \
+                           if choice[0]==field.data]
+                seltext = seltext[0] if (seltext and field.data) else ''
+                kvals[field.name+'_text'] = seltext
+
+        # We try to infere the top-level step status and the whole IDSR form
+        # status in order to establish the status for the current substep, for
+        # the current step and for the whole IDSR form (including other steps)
+        self._infereStatus(idsr_object, kvals)
         return kvals
 
     def getPrevStepId(self):
