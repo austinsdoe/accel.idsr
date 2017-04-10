@@ -20,7 +20,7 @@ class IdsrEntryStepA1Form(AbstractIdsrEntryStepForm):
         'Reporting Date',
         format='%d/%m/%Y',
         validators=[DataRequired(), ],
-        render_kw={'type': 'date'})
+        render_kw={'input-type': 'date'})
 
     county_code = TextField(
         'County Code',
