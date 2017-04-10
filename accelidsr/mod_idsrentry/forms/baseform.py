@@ -37,7 +37,7 @@ class AbstractIdsrEntryStepForm(FlaskForm):
             the form fields
         :type idsrobj: accelidsr.mod_idsrentry.models.idsr
         """
-        if idsrobj is None:
+        if not idsrobj or not idsrobj.getDict():
             self.initDefaults()
             return
         for field in self.getFields():
@@ -48,6 +48,8 @@ class AbstractIdsrEntryStepForm(FlaskForm):
         self.idsrobj = idsrobj
         self.stepform.data = self.step
         self.substepform.data = self.substep
+        formdict = self.getDict(idsrobj)
+        self.idsrobj.update(formdict)
 
     def initDefaults(self):
         """
@@ -107,7 +109,7 @@ class AbstractIdsrEntryStepForm(FlaskForm):
     def getIdsrObject(self):
         return self.idsrobj
 
-    def _infereStatus(self, idsr_object=None, kvals={}):
+    def _infereStatus(self, kvals={}):
         status = 'idsr-status-{0}'.format(self.step)
         substatus = 'idsr-status-{0}_{1}'.format(self.step, self.substep)
         if not self.isComplete():
@@ -118,27 +120,18 @@ class AbstractIdsrEntryStepForm(FlaskForm):
             return kvals
 
         kvals[substatus] = 'complete'
-        idsrobj = self.idsrobj if not idsr_object else idsr_object
-        if not idsrobj:
-            # If there is no idsrobj, we assume this form has been loaded for
-            # the first time for the creation of a new Idsr, so obviously, the
-            # rest of sub-steps and top-level steps are empty. Set the status
-            # for the top-level step as incomplete
-            kvals[status] = 'incomplete'
-            return kvals
 
         # At this point, the current sub-step is ok and other sub-steps might
         # been filled previously, so we need to ensure the top-level status is
         # consistent with the rest of sub-steps statuses
         incompleted = 0
         substepids = self.getSubstepIds()
-        objdict = idsrobj.getDict()
         for s in substepids:
             if s == self.substep:
                 # This is the current substep, omit
                 continue
-            key = 'idsr-status-{0}_{1}'.format(self.step, self.substep)
-            if objdict.get(key, '') != 'complete':
+            key = 'idsr-status-{0}_{1}'.format(self.step, s)
+            if kvals.get(key, '') != 'complete':
                 # One sub-step found in an incomplete state, that's enough
                 kvals[status] = 'incomplete'
                 return kvals
@@ -147,16 +140,15 @@ class AbstractIdsrEntryStepForm(FlaskForm):
         # complete
         kvals[status] = 'complete'
 
-        bs = objdict.get('bika-status', '')
+        bs = kvals.get('bika-status', '')
         if bs and bs in ['failed', 'inserted']:
             return kvals
 
-        # Now, try to stablish the status for the whole idsr, with all the
+        # Now, try to establish the status for the whole idsr, with all the
         # steps included, suitable for being submitted to bika
         for s in getAvailableSteps():
             stepstatus = 'idsr-status-{0}'.format(s.get('id','')).lower()
             sstat = kvals.get(stepstatus, '')
-            sstat = objdict.get(stepstatus, '') if not sstat else sstat
             if sstat != 'complete':
                 kvals['idsr-status'] = 'incomplete'
                 kvals['bika-status'] = 'pending'
@@ -168,8 +160,8 @@ class AbstractIdsrEntryStepForm(FlaskForm):
         return kvals
 
     def getDict(self, idsr_object=None):
-        kvals = {}
         idsrobj = self.idsrobj if not idsr_object else idsr_object
+        kvals = idsrobj.getDict().copy() if idsrobj else {}
         kvals['_id'] = self.idobj.data
 
         # We need to fill the value-text fields with both information, so
@@ -190,7 +182,7 @@ class AbstractIdsrEntryStepForm(FlaskForm):
         # We try to infere the top-level step status and the whole IDSR form
         # status in order to establish the status for the current substep, for
         # the current step and for the whole IDSR form (including other steps)
-        self._infereStatus(idsr_object, kvals)
+        self._infereStatus(kvals)
         return kvals
 
     def getPrevStepId(self):
