@@ -82,10 +82,10 @@ class PloneApi:
         result = self.send_request(url, params)
         return result
 
-    def getUID(self, obj_id, folder=None):
+    def getUID(self, obj_id, portal_type=None):
         url = self.jsonapi_url + '/plone/api/1.0/search?id='+obj_id
-        if folder:
-            url += '&folder='+folder
+        if portal_type:
+            url += '&portal_type='+portal_type
         result = self.send_request(url)
         return result['items'][0]['uid']
 

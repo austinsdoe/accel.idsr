@@ -67,24 +67,25 @@ class AnalysisRequest():
     def setPatientUid(self, patient_uid):
         self.patient_uid = patient_uid
 
-    def setPatientUid(self, contact_uid):
+    def setContactUid(self, contact_uid):
         self.contact_uid = contact_uid
 
     def get_api_format(self):
-        result = {}
-        result["0"] = {'Contact': self.contact_uid,
-                       'CCContact': self.cc_contact,
-                       'CCEmails': self.sampler_phone,
-                       'Client': self.reporting_health_facility,
-                       'Batch': self.case_id,
-                       'ClientPatientID': self.patient_record_id,
-                       'Patient': self.patient_uid,
-                       'SamplingDate': self.sampling_date,
-                       'SampleType': self.sample_type,
-                       'Specification': '',
-                       'ClientOrderNumber': self.client_order_number,
-                       'Profiles': self.analyses_requested,
-                       # TODO Analyses MUST BE REMOVED!
-                       "Analyses": ["5d7c07665dfc43ddbb8d8c354740e412"]
-                       }
+        result = {'obj_type': 'AnalysisRequest',
+                  'Contact': self.contact_uid,
+                  'CCContact': self.cc_contact,
+                  'CCEmails': self.sampler_phone,
+                  'Client': self.reporting_health_facility,
+                  'Batch': self.case_id,
+                  'ClientPatientID': self.patient_uid,
+                  'Patient': "uid:" + self.patient_uid,
+                  'SamplingDate': self.sampling_date,
+                  'SampleType': self.sample_type,
+                  'Specification': '',
+                  'ClientOrderNumber': self.client_order_number,
+                  'Profiles': "uid:" + self.analyses_requested,
+                  'Services': [""]
+                  # TODO Analyses MUST BE REMOVED!
+                  # "Analyses": ["5d7c07665dfc43ddbb8d8c354740e412"]
+                  }
         return result

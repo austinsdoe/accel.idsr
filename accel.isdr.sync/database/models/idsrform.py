@@ -21,5 +21,5 @@ class IDSRForm():
     def getAR(self):
         return self.ar
 
-    def getContact():
+    def getContact(self):
         return self.contact
