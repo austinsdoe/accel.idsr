@@ -126,7 +126,9 @@ class Run:
         try:
             imported = 0
             db_uids = self.db.get_uids('sampletypes')
-            api_samtypes = self.api.getContent('SampleType').get('items', {})
+            api_samtypes = self.api.getContent(
+                            'SampleType',
+                            inactive_state="active").get('items', {})
             if not api_samtypes or len(api_samtypes) == 0:
                 print '[WARN] No Sample Types found in Bika'
             new_samtypes = [SampleType(uid=st['uid'],
@@ -241,11 +243,11 @@ class Run:
         try:
             forms = self.db.get_waiting_forms()
             for f in forms:
-                # To create a new AR, Patient UID and Contact UID are required
+                # To create a new AR, Patient UID and Contact ID are required
 
                 # PATIENT CREATION
                 p_result = self.api.create(f.getPatient())
-                if not p_result['success']:
+                if not p_result.get('success', ''):
                     message = p_result['message']
                     status = 'Fail'
                     self.db.update_status(f.getId(), 'failed')
@@ -257,11 +259,11 @@ class Run:
                 status = 'Success'
                 self.insert_log(status, message,
                                 'Patient', f.getId())
-                p_uid = self.api.getUID(p_id)
+                p_uid = self.api.getUID(p_id, "Patient")
 
                 # CLIENT CONTACT CREATION
                 c_result = self.api.create(f.getContact())
-                if not c_result['success']:
+                if not c_result.get('success', ''):
                     message = c_result['message']
                     status = 'Fail'
                     self.db.update_status(f.getId(), 'failed')
@@ -273,21 +275,20 @@ class Run:
                 status = 'Success'
                 self.insert_log(status, message,
                                 'Contact', f.getId())
-                c_uid = self.api.getUID(c_id)
 
                 # FINALLY AR CREATION
                 ar = f.getAR()
                 ar.setPatientUid(p_uid)
-                ar.setContactUid(c_uid)
-                ar_result = self.api.createAR(ar)
-                if not ar_result['success']:
-                    message = ar_result['errors']
+                ar.setContactUid(c_id)
+                ar_result = self.api.create(ar)
+                if not ar_result.get('success', ''):
+                    message = str(ar_result['message'])
                     status = 'Fail'
                     self.db.update_status(f.getId(), 'failed')
                     self.insert_log(status, message,
                                     'AnalysisRequest', f.getId())
                     continue
-                message = 'AR Created. UID: '+ar_result['stickers']
+                message = 'AR Created. UID: '+ar_result.get('ar_id')
                 status = 'Success'
                 self.db.update_status(f.getId(), 'inserted')
                 self.insert_log(status, message,
@@ -296,7 +297,7 @@ class Run:
             message = str(e)
             status = 'Fail'
             self.insert_log(status, message, 'AR & Patient')
-        threading.Timer(intervals['idsrform'], self.processForms).start()
+        # threading.Timer(intervals['idsrform'], self.processForms).start()
 
     def insert_log(self, status, message, content_type, idsr_id=None):
         """

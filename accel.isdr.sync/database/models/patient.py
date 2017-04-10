@@ -49,6 +49,6 @@ class Patient():
             "BusinessPhone": '',
             "EmailAddress": '',
             "PatientAsGuarantor": False,
-            "PrimaryReferrer": self.self.facility_code
+            "PrimaryReferrer": self.facility_code,
         }
         return result

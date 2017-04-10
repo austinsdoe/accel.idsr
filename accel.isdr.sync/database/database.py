@@ -58,7 +58,7 @@ class Database:
         return results
 
     def update_status(self, form_id, status):
-        result = db._db['idsrform'].update_one(
+        result = self._db['idsrform'].update_one(
                     {"idobj": form_id},
                     {
                         "$set": {
@@ -84,7 +84,7 @@ class Database:
             p_clientPatientId = c['patient_client_patientid']
             p_surname = c['patient_lastname']
             p_firstname = c['patient_firstname']
-            p_birthDate = c['patient_dateofbirth']
+            p_birthDate = c['patient_dateofbirth'].strftime('%Y-%m-%dT%H:%M:%S')
             p_gender = c['patient_gender']
             p_phone = c['patient_phone_number']
             patient = Patient(p_clientPatientId, p_surname, p_firstname,
@@ -102,22 +102,22 @@ class Database:
             ar_sampler_phone = c['sampler_phone']
             ar_case_id = c['case_id']
             ar_patient_record_id = c['patient_record_id']
-            ar_reporting_health_facility = c['reporting_health_facility']
+            ar_reporting_health_facility = facility_code
             ar_patient_uid = ''
-            ar_sampling_date = c['date_sampled'].strftime("%y-%m-%d %H:%M")
+            ar_sampling_date = c['date_sampled'].strftime("%Y-%m-%d %H:%M")
             # TODO make sure that sample_type is UID
             ar_sample_type = c['sample_type']
             ar_analysis_specification = ''
             ar_analyses_requested = c['analyses_requested']
             ar_client_order_number = c['patient_record_id']
 
-            ar = AnalysisRequest(ar_contact, ar_cc_contact, ar_sampler_phone,
+            ar = AnalysisRequest(ar_contact_uid, ar_cc_contact, ar_sampler_phone,
                                  ar_case_id, ar_patient_record_id,
                                  ar_reporting_health_facility, ar_patient_uid,
                                  ar_sampling_date, ar_sample_type,
                                  ar_analysis_specification,
                                  ar_analyses_requested, ar_client_order_number)
-            idsr_form = IDSRForm(form_id, patient, ar)
+            idsr_form = IDSRForm(form_id, patient, contact, ar)
             idsr_forms.append(idsr_form)
 
         return idsr_forms
