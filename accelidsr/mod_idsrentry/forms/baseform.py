@@ -130,7 +130,7 @@ class AbstractIdsrEntryStepForm(FlaskForm):
             if s == self.substep:
                 # This is the current substep, omit
                 continue
-            key = 'idsr-status-{0}_{1}'.format(self.step, self.substep)
+            key = 'idsr-status-{0}_{1}'.format(self.step, s)
             if kvals.get(key, '') != 'complete':
                 # One sub-step found in an incomplete state, that's enough
                 kvals[status] = 'incomplete'
