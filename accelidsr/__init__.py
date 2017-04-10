@@ -84,4 +84,4 @@ def not_found(error):
     return render_template('404.html'), 404
 
 
-import accelidsr.views
+#import accelidsr.views
