@@ -52,7 +52,8 @@ class IdsrEntryStepA1Form(AbstractIdsrEntryStepForm):
         objdict = self.getDict()
         # Check County
         prvcode = objdict.get('reporting_country','')
-        if self.county_code and prvcode and prvcode != self.county_code.data:
+        if self.county_code.data \
+            and prvcode and prvcode != self.county_code.data:
             self.county_code.errors.append("The county code doesn't match " \
                                            "with the reporting county (A.2)")
             failures += 1
@@ -111,5 +112,30 @@ class IdsrEntryStepA2Form(AbstractIdsrEntryStepForm):
         facilities = getFacilityChoices(county, district)
         self.reporting_district.choices = districts
         self.reporting_health_facility.choices = facilities
+
+    def validate(self):
+        """
+        Validates the form by calling `validate` on each field. Also checks if
+        the value fields match with the values set in other steps or Substeps
+        for the current IDSR object. (e.g. County Code must match with the
+        county selected in the Reporting County SelectList from step A.2)
+        :param extra_validators:
+            If provided, is a dict mapping field names to a sequence of
+            callables which will be passed as extra validators to the field's
+            `validate` method.
+        Returns `True` if no errors occur.
+        """
+        success = super(IdsrEntryStepA2Form, self).validate()
+        failures = 0 if success else 1
+        objdict = self.getDict()
+        # Check County
+        prvcode = objdict.get('county_code','')
+        if self.reporting_country.data \
+            and prvcode and prvcode != self.reporting_country.data:
+            self.reporting_country.errors.append(
+                "The reporting county selected does not match with the " \
+                " county code (A.1)")
+            failures += 1
+        return failures == 0
 
 registerStepForm(clazz=IdsrEntryStepA2Form, step=STEP, substep=2)
