@@ -41,11 +41,9 @@ class IdsrEntryStepA1Form(AbstractIdsrEntryStepForm):
         the value fields match with the values set in other steps or Substeps
         for the current IDSR object. (e.g. County Code must match with the
         county selected in the Reporting County SelectList from step A.2)
-        :param extra_validators:
-            If provided, is a dict mapping field names to a sequence of
-            callables which will be passed as extra validators to the field's
-            `validate` method.
-        Returns `True` if no errors occur.
+
+        :returns: `True` if no errors occur.
+        :rtype: bool
         """
         success = super(IdsrEntryStepA1Form, self).validate()
         failures = 0 if success else 1
@@ -119,11 +117,9 @@ class IdsrEntryStepA2Form(AbstractIdsrEntryStepForm):
         the value fields match with the values set in other steps or Substeps
         for the current IDSR object. (e.g. County Code must match with the
         county selected in the Reporting County SelectList from step A.2)
-        :param extra_validators:
-            If provided, is a dict mapping field names to a sequence of
-            callables which will be passed as extra validators to the field's
-            `validate` method.
-        Returns `True` if no errors occur.
+
+        :returns: `True` if no errors occur.
+        :rtype: bool
         """
         success = super(IdsrEntryStepA2Form, self).validate()
         failures = 0 if success else 1

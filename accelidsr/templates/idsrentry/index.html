@@ -91,6 +91,31 @@ IDSR Input Form
                 }, "json");
             });
 
+            // Diagnosis "other... logic".
+            if ($('input[type=radio][id^="diagnosis-"][value="_other"]').is(':checked')) {
+                $('input[id=diagnosis_other]').addClass('required');
+                $('input[id=diagnosis_other]').prop('required', true);
+                $('input[id=diagnosis_other]').parent('div.formline').show();
+                $('input[id=diagnosis_other]').parent('div.formline').addClass('required');
+            } else {
+                $('input[id=diagnosis_other]').parent('div.formline').hide();
+                $('input[id=diagnosis_other]').val('');
+            }
+            $('input[type=radio][id^="diagnosis-"]').change(function(e) {
+                if ($(this).val() == '_other' && $(this).is(':checked')) {
+                    $('input[id=diagnosis_other]').addClass('required');
+                    $('input[id=diagnosis_other]').prop('required', true);
+                    $('input[id=diagnosis_other]').parent('div.formline').show();
+                    $('input[id=diagnosis_other]').parent('div.formline').addClass('required');
+                } else {
+                    $('input[id=diagnosis_other]').val('');
+                    $('input[id=diagnosis_other]').removeClass('required');
+                    $('input[id=diagnosis_other]').removeAttr('required');
+                    $('input[id=diagnosis_other]').parent('div.formline').hide();
+                    $('input[id=diagnosis_other]').parent('div.formline').removeClass('required');
+                }
+            });
+
             // Browser navigator
             $('div.form-footer a.navlink').click(function(e) {
                 e.preventDefault();
