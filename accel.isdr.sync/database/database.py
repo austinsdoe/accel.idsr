@@ -101,7 +101,7 @@ class Database:
             ar_cc_contact = ''
             ar_sampler_phone = c['sampler_phone']
             ar_case_id = c['case_id']
-            ar_patient_record_id = c['patient_record_id']
+            ar_patient_record_id = c.get('patient_record_id','')
             ar_reporting_health_facility = facility_code
             ar_patient_uid = ''
             ar_sampling_date = c['date_sampled'].strftime("%Y-%m-%d %H:%M")
@@ -109,7 +109,7 @@ class Database:
             ar_sample_type = c['sample_type']
             ar_analysis_specification = ''
             ar_analyses_requested = c['analyses_requested']
-            ar_client_order_number = c['patient_record_id']
+            ar_client_order_number = c.get('patient_record_id','')
 
             ar = AnalysisRequest(ar_contact_uid, ar_cc_contact, ar_sampler_phone,
                                  ar_case_id, ar_patient_record_id,
