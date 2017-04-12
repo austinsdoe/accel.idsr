@@ -3,7 +3,7 @@ class Patient():
     """
     Class that represents Patient
     """
-    def __init__(self, clientPatientId, surname, firstname, birthDate,
+    def __init__(self, clientPatientId, is_anon, surname, firstname, birthDate,
                  gender, phone, facility_code):
         self.clientPatientId = clientPatientId
         self.surname = surname
@@ -12,6 +12,7 @@ class Patient():
         self.gender = gender
         self.phone = phone
         self.facility_code = facility_code
+        self.is_anon = is_anon
 
     def getClientPatientId(self):
         return self.clientPatientId
@@ -50,5 +51,6 @@ class Patient():
             "EmailAddress": '',
             "PatientAsGuarantor": False,
             "PrimaryReferrer": self.facility_code,
+            "Anonymous": self.is_anon
         }
         return result

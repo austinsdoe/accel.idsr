@@ -297,7 +297,7 @@ class Run:
             message = str(e)
             status = 'Fail'
             self.insert_log(status, message, 'AR & Patient')
-        # threading.Timer(intervals['idsrform'], self.processForms).start()
+        threading.Timer(intervals['idsrform'], self.processForms).start()
 
     def insert_log(self, status, message, content_type, idsr_id=None):
         """
