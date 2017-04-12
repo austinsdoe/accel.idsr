@@ -8,6 +8,7 @@ from accelidsr.mod_idsrentry import getFacilityChoices
 from accelidsr.mod_idsrentry.validators import DynamicDataValidator
 from accelidsr.mod_idsrentry.forms import registerStepForm
 from accelidsr.mod_idsrentry.forms.baseform import AbstractIdsrEntryStepForm
+from accelidsr import db
 
 STEP = ('A', 'Basic information')
 
@@ -28,7 +29,7 @@ class IdsrEntryStepA1Form(AbstractIdsrEntryStepForm):
 
     facility_code = TextField(
         'Facility Code',
-        validators=[DataRequired(), Length(max=8)])
+        validators=[DataRequired(), Length(max=12)]) # maxlength was 8
 
     case_id = TextField(
         'Case ID',
@@ -55,6 +56,26 @@ class IdsrEntryStepA1Form(AbstractIdsrEntryStepForm):
             self.county_code.errors.append("The county code doesn't match " \
                                            "with the reporting county (A.2)")
             failures += 1
+
+        # Check facility code
+        if self.facility_code.data:
+            prvcode = objdict.get('reporting_health_facility_code', '')
+            if not prvcode:
+                prvcode = objdict.get('reporting_health_facility', '')
+                if prvcode:
+                    # This is the uid, get the facility code from db
+                    col = db.get_collection('facilities')
+                    try:
+                        doc = col.find_one({'uid':  prvcode})
+                        prvcode = doc.get('code', '')
+                    except:
+                        prvcode = ''
+            if prvcode and prvcode != self.facility_code.data:
+                self.facility_code.errors.append("The facility code doesn't " \
+                                                 "match with the reporting " \
+                                                 "health facility (A.2)")
+                failures += 1
+
         return failures == 0
 
 
