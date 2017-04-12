@@ -1,5 +1,6 @@
 from exceptions import ValueError
 from operator import itemgetter
+from accelidsr.mod_idsrentry.models.idsr import Idsr
 
 _stepforms = {}
 
@@ -216,7 +217,13 @@ def loadStepFormInstance(requestform=None):
     step = requestform.get('stepform', 'A')
     substep = requestform.get('substepform', 1)
     clazz = _getRegisteredStepForm(step, substep)
-    return clazz(requestform)
+    obj = clazz(requestform)
+    idobj = requestform.get('idobj', '')
+    if idobj:
+        idsrobj = Idsr.fetch(idobj)
+        idsrobj.update(requestform)
+        obj.setIdsrObject(idsrobj)
+    return obj
 
 
 # Import custom forms to be loaded dynamically here
