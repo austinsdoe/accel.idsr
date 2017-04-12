@@ -134,8 +134,26 @@ class IdsrEntryStepA2Form(AbstractIdsrEntryStepForm):
             and prvcode and prvcode != self.reporting_country.data:
             self.reporting_country.errors.append(
                 "The reporting county selected does not match with the " \
-                " county code (A.1)")
+                "county code (A.1)")
             failures += 1
+
+        # Check facility code
+        prvcode = objdict.get('facility_code','')
+        if prvcode and self.reporting_health_facility.data:
+            # This is the uid, get the facility code from db
+            uid = self.reporting_health_facility.data
+            col = db.get_collection('facilities')
+            try:
+                doc = col.find_one({'uid':  uid})
+                fcode = doc.get('code', '')
+            except:
+                fcode = ''
+            if fcode != prvcode:
+                self.reporting_health_facility.errors.append(
+                    "The health facility selected does not match with the " \
+                    "facility code (A.1)")
+                failures += 1
+
         return failures == 0
 
 registerStepForm(clazz=IdsrEntryStepA2Form, step=STEP, substep=2)
