@@ -126,6 +126,7 @@ class IdsrEntryStepD5Form(AbstractIdsrEntryStepForm):
 
     analyses_requested = SelectField(
         'Lab Analysis Requested',
+        validators=[DataRequired(), ],
         choices=getAnalysisProfileChoices())
 
 registerStepForm(clazz=IdsrEntryStepD5Form, step=STEP, substep=5)
