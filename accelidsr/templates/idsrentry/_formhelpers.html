@@ -9,6 +9,13 @@
       {% endif %}
       {% if field.type == "BooleanField" %}
         {{ field(**kwargs)|safe }} {{ field.label }}
+      {% elif field.type == "TextAreaField" %}
+        {{ field.label }}<br/>
+        {% if field.flags.required %}
+            {{ field(required='', **kwargs)|safe }}
+        {% else %}
+            {{ field(**kwargs)|safe }}
+        {% endif %}
       {% else %}
         {% if field.flags.required %}
             {{ field.label }}: {{ field(required='', **kwargs)|safe }}

@@ -95,29 +95,32 @@ IDSR Input Form
             if ($('input[type=radio][id^="diagnosis-"][value="_other"]').is(':checked')) {
                 $('input[id=diagnosis_other]').addClass('required');
                 $('input[id=diagnosis_other]').prop('required', true);
-                $('input[id=diagnosis_other]').parent('div.formline').show();
-                $('input[id=diagnosis_other]').parent('div.formline').addClass('required');
+                $('input[id=diagnosis_other]').closest('div.formline').show();
+                $('input[id=diagnosis_other]').closest('div.formline').addClass('required');
             } else {
-                $('input[id=diagnosis_other]').parent('div.formline').hide();
+                $('input[id=diagnosis_other]').closest('div.formline').hide();
                 $('input[id=diagnosis_other]').val('');
             }
             $('input[type=radio][id^="diagnosis-"]').change(function(e) {
                 if ($(this).val() == '_other' && $(this).is(':checked')) {
                     $('input[id=diagnosis_other]').addClass('required');
                     $('input[id=diagnosis_other]').prop('required', true);
-                    $('input[id=diagnosis_other]').parent('div.formline').show();
-                    $('input[id=diagnosis_other]').parent('div.formline').addClass('required');
+                    $('input[id=diagnosis_other]').closest('div.formline').show();
+                    $('input[id=diagnosis_other]').closest('div.formline').addClass('required');
                 } else {
                     $('input[id=diagnosis_other]').val('');
                     $('input[id=diagnosis_other]').removeClass('required');
                     $('input[id=diagnosis_other]').removeAttr('required');
-                    $('input[id=diagnosis_other]').parent('div.formline').hide();
-                    $('input[id=diagnosis_other]').parent('div.formline').removeClass('required');
+                    $('input[id=diagnosis_other]').closest('div.formline').hide();
+                    $('input[id=diagnosis_other]').closest('div.formline').removeClass('required');
                 }
             });
 
             // Patients fields logic
             loadPatientFields();
+
+            // Vaccination fields logic
+            loadVaccinationFields();
 
             // Browser navigator
             $('div.form-footer a.navlink').click(function(e) {
@@ -278,6 +281,28 @@ IDSR Input Form
                 date.setFullYear(date.getFullYear() - years);
                 datestr = date.getDate()+"/"+date.getMonth()+"/"+date.getFullYear()
                 $("#patient_dateofbirth").val(datestr);
+            }
+
+            function loadVaccinationFields() {
+                var vac = $('input[id^="vaccinated_for_disease-"][value="y"]');
+                if (vac.length > 0) {
+                    if ($(vac).is(':checked')) {
+                        $('#number_of_vaccinations').closest('div.formline').show();
+                        $('#date_of_most_recent_vaccination').closest('div.formline').show();
+                    } else {
+                        $('#number_of_vaccinations').closest('div.formline').hide();
+                        $('#date_of_most_recent_vaccination').closest('div.formline').hide();
+                    }
+                    $('input[id^="vaccinated_for_disease-"]').change(function(e){
+                        if ($(this).val()=='y') {
+                            $('#number_of_vaccinations').closest('div.formline').show();
+                            $('#date_of_most_recent_vaccination').closest('div.formline').show();
+                        } else {
+                            $('#number_of_vaccinations').closest('div.formline').hide();
+                            $('#date_of_most_recent_vaccination').closest('div.formline').hide();
+                        }
+                    });
+                }
             }
 
         })
