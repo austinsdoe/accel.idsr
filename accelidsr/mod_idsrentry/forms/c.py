@@ -38,6 +38,9 @@ class IdsrEntryStepC1Form(AbstractIdsrEntryStepForm):
         default='u',
         choices=[('u', 'Unknown'), ('m', 'Male'), ('f', 'Female')])
 
+    patient_birth_date_estimated = BooleanField(
+        'Date of Birth is estimated (years)')
+
     patient_dateofbirth = DateTimeField(
         'Date of Birth',
         format='%d/%m/%Y',
