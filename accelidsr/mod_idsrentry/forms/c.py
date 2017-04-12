@@ -42,7 +42,7 @@ class IdsrEntryStepC1Form(AbstractIdsrEntryStepForm):
         'Date of Birth',
         format='%d/%m/%Y',
         validators=[DataRequired(), ],
-        render_kw={'type': 'date'})
+        render_kw={'input-type': 'date'})
 
     patient_age_years = IntegerField(
         'Patient Age. Years',

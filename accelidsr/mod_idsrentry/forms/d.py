@@ -22,13 +22,13 @@ class IdsrEntryStepD1Form(AbstractIdsrEntryStepForm):
         'Date of Onset',
         format='%d/%m/%Y',
         validators=[DataRequired(), ],
-        render_kw={'type': 'date'})
+        render_kw={'input-type': 'date'})
 
     case_date_seen = DateTimeField(
         'Date Seen',
         format='%d/%m/%Y',
         validators=[DataRequired(), ],
-        render_kw={'type': 'date'})
+        render_kw={'input-type': 'date'})
 
     case_inout_patient = RadioField(
         'In/Out Patient',
@@ -101,7 +101,7 @@ class IdsrEntryStepD4Form(AbstractIdsrEntryStepForm):
     date_of_most_recent_vaccination = DateTimeField(
         'Date of most recent vaccination',
         format='%d/%m/%Y',
-        render_kw={'type': 'date'},
+        render_kw={'input-type': 'date'},
         validators=[validators.optional(), ])
 
 registerStepForm(clazz=IdsrEntryStepD4Form, step=STEP, substep=4)
@@ -112,13 +112,13 @@ class IdsrEntryStepD5Form(AbstractIdsrEntryStepForm):
         'Date of Specimen Collection',
         format='%d/%m/%Y',
         validators=[DataRequired(), ],
-        render_kw={'type': 'date'})
+        render_kw={'input-type': 'date'})
 
     date_specimen_sent = DateTimeField(
         'Date of Specimen Sent to Lab',
         format='%d/%m/%Y',
         validators=[DataRequired(), ],
-        render_kw={'type': 'date'})
+        render_kw={'input-type': 'date'})
 
     sample_type = SelectField(
         'Specimen Type',
