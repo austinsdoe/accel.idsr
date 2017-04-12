@@ -106,6 +106,9 @@ class AbstractIdsrEntryStepForm(FlaskForm):
         """
         return getStepTitle(self.step)
 
+    def setIdsrObject(self, idsrobject):
+        self.idsrobj = idsrobject
+
     def getIdsrObject(self):
         return self.idsrobj
 

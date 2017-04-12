@@ -102,25 +102,24 @@ def step(step):
         if form.validate():
             # Seems the data is correct. Get the Idsr object filled
             # with the post data and try to save
-            formdict = form.getDict()
-            objid = formdict.get('_id', '')
-            idsrobj = idsrobj if not objid else Idsr.fetch(objid)
-            if idsrobj:
-                formdict = form.getDict(idsrobj)
-                if not objid:
-                    formdict['createdby'] = current_user.get_username()
-                formdict['modifiedby'] = current_user.get_username()
-                idsrobj.update(formdict)
-                if save(idsrobj):
-                    nextstep = form.getNextStepId()
-                    if nextstep:
-                        url = url_for('idsrentry.step',
-                                      step=nextstep,
-                                      id=idsrobj.getId())
-                        return redirect(url)
-                    else:
-                        # This is the last step. Redirect to main page
-                        return redirect(url_for('index'))
+            fidsr = form.getIdsrObject()
+            if fidsr:
+                idsrobj = fidsr
+            formdict = form.getDict(idsrobj)
+            if not idsrobj.getId():
+                formdict['createdby'] = current_user.get_username()
+            formdict['modifiedby'] = current_user.get_username()
+            idsrobj.update(formdict)
+            if save(idsrobj):
+                nextstep = form.getNextStepId()
+                if nextstep:
+                    url = url_for('idsrentry.step',
+                                  step=nextstep,
+                                  id=idsrobj.getId())
+                    return redirect(url)
+                else:
+                    # This is the last step. Redirect to main page
+                    return redirect(url_for('index'))
 
         # Oops, unable to save the form
         message = 'Cannot save!'
