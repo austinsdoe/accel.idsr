@@ -212,7 +212,7 @@ class AbstractIdsrEntryStepForm(FlaskForm):
 
     def isComplete(self):
         miss = [f for f in self.getFields() if f.flags.required \
-                and not str(f.data).strip()]
+                and str(f.data).strip() == 'None']
         return len(miss) == 0
 
     def stringify(self, choices):
