@@ -18,6 +18,7 @@ class IdsrEntryStepB1Form(AbstractIdsrEntryStepForm):
         choices=getDiagnosisChoices(),
         validators=[DataRequired(), ])
 
-    diagnosis_other = TextField('Other diagnosis')
+    diagnosis_other = TextField('Other diagnosis',
+        render_kw={'style': 'hidden'})
 
 registerStepForm(clazz=IdsrEntryStepB1Form, step=STEP, substep=1)
