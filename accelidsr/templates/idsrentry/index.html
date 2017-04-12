@@ -116,6 +116,9 @@ IDSR Input Form
                 }
             });
 
+            // Patients fields logic
+            loadPatientFields();
+
             // Browser navigator
             $('div.form-footer a.navlink').click(function(e) {
                 e.preventDefault();
@@ -123,6 +126,29 @@ IDSR Input Form
                 $(navstep).show();
                 $(this).closest('div.substep').hide();
             });
+
+            function loadPatientFields() {
+                var anon = $('#patient_anonymous');
+                if (anon.length > 0) {
+                    $(anon).closest('div.formline').addClass('anon');
+                    if ($(anon).is(':checked')) {
+                        $('div.formline').not('.anon').hide();
+                        // fill all required fields with dummy data
+                        $('input[required]').not('[input-type="date"]').val('000');
+                        $('input[required][input-type="date"]').val('01/01/2017');
+                    }
+                    $(anon).change(function(e) {
+                        if ($(anon).is(':checked')) {
+                            $('div.formline').not('.anon').hide();
+                            $('input[required]').not('[input-type="date"]').val('000');
+                            $('input[required][input-type="date"]').val('01/01/2017');
+                        } else {
+                            $('div.formline').not('.anon').show();
+                            $('input[required]').val('');
+                        }
+                    });
+                }
+            }
         })
     })(jQuery);
     </script>

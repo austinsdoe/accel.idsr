@@ -1,7 +1,7 @@
 from wtforms import BooleanField, TextField, TextAreaField, PasswordField, \
                     validators, HiddenField, DateTimeField, SelectField, \
                     SubmitField, RadioField, IntegerField
-from wtforms.validators import DataRequired, Email, Length
+from wtforms.validators import DataRequired, InputRequired, Email, Length
 from accelidsr.mod_idsrentry import getCountiesChoices
 from accelidsr.mod_idsrentry import getDistrictChoices
 from accelidsr.mod_idsrentry.forms import registerStepForm
@@ -20,18 +20,18 @@ class IdsrEntryStepC1Form(AbstractIdsrEntryStepForm):
 
     patient_firstname = TextField(
         'Patient First Name',
-        validators=[DataRequired(), Length(min=3)])
+        validators=[InputRequired(), Length(min=3)])
 
     patient_middlename = TextField(
         'Patient Middle Name')
 
     patient_lastname = TextField(
         'Patient Last Name',
-        validators=[DataRequired(), Length(min=3)])
+        validators=[InputRequired(), Length(min=3)])
 
     patient_client_patientid = TextField(
         'Client Patient ID',
-        validators=[DataRequired(), Length(min=3)])
+        validators=[InputRequired(), Length(min=3)])
 
     patient_gender = RadioField(
         'Patient Gender',
@@ -46,15 +46,15 @@ class IdsrEntryStepC1Form(AbstractIdsrEntryStepForm):
 
     patient_age_years = IntegerField(
         'Patient Age. Years',
-        validators=[DataRequired(), ])
+        validators=[InputRequired(), ])
 
     patient_age_months = IntegerField(
         'Patient Age. Months',
-        validators=[DataRequired(), ])
+        validators=[InputRequired(), ])
 
     patient_age_days = IntegerField(
         'Patient Age. Days',
-        validators=[DataRequired(), ])
+        validators=[InputRequired(), ])
 
 registerStepForm(clazz=IdsrEntryStepC1Form, step=STEP, substep=1)
 
