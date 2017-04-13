@@ -91,6 +91,37 @@ IDSR Input Form
                 }, "json");
             });
 
+            // Diagnosis "other... logic".
+            if ($('input[type=radio][id^="diagnosis-"][value="_other"]').is(':checked')) {
+                $('input[id=diagnosis_other]').addClass('required');
+                $('input[id=diagnosis_other]').prop('required', true);
+                $('input[id=diagnosis_other]').closest('div.formline').show();
+                $('input[id=diagnosis_other]').closest('div.formline').addClass('required');
+            } else {
+                $('input[id=diagnosis_other]').closest('div.formline').hide();
+                $('input[id=diagnosis_other]').val('');
+            }
+            $('input[type=radio][id^="diagnosis-"]').change(function(e) {
+                if ($(this).val() == '_other' && $(this).is(':checked')) {
+                    $('input[id=diagnosis_other]').addClass('required');
+                    $('input[id=diagnosis_other]').prop('required', true);
+                    $('input[id=diagnosis_other]').closest('div.formline').show();
+                    $('input[id=diagnosis_other]').closest('div.formline').addClass('required');
+                } else {
+                    $('input[id=diagnosis_other]').val('');
+                    $('input[id=diagnosis_other]').removeClass('required');
+                    $('input[id=diagnosis_other]').removeAttr('required');
+                    $('input[id=diagnosis_other]').closest('div.formline').hide();
+                    $('input[id=diagnosis_other]').closest('div.formline').removeClass('required');
+                }
+            });
+
+            // Patients fields logic
+            loadPatientFields();
+
+            // Vaccination fields logic
+            loadVaccinationFields();
+
             // Browser navigator
             $('div.form-footer a.navlink').click(function(e) {
                 e.preventDefault();
@@ -98,6 +129,182 @@ IDSR Input Form
                 $(navstep).show();
                 $(this).closest('div.substep').hide();
             });
+
+            function loadPatientFields() {
+                var anon = $('#patient_anonymous');
+                if (anon.length > 0) {
+                    $(anon).closest('div.formline').addClass('anon');
+                    if ($(anon).is(':checked')) {
+                        $('div.formline').not('.anon').hide();
+                        // fill all required fields with dummy data
+                        $('input[required]').not('[input-type="date"]').val('000');
+                        $('input[required][input-type="date"]').val('01/01/2017');
+                        $('#patient_birth_date_estimated').prop('checked', false);
+                    }
+                    $(anon).change(function(e) {
+                        if ($(anon).is(':checked')) {
+                            $('div.formline').not('.anon').hide();
+                            $('input[required]').not('[input-type="date"]').val('000');
+                            $('input[required][input-type="date"]').val('01/01/2017');
+                            $('#patient_birth_date_estimated').prop('checked', false);
+                        } else {
+                            $('div.formline').not('.anon').show();
+                            $('input[required]').val('');
+                        }
+                    });
+                    loadEstimatedDateOfBirth();
+                }
+            }
+
+            function loadEstimatedDateOfBirth() {
+                if ($('#patient_birth_date_estimated').is(':checked')) {
+                    $('#patient_dateofbirth').closest('div.formline').hide();
+                    if (!$("#patient_age_years").val()) {
+                        $("#patient_age_years").val(0);
+                    }
+                    if (!$("#patient_age_months").val()) {
+                        $("#patient_age_months").val(0);
+                    }
+                    if (!$("#patient_age_days").val()) {
+                        $("#patient_age_days").val(0);
+                    }
+                }
+                $('#patient_birth_date_estimated').change(function(e) {
+                    var anon = $('#patient_anonymous');
+                    if (!$(anon).is(':checked')) {
+                        if ($(this).is(':checked')) {
+                            $('#patient_dateofbirth').closest('div.formline').hide();
+                            $("#patient_age_years").prop('readonly', false);
+                            $("#patient_age_months").prop('readonly', false);
+                            $("#patient_age_days").prop('readonly', false);
+                            $("#patient_age_years").val('');
+                            $("#patient_age_months").val(0);
+                            $("#patient_age_days").val(0);
+                        } else {
+                            $('#patient_dateofbirth').closest('div.formline').show();
+                            $("#patient_age_years").prop('readonly', true);
+                            $("#patient_age_months").prop('readonly', true);
+                            $("#patient_age_days").prop('readonly', true);
+                        }
+                    }
+                });
+                $('#patient_dateofbirth').change(function(e) {
+                    var anon = $('#patient_anonymous');
+                    var estim = $('#patient_birth_date_estimated');
+                    if (!$(anon).is(':checked') && !$(estim).is(':checked')) {
+                        // Calculatge the age from date
+                        calculateAge();
+                    }
+                });
+                $('input[id^="patient_age_"]').change(function(e){
+                    var anon = $('#patient_anonymous');
+                    var estim = $('#patient_birth_date_estimated');
+                    if (!$(anon).is(':checked') && $(estim).is(':checked')) {
+                        // Calculate the date from age
+                        calculateDateOfBirth();
+                    }
+                });
+            }
+
+            /**
+             * Calculates the age of the patient using the current Birth Date value,
+             * and set the result value to 'Age' field. If no Birth Date available or
+             * with a non-valid format, restores the value of 'Age' field to empty.
+             */
+            function calculateAge() {
+                var dobstr = $("#patient_dateofbirth").val();
+                var dobtok = dobstr.split('/');
+                if (dobtok.length < 3) {
+                    $("#patient_age_years").val('');
+                    $("#patient_age_months").val('');
+                    $("#patient_age_days").val('');
+                    return;
+                }
+                var dob = new Date(dobtok[2],dobtok[1]-1,dobtok[0]);
+                var now = new Date();
+                if (dob!= undefined && dob != null && now>=dob){
+                    var now = new Date();
+                    var currentday=now.getDate();
+                    var currentmonth=now.getMonth()+1;
+                    var currentyear=now.getFullYear();
+                    var birthday=dob.getDate();
+                    var birthmonth=dob.getMonth()+1;
+                    var birthyear=dob.getFullYear();
+                    var ageday = currentday-birthday;
+                    var agemonth=0;
+                    var ageyear=0;
+                    if (ageday < 0) {
+                        currentmonth--;
+                        if (currentmonth < 1) {
+                            currentyear--;
+                            currentmonth = currentmonth + 12;
+                        }
+                        dayspermonth = 30;
+                        if (currentmonth==1 || currentmonth==3 ||
+                            currentmonth==5 || currentmonth==7 ||
+                            currentmonth==8 || currentmonth==10||
+                            currentmonth==12) {
+                            dayspermonth = 31;
+                        } else if (currentmonth == 2) {
+                            dayspermonth = 28;
+                            if(!(currentyear%4) && (currentyear%100 || !(currentyear%400))) {
+                                dayspermonth++;
+                            }
+                        }
+                        ageday = ageday + dayspermonth;
+                    }
+                    agemonth = currentmonth - birthmonth;
+                    if (agemonth < 0) {
+                        currentyear--;
+                        agemonth = agemonth + 12;
+                    }
+                    ageyear = currentyear - birthyear;
+
+                    $("#patient_age_years").val(ageyear);
+                    $("#patient_age_months").val(agemonth);
+                    $("#patient_age_days").val(ageday);
+
+                } else {
+                    $("#patient_age_years").val('');
+                    $("#patient_age_months").val('');
+                    $("#patient_age_days").val('');
+                }
+            }
+
+            function calculateDateOfBirth() {
+                var years = parseInt($('#patient_age_years').val());
+                var months = parseInt($("#patient_age_months").val());
+                var days = parseInt($("#patient_age_days").val());
+                var date = new Date()
+                date.setDate(date.getDate() - days);
+                date.setMonth(date.getMonth() - months);
+                date.setFullYear(date.getFullYear() - years);
+                datestr = date.getDate()+"/"+date.getMonth()+"/"+date.getFullYear()
+                $("#patient_dateofbirth").val(datestr);
+            }
+
+            function loadVaccinationFields() {
+                var vac = $('input[id^="vaccinated_for_disease-"][value="y"]');
+                if (vac.length > 0) {
+                    if ($(vac).is(':checked')) {
+                        $('#number_of_vaccinations').closest('div.formline').show();
+                        $('#date_of_most_recent_vaccination').closest('div.formline').show();
+                    } else {
+                        $('#number_of_vaccinations').closest('div.formline').hide();
+                        $('#date_of_most_recent_vaccination').closest('div.formline').hide();
+                    }
+                    $('input[id^="vaccinated_for_disease-"]').change(function(e){
+                        if ($(this).val()=='y') {
+                            $('#number_of_vaccinations').closest('div.formline').show();
+                            $('#date_of_most_recent_vaccination').closest('div.formline').show();
+                        } else {
+                            $('#number_of_vaccinations').closest('div.formline').hide();
+                            $('#date_of_most_recent_vaccination').closest('div.formline').hide();
+                        }
+                    });
+                }
+            }
+
         })
     })(jQuery);
     </script>

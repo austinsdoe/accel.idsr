@@ -211,7 +211,8 @@ class AbstractIdsrEntryStepForm(FlaskForm):
         return not nstep or nstep.split('_')[0].lower() != self.step.lower()
 
     def isComplete(self):
-        miss = [f for f in self.getFields() if f.flags.required and not f.data]
+        miss = [f for f in self.getFields() if f.flags.required \
+                and str(f.data).strip() == 'None']
         return len(miss) == 0
 
     def stringify(self, choices):

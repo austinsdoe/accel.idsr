@@ -75,7 +75,7 @@ class IdsrEntryStepD3Form(AbstractIdsrEntryStepForm):
 
     facility_code = TextField(
         'Facility Code',
-        validators=[DataRequired(), Length(max=8)])
+        validators=[DataRequired(), Length(max=12)]) # maxlength was 8
 
     case_id = TextField(
         'Case ID',
@@ -126,6 +126,7 @@ class IdsrEntryStepD5Form(AbstractIdsrEntryStepForm):
 
     analyses_requested = SelectField(
         'Lab Analysis Requested',
+        validators=[DataRequired(), ],
         choices=getAnalysisProfileChoices())
 
 registerStepForm(clazz=IdsrEntryStepD5Form, step=STEP, substep=5)
