@@ -49,8 +49,11 @@ class Patient():
             "MobilePhone": '',
             "BusinessPhone": '',
             "EmailAddress": '',
-            "PatientAsGuarantor": False,
+            "PatientAsGuarantor": True,
             "PrimaryReferrer": self.facility_code,
             "Anonymous": self.is_anon
         }
+        if self.is_anon:
+            result["Firstname"] = 'Anonymous'
+            result["Surname"] = 'Patient'
         return result
