@@ -281,7 +281,7 @@ class Run:
                 ar = f.getAR()
                 ar.setPatientUid(p_uid)
                 ar.setContactUid(c_id)
-                ar_result = self.api.create(ar)
+                ar_result = self.api.createAR(ar)
                 if not ar_result.get('success', ''):
                     message = str(ar_result['message'])
                     status = 'Fail'
