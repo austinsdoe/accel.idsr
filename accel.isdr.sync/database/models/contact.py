@@ -21,7 +21,7 @@ class Contact():
 
     def get_api_format(self):
         result = {
-            "obj_path": '/'+self.plone_site_name+'/'+self.client_id,
+            "obj_path": '/'+self.plone_site_name+'/clients/'+self.client_id,
             "obj_type": 'Contact',
             "Surname": self.surname,
             "Firstname": self.firstname
