@@ -1,8 +1,12 @@
+from utils.config import settings
 
 class Patient():
     """
     Class that represents Patient
     """
+    def __init__(self):
+        self.plone_site_name = settings['plone_site_name']
+
     def __init__(self, clientPatientId, is_anon, surname, firstname, birthDate,
                  gender, phone, facility_code):
         self.clientPatientId = clientPatientId
@@ -37,7 +41,7 @@ class Patient():
 
     def get_api_format(self):
         result = {
-            "obj_path": '/Plone/patients',
+            "obj_path": '/' +self.plone_site_name+'/patients',
             "obj_type": 'Patient',
             "ClientPatientID": self.clientPatientId,
             "Surname": self.surname,
