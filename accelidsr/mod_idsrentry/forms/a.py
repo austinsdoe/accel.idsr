@@ -23,9 +23,10 @@ class IdsrEntryStepA1Form(AbstractIdsrEntryStepForm):
         validators=[DataRequired(), ],
         render_kw={'input-type': 'date'})
 
-    county_code = TextField(
-        'County Code',
-        validators=[DataRequired(), Length(max=8)])
+    county_code = SelectField(
+        'Country Code',
+        choices=getCountiesChoices(),
+        validators=[DataRequired(), ],)
 
     facility_code = TextField(
         'Facility Code',
@@ -33,7 +34,7 @@ class IdsrEntryStepA1Form(AbstractIdsrEntryStepForm):
 
     case_id = TextField(
         'Case ID',
-        validators=[Length(max=8), ])
+        validators=[DataRequired(), Length(max=8), ])
 
     def validate(self):
         """
