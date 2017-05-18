@@ -33,7 +33,7 @@ class IdsrEntryStepA1Form(AbstractIdsrEntryStepForm):
 
     case_id = TextField(
         'Case ID',
-        validators=[Length(max=3), ])
+        validators=[Length(max=8), ])
 
     def validate(self):
         """
