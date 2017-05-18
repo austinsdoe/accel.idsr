@@ -87,7 +87,7 @@ class IdsrEntryStepA2Form(AbstractIdsrEntryStepForm):
     Form for "Step A.2 - Basic Information" from IDSR Form.
     """
     reporting_country = SelectField(
-        'Reporting Country',
+        'Reporting County',
         choices=getCountiesChoices(),
         validators=[DataRequired(), ],)
 
