@@ -5,4 +5,4 @@ accelidsr/accel.idsr.ini
 run_debug
 start_mongodb
 stop_mongodb
-
+accel.isdr.sync/utils/config.ini

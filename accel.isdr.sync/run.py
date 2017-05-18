@@ -132,6 +132,7 @@ class Run:
             if not api_samtypes or len(api_samtypes) == 0:
                 print '[WARN] No Sample Types found in Bika'
             new_samtypes = [SampleType(uid=st['uid'],
+                                       id=st['id'],
                                        title=st['title'])
                             for st in api_samtypes
                             if st['uid'] not in db_uids]
@@ -297,7 +298,7 @@ class Run:
             message = str(e)
             status = 'Fail'
             self.insert_log(status, message, 'AR & Patient')
-        # threading.Timer(intervals['idsrform'], self.processForms).start()
+        threading.Timer(intervals['idsrform'], self.processForms).start()
 
     def insert_log(self, status, message, content_type, idsr_id=None):
         """

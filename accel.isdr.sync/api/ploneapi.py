@@ -73,15 +73,6 @@ class PloneApi:
         result = self.send_request(url, params)
         return result
 
-    def createAR(self, ar):
-        url = self.plone_site_url + '/analysisrequest_submit'
-        # Setting some obligatory parameters
-        params = urllib.urlencode({
-            "state": json.dumps(ar.get_api_format())
-        })
-        result = self.send_request(url, params)
-        return result
-
     def getUID(self, obj_id, portal_type=None):
         url = self.jsonapi_url + '/plone/api/1.0/search?id='+obj_id
         if portal_type:

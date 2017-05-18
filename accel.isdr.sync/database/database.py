@@ -82,13 +82,14 @@ class Database:
 
             # Setting up Patient
             p_clientPatientId = c['patient_client_patientid']
-            p_surname = c['patient_lastname']
-            p_firstname = c['patient_firstname']
+            p_is_anon = c.get('patient_anonymous', False)
+            p_surname = c.get('patient_lastname', '')
+            p_firstname = c.get('patient_firstname', '')
             p_birthDate = c['patient_dateofbirth'].strftime('%Y-%m-%dT%H:%M:%S')
             p_gender = c['patient_gender']
             p_phone = c['patient_phone_number']
-            patient = Patient(p_clientPatientId, p_surname, p_firstname,
-                              p_birthDate, p_gender, p_phone,
+            patient = Patient(p_clientPatientId, p_is_anon, p_surname,
+                              p_firstname, p_birthDate, p_gender, p_phone,
                               facility_code)
 
             # Setting up Contact

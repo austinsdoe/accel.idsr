@@ -237,7 +237,7 @@ def getSpecimenTypeChoices():
                     ("title", pymongo.ASCENDING)
                 ])
     if records.count() > 0:
-        choices = [(r['uid'], r['title']) for r in records]
+        choices = [(r['id'], r['title']) for r in records]
     choices.insert(0, ('', 'Select...'))
     return choices
 

@@ -36,7 +36,7 @@ class IdsrEntryStepC1Form(AbstractIdsrEntryStepForm):
     patient_gender = RadioField(
         'Patient Gender',
         default='u',
-        choices=[('u', 'Unknown'), ('m', 'Male'), ('f', 'Female')])
+        choices=[('dk', 'Unknown'), ('male', 'Male'), ('female', 'Female')])
 
     patient_birth_date_estimated = BooleanField(
         'Date of Birth is estimated (years)')

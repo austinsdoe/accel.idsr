@@ -1,10 +1,14 @@
+from utils.config import settings
+
 
 class Patient():
     """
     Class that represents Patient
     """
-    def __init__(self, clientPatientId, surname, firstname, birthDate,
+
+    def __init__(self, clientPatientId, is_anon, surname, firstname, birthDate,
                  gender, phone, facility_code):
+        self.plone_site_name = settings['plone_site_name']
         self.clientPatientId = clientPatientId
         self.surname = surname
         self.firstname = firstname
@@ -12,6 +16,7 @@ class Patient():
         self.gender = gender
         self.phone = phone
         self.facility_code = facility_code
+        self.is_anon = is_anon
 
     def getClientPatientId(self):
         return self.clientPatientId
@@ -36,7 +41,7 @@ class Patient():
 
     def get_api_format(self):
         result = {
-            "obj_path": '/Plone/patients',
+            "obj_path": '/' + self.plone_site_name+'/patients',
             "obj_type": 'Patient',
             "ClientPatientID": self.clientPatientId,
             "Surname": self.surname,
@@ -48,7 +53,11 @@ class Patient():
             "MobilePhone": '',
             "BusinessPhone": '',
             "EmailAddress": '',
-            "PatientAsGuarantor": False,
+            "PatientAsGuarantor": True,
             "PrimaryReferrer": self.facility_code,
+            "Anonymous": self.is_anon
         }
+        if self.is_anon:
+            result["Firstname"] = 'Anonymous'
+            result["Surname"] = 'Patient'
         return result
