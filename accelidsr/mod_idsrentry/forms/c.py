@@ -99,7 +99,7 @@ class IdsrEntryStepC3Form(AbstractIdsrEntryStepForm):
     # Step C.3
     patient_head_of_household = TextField('Head of Household')
     patient_parents_name = TextField('Parents Name (if young)')
-    patient_phone_number = TextField('Parent Phone Number', validators=[Length(max=10), ])
+    patient_phone_number = TextField('Contact Phone Number', validators=[Length(max=10), ])
 
 registerStepForm(clazz=IdsrEntryStepC3Form, step=STEP, substep=3)
 
