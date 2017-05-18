@@ -32,7 +32,7 @@ class IdsrEntryStepD1Form(AbstractIdsrEntryStepForm):
 
     case_inout_patient = RadioField(
         'In/Out Patient',
-        choices=[('in', 'In Patient'), ('out', 'Out Patient')])
+        choices=[('in', 'In Patient'), ('out', 'Out Patient'), 'unk', 'Not Indicated'])
 
     case_outcome = RadioField(
         'Outcome',
