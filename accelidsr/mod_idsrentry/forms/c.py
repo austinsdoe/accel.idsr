@@ -59,6 +59,32 @@ class IdsrEntryStepC1Form(AbstractIdsrEntryStepForm):
         'Patient Age. Days',
         validators=[InputRequired(), ])
 
+    def validate(self):
+        """
+        """
+        success = super(IdsrEntryStepC1Form, self).validate()
+        failures = 0 if success else 1
+        objdict = self.getDict()
+
+        # Check facility code
+        dof = self.patient_dateofbirth.data
+        if not self.is_valid_date(dof):
+            self.patient_dateofbirth.errors.append(" Please enter valid Date \
+            of Birth in DD/MM/YYYY format.")
+            failures += 1
+
+        return failures == 0
+
+    def is_valid_date(self, value):
+        """
+        Date Validator function.
+        Returns True only if date format is DD/MM/YYYY.
+        """
+        if not value:
+            return False
+        return True
+
+
 registerStepForm(clazz=IdsrEntryStepC1Form, step=STEP, substep=1)
 
 
