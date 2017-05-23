@@ -10,6 +10,7 @@ from accelidsr.mod_idsrentry import getSpecimenTypeChoices
 from accelidsr.mod_idsrentry import getAnalysisProfileChoices
 from accelidsr.mod_idsrentry.forms import registerStepForm
 from accelidsr.mod_idsrentry.forms.baseform import AbstractIdsrEntryStepForm
+from datetime import datetime
 
 STEP = ('D', 'Clinical information')
 
@@ -42,6 +43,48 @@ class IdsrEntryStepD1Form(AbstractIdsrEntryStepForm):
     case_classification = SelectField(
         'Classification',
         choices=getCaseClassificationChoices())
+
+    def validate(self):
+        """
+        Validator of D1 step.
+        Checks different fields. In case of any error, adds error message(s)
+        to field(s) and returns False.
+        :returns: `True` if no errors occur.
+        :rtype: boolean
+        """
+        success = super(IdsrEntryStepD1Form, self).validate()
+        failures = 0 if success else 1
+        # Date of Onset/seem can't be future date. No need to check format.
+        # Already checked by DateTimeField formatter which returns None in case
+        # of wrong format. Just add message if empty.
+        d_onset = self.case_date_of_onset.data
+        if not d_onset:
+            self.case_date_of_onset.errors.append("Please enter valid date in \
+                DD/MM/YYYY format.")
+            failures += 1
+        elif d_onset > datetime.now():
+            self.case_date_of_onset.errors.append("Date of Onset can't be \
+                future date")
+            failures += 1
+
+        d_seen = self.case_date_seen.data
+        if not d_seen:
+            self.case_date_seen.errors.append("Please enter valid date in \
+                DD/MM/YYYY format.")
+            failures += 1
+        elif d_seen > datetime.now():
+            self.case_date_seen.errors.append("Date Seen can't be future date")
+            failures += 1
+
+        # If eveything is correct, do not allow "Date of Onset" to be after
+        # "Date Seen".
+        if failures == 0 and d_onset > d_seen:
+            self.case_date_of_onset.errors.append("Date of Onset can't be \
+                after Date Seen.")
+            failures += 1
+
+        return failures == 0
+
 
 registerStepForm(clazz=IdsrEntryStepD1Form, step=STEP, substep=1)
 
