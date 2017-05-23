@@ -156,13 +156,13 @@ class IdsrEntryStepD5Form(AbstractIdsrEntryStepForm):
         'Date of Specimen Collection',
         format='%d/%m/%Y',
         validators=[DataRequired(), ],
-        render_kw={'input-type': 'date'})
+        render_kw={'input-type': 'date', 'no_future': '1'})
 
     date_specimen_sent = DateTimeField(
         'Date of Specimen Sent to Lab',
         format='%d/%m/%Y',
         validators=[DataRequired(), ],
-        render_kw={'input-type': 'date'})
+        render_kw={'input-type': 'date', 'no_future': '1'})
 
     sample_type = SelectField(
         'Specimen Type',
@@ -172,5 +172,49 @@ class IdsrEntryStepD5Form(AbstractIdsrEntryStepForm):
         'Lab Analysis Requested',
         validators=[DataRequired(), ],
         choices=getAnalysisProfileChoices())
+
+    def validate(self):
+        """
+        Validator of D5 step.
+        Checks different fields. In case of any error, adds error message(s)
+        to field(s) and returns False.
+        :returns: `True` if no errors occur.
+        :rtype: boolean
+        """
+        success = super(IdsrEntryStepD5Form, self).validate()
+        failures = 0 if success else 1
+        # Date of Specimen Collection adn Date of Specimen Sent to Lab can't be
+        # future dates. No need to check format. Already checked by
+        # DateTimeField formatter which returns None in case
+        # of wrong format. Just add message if empty.
+        d_sampled = self.date_sampled.data
+        if not d_sampled:
+            self.date_sampled.errors.append("Please enter valid date in \
+                DD/MM/YYYY format.")
+            failures += 1
+        elif d_sampled > datetime.now():
+            self.date_sampled.errors.append("Date of Specimen Collection can't be \
+                future date")
+            failures += 1
+
+        d_sent = self.date_specimen_sent.data
+        if not d_sent:
+            self.date_specimen_sent.errors.append("Please enter valid date in \
+                DD/MM/YYYY format.")
+            failures += 1
+        elif d_sent > datetime.now():
+            self.date_specimen_sent.errors.append("Date of Specimen Sent to Lab \
+                can't be future date")
+            failures += 1
+
+        # If eveything is correct, do not allow "Date of Specimen Collection"
+        # to be after "Date of Specimen Sent to Lab".
+        if failures == 0 and d_sampled > d_sent:
+            self.date_sampled.errors.append("Date of Specimen Sent to Lab can't \
+                be before Date of Specimen Collection.")
+            failures += 1
+
+        return failures == 0
+
 
 registerStepForm(clazz=IdsrEntryStepD5Form, step=STEP, substep=5)
