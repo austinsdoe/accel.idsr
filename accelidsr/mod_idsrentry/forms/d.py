@@ -23,13 +23,13 @@ class IdsrEntryStepD1Form(AbstractIdsrEntryStepForm):
         'Date of Onset',
         format='%d/%m/%Y',
         validators=[DataRequired(), ],
-        render_kw={'input-type': 'date'})
+        render_kw={'input-type': 'date', 'no_future': '1'})
 
     case_date_seen = DateTimeField(
         'Date Seen',
         format='%d/%m/%Y',
         validators=[DataRequired(), ],
-        render_kw={'input-type': 'date'})
+        render_kw={'input-type': 'date', 'no_future': '1'})
 
     case_inout_patient = RadioField(
         'In/Out Patient',
