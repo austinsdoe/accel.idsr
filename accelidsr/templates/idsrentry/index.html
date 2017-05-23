@@ -168,6 +168,10 @@ IDSR Input Form
                     if (!$("#patient_age_days").val()) {
                         $("#patient_age_days").val(0);
                     }
+                }else{
+                  $("#patient_age_years").prop('readonly', true);
+                  $("#patient_age_months").prop('readonly', true);
+                  $("#patient_age_days").prop('readonly', true);
                 }
                 $('#patient_birth_date_estimated').change(function(e) {
                     var anon = $('#patient_anonymous');
@@ -180,6 +184,7 @@ IDSR Input Form
                             $("#patient_age_years").val('');
                             $("#patient_age_months").val(0);
                             $("#patient_age_days").val(0);
+                            calculateAge();
                         } else {
                             $('#patient_dateofbirth').closest('div.formline').show();
                             $("#patient_age_years").prop('readonly', true);
