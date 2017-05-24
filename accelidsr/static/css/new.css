@@ -285,6 +285,10 @@ div.filters > a.current {
     background-color: red;
 }
 
+.bika-status.bika-status-cancelled {
+    background-color: black;
+}
+
 .bika-status.bika-status-inserted {
     background-color: green;
 }
