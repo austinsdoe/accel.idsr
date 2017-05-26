@@ -55,6 +55,9 @@
 .substepsnav ul li.current a  {
     background-color:#ffa100;
     opacity:1;
+    border-style: double;
+    border-color: aquamarine;
+    border-width: thick;
 }
 .stepsnav ul li.incomplete a,
 .substepsnav ul li.incomplete a {
