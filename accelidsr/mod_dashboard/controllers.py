@@ -65,11 +65,12 @@ def _cancel_idsrs(ids):
     n_cancelled = 0
     n_skipped = 0
     n_failed = 0
+    allowed_states = ['in_queue', 'pending', 'incomplete']
     for i in ids:
         try:
             idsrobj = Idsr.fetch(i)
             status = idsrobj.getDict().get('bika-status')
-            if not status == 'in_queue':
+            if status not in allowed_states:
                 n_skipped += 1
                 continue
             idsrobj.update({"bika-status": "cancelled",
