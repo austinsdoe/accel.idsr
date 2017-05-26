@@ -134,7 +134,7 @@ IDSR Input Form
         {% set idobj = idsrobj.getId() %}
         {% set statuses = ['a', 'b', 'c', 'd'] %}
         {% set bikastatus = idsrdict.get('bika-status', 'pending') %}
-        <tr class="{{ loop.cycle('odd', 'even') }}" data-created="{{ idsrdict.get('createdby', 'unk') }}" data-bikastatus="{{ idsrdict.get('bika-status', 'unk') }}">
+        <tr class="{{ loop.cycle('odd', 'even') }}" data-created="{{ idsrdict.get('createdby', 'unk') }}" data-bikastatus="{{ bikastatus }}">
             <td>
               <input type="checkbox" name="chk_idsr_ids" id="chk_idsr_ids_{{ idobj }}" value= "{{ idobj }}">
             </td>
