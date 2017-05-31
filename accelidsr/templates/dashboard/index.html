@@ -9,21 +9,102 @@ IDSR Input Form
     <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/new.css') }}"/>
     <script type='text/javascript'>
     (function ($) {
+
         $(document).ready(function () {
-            $('#filter-my').click(function(e){
-                e.preventDefault();
-                $('div.items-table table tr[data-created]').hide();
-                $('div.items-table table tr[data-created="{{ current_user.get_username() }}"]').show();
-                $(this).addClass('current');
-                $('#filter-all').removeClass('current');
-            });
-            $('#filter-all').click(function(e){
-                e.preventDefault();
-                $('div.items-table table tr[data-created]').show();
-                $(this).addClass('current');
-                $('#filter-my').removeClass('current');
-            });
+          load_filtering_events();
+          $('[id^="filter-bikastatus-active"]').click();
         });
+
+        /**
+         * Load filtering events.
+         * To add a new filter, first, filter name must be added to items' <tr>
+         * as an attribute in "data-<filtername>" format. Then in the 'filters'
+         * section, a new button with ID in "filter-<filtername-<value>" format
+         * must be added. Multiple values can be seperated with ':'(colon).
+         * For example, if there are following items:
+         *      <tr id='1' data-bikastatus="cancelled">
+         *      <tr id='2' data-bikastatus="inserted">
+         *      <tr id='3' data-bikastatus="active">
+         * A button like this will hide only the first item.
+         * <a id='filter-bikastatus-active:inserted' href="#">Active IDSRs</a>
+         *
+         */
+        function load_filtering_events(){
+
+          /**
+           * Filter all button disables all filterings by removing current
+           * class from their buttons.
+           */
+          $('#filter-all').click(function(e){
+              e.preventDefault();
+              $('.current').removeClass('current');
+              $(this).addClass('current');
+              filter();
+          });
+
+          /**
+           * When a filtering button is clicked, checking if user is enabling or
+           * disabling this filter. If this filtering is being enables,
+           * disable other filters with the same filter name.
+           */
+          $('[id^="filter-"]').click(function(e){
+              e.preventDefault();
+              var id = $(this).attr('id').split("-");
+              // To be sure it s a filtering button.
+              if ( id.length < 3) {
+                return true;
+              }
+              var f_name=id[1];
+              $('#filter-all').removeClass('current');
+              if ($(this).hasClass('current')) {
+                  $(this).removeClass('current');
+              }else{
+                $('[id^="filter-'+f_name+'"]').removeClass('current');
+                $(this).addClass('current');
+              }
+              filter();
+          });
+
+          function show_all_items(){
+            $('div.items-table table tbody tr').show();
+          };
+
+
+          /**
+           * Filtering process.
+           * Applying filters based on all items with 'current' class, having ID
+           * in 'filter-<filtername>-<value>' format. First, show all items,
+           * and then filter and hide.
+           */
+          function filter(){
+            show_all_items();
+            var cur_filters = $('.current');
+            if (cur_filters.length == 0) {
+              $('#filter-all').addClass('current');
+              return true;
+            }
+            for (var i = 0; i < cur_filters.length; i++) {
+              var id = cur_filters[i].id.split("-");
+              // To be sure it s a filtering button.
+              if ( id.length < 3 || id[0] != "filter") {
+                continue;
+              }
+              var items = $('div.items-table table tbody tr');
+              var f_name=id[1];
+              // Splitting filter values to get available values
+              var f_values= id[2].split(":");
+              for (var k = 0; k < items.length; k++) {
+                var item = items[k];
+                // If items attribute for current filter name doesn't exist in
+                // available values, then hide that item.
+                var at_value = item.getAttribute('data-'+f_name);
+                if ( $.inArray(at_value, f_values) == -1){
+                  item.style.display='none';
+                }
+              }
+            }
+          };
+        };
     })(jQuery);
     </script>
 {% endblock %}
@@ -35,11 +116,16 @@ IDSR Input Form
 </div>
 <div class='filters'>
     <a id='filter-all' class='current' href="#">All IDSRs</a>
-    <a id='filter-my' href="#">My IDSRs</a>
+    <a id='filter-created-{{ current_user.get_username() }}' href="#">My IDSRs</a>
+    <a id='filter-bikastatus-pending' href="#">Pending</a>
+    <a id='filter-bikastatus-inserted' href="#">Inserted</a>
+    <a id='filter-bikastatus-active:in_queue:pending:inserted' href="#">Active IDSRs</a>
+    <a id='filter-bikastatus-cancelled' href="#">Cancelled IDSRs</a>
 </div>
 <div class='items-table'>
 {% from "dashboard/macros.html" import render_idsr_table_header %}
 {% from "dashboard/macros.html" import render_idsr_row %}
+<form action="doaction" method="post">
 <table>
     <thead>
         {{ render_idsr_table_header(items) }}
@@ -50,7 +136,10 @@ IDSR Input Form
         {% set idobj = idsrobj.getId() %}
         {% set statuses = ['a', 'b', 'c', 'd'] %}
         {% set bikastatus = idsrdict.get('bika-status', 'pending') %}
-        <tr class="{{ loop.cycle('odd', 'even') }}" data-created="{{ idsrdict.get('createdby', 'unk') }}">
+        <tr class="{{ loop.cycle('odd', 'even') }}" data-created="{{ idsrdict.get('createdby', 'unk') }}" data-bikastatus="{{ bikastatus }}">
+            <td>
+              <input type="checkbox" name="chk_idsr_ids" id="chk_idsr_ids_{{ idobj }}" value= "{{ idobj }}">
+            </td>
             <td class='status'>
                 {% for st in statuses %}
                     <a href="/idsrentry/{{ st }}?id={{ idobj }}" class="{{ idsrdict.get('idsr-status-'+st, 'empty') }}">{{ st }}</a>
@@ -70,5 +159,9 @@ IDSR Input Form
         {% endfor %}
     </tbody>
 </table>
+<div class="items-buttons">
+  <input type="submit" name="action" value="Cancel" class="cancel" />
+</div>
+</form>
 </div>
 {% endblock %}

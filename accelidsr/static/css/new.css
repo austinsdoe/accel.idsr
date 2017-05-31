@@ -193,6 +193,24 @@ div.required::before {
 .items-table table tr th {
     padding:4px 0;
 }
+div.items-buttons {
+    margin-top: 10px;
+    position: absolute;
+}
+div.items-buttons input[type="submit"]{
+  background-color: red;
+  border: medium none;
+  line-height: 25px;
+  border-radius: 5px;
+  color: #fff;
+  font-size: 1.1em;
+  margin-left: 5px;
+  padding:5px 7px;
+  text-decoration:none;
+}
+div.items-buttons input[type="submit"]:hover{
+    opacity:0.8;
+}
 div.buttons-bar {
     margin-bottom: 10px;
     margin-left: 860px;
@@ -265,6 +283,10 @@ div.filters > a.current {
 
 .bika-status.bika-status-failed {
     background-color: red;
+}
+
+.bika-status.bika-status-cancelled {
+    background-color: black;
 }
 
 .bika-status.bika-status-inserted {
