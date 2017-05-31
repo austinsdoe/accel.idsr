@@ -59,6 +59,27 @@ class IdsrEntryStepC1Form(AbstractIdsrEntryStepForm):
         'Patient Age. Days',
         validators=[InputRequired(), ])
 
+    def validate(self):
+        """
+        Validator function of C1 step.
+        Adds an error message and returns False if any field fails to be saved.
+        """
+        success = super(IdsrEntryStepC1Form, self).validate()
+        failures = 0 if success else 1
+        objdict = self.getDict()
+
+        # Checking if Date of Birth is correct. Since DateTimeField already
+        # has a date formatter, it returns None when entered value is not in
+        # proper format. Just adding error message here.
+        dof = self.patient_dateofbirth.data
+        if not dof:
+            self.patient_dateofbirth.errors.append(" Please enter valid Date \
+            of Birth in DD/MM/YYYY format.")
+            failures += 1
+
+        return failures == 0
+
+
 registerStepForm(clazz=IdsrEntryStepC1Form, step=STEP, substep=1)
 
 
