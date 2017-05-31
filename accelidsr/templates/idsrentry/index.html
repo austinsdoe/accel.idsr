@@ -17,6 +17,8 @@ IDSR Input Form
     (function ($) {
         $(document).ready(function () {
             $("input[input-type='date']").datepicker({ dateFormat: 'dd/mm/yy' });
+            // Disable future dates if no_future option is set to 1
+            $("input[no_future='1']").datepicker( "option", "maxDate", "+0d" );
 
             $('select').each(function(){
                 var hidid = $(this).attr('id')+"_text";
