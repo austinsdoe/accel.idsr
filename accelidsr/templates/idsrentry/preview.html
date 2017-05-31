@@ -126,5 +126,82 @@ IDSR Input Form
             </table>
         </div>
     </div>
+    <div class='idsr-pf-section-container'>
+        <div class='section-title'>Patient Demographics</div>
+        <div class='idsr-pf-section'>
+            <table>
+                <tr>
+                    <td>
+                        <div class='idsr-pf-label'>Patient First Name:</div>
+                        <div class='idsr-pf-field-container idsr-pf-field-container-first todo'>
+                            {{ idsrobj.get('patient_firstname', '?????') }}
+                        </div>
+                    </td>
+                    <td>
+                        <div class='idsr-pf-label'>Patient Last Name:</div>
+                        <div class='idsr-pf-field-container todo'>
+                            {{ idsrobj.get('patient_lastname', '?????') }}
+                        </div>
+                    </td>
+                    <td>
+                        <div class='idsr-pf-label'>Patient Sex:</div>
+                        <div class='idsr-pf-field-container idsr-pf-field-container-last todo'>
+                            {{ idsrobj.get('patient_gender_text', '?????') }}
+                        </div>
+                    </td>
+                    <td>
+                        <div class='idsr-pf-label'>Patient Age:</div>
+                        <div class='idsr-pf-field-container idsr-pf-field-container-last todo'>
+                            {% set pay = ("%s years " % idsrobj.get('patient_age_years')) if idsrobj.get('patient_age_years', 0) > 0 else '' %}
+                            {% set pam = ("%s months " % idsrobj.get('patient_age_months')) if idsrobj.get('patient_age_months', 0) > 0 else '' %}
+                            {% set pad = ("%s days " % idsrobj.get('patient_age_days')) if idsrobj.get('patient_age_days',0) > 0 else '' %}
+                            {{ pay + pam + pad }}
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <div class='idsr-pf-label'>Date of Birth:</div>
+                        <div class='idsr-pf-field-container idsr-pf-field-container-first todo'>
+                            {% set pdob = (idsrobj.get('patient_dateofbirth').strftime('%d / %m / %Y')) if idsrobj.get('patient_dateofbirth') else '??/??/????' %}
+                            {{ pdob }}
+                        </div>
+                        <div class='idsr-pf-field-sub'>
+                          <!-- <span class='idsr-pf-field-sublabel'>Day</span> -->
+                        </div>
+                    </td>
+                    <td>
+                        <div class='idsr-pf-label'>County of Residence:</div>
+                        <div class='idsr-pf-field-container todo'>
+                            {{ idsrobj.get('patient_county_of_residence_text', '?????') }}
+                        </div>
+                    </td>
+                    <td >
+                        <div class='idsr-pf-label'>District of Residence:</div>
+                        <div class='idsr-pf-field-container idsr-pf-field-container-last todo'>
+                            {{ idsrobj.get('patient_district_of_residence_text', '?????') }}
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <div class='idsr-pf-label'>Community of Residence:</div>
+                        <div class='idsr-pf-field-container idsr-pf-field-container-first todo'>
+                            {{ idsrobj.get('patient_community_of_residence', '?????') }}
+                        </div>
+                    </td>
+                    <td colspan="3">
+                        <div class='idsr-pf-label'>Location Information:</div>
+                        <div class='idsr-pf-field-container todo'>
+                            {% set ppn = ("Parent's Name: %s , " % idsrobj.get('patient_parents_name')) if idsrobj.get('patient_parents_name','') else '' %}
+                            {% set pph = ("Patient phone: %s , " % idsrobj.get('patient_phone_number')) if idsrobj.get('patient_phone_number','') else '' %}
+                            {% set phh = ("Head of Household: %s , " % idsrobj.get('patient_head_of_household')) if idsrobj.get('patient_head_of_household','') else '' %}
+                            {{ phh + ppn +  pph}}
+                        </div>
+                    </td>
+                </tr>
+            </table>
+        </div>
+    </div>
 </div>
 {% endblock %}
