@@ -249,7 +249,7 @@ class Run:
                 # PATIENT CREATION
                 p_result = self.api.create(f.getPatient())
                 if not p_result.get('success', ''):
-                    message = c_result.get('message', '')
+                    message = p_result.get('message', '')
                     status = 'Fail'
                     self.db.update_status(f.getId(), 'failed')
                     self.insert_log(status, message,
@@ -283,7 +283,7 @@ class Run:
                 ar.setContactUid(c_id)
                 ar_result = self.api.create(ar)
                 if not ar_result.get('success', ''):
-                    message = str(c_result.get('message', ''))
+                    message = str(ar_result.get('message', ''))
                     status = 'Fail'
                     self.db.update_status(f.getId(), 'failed')
                     self.insert_log(status, message,
