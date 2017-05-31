@@ -47,14 +47,14 @@ IDSR Input Form
                     </div>
                 </td>
                 <td>
-                    <div class='idsr-pf-label'>Reporting Date:</div>
+                    <div class='idsr-pf-label'>IDSR-ID:</div>
                     <div class='idsr-pf-field-container idsr-pf-idsrid todo'>
                         {% set countycode = idsrobj.get('county_code') %}
                         {% set facilitycode = idsrobj.get('facility_code') %}
                         {% set caseid = idsrobj.get('case_id') %}
-                        {% set cc = countycode if countycode else 'XXXXX' %}
-                        {% set fc = facilitycode if facility_code else 'XXXXX' %}
-                        {% set ci = caseid if caseid else 'XXXXX' %}
+                        {% set cc = countycode if countycode else '????' %}
+                        {% set fc = facilitycode if facilitycode else '????' %}
+                        {% set ci = caseid if caseid else '???' %}
                         <span class='idsr-pf-idsrid-countycode'>{{ cc }}</span> -
                         <span class='idsr-pf-idsrid-facilitycode'>{{ fc }}</span> -
                         <span class='idsr-pf-idsrid-caseid'>{{ ci }}</span>
@@ -83,21 +83,45 @@ IDSR Input Form
                     <td>
                         <div class='idsr-pf-label'>Reporting Health Facility:</div>
                         <div class='idsr-pf-field-container idsr-pf-field-container-first idsr-pf-reporting-facility todo'>
-                            {{ idsrobj.get('reporting_health_facility', '?????') }}
+                            {{ idsrobj.get('reporting_health_facility_text', '?????') }}
                         </div>
                     </td>
                     <td>
                         <div class='idsr-pf-label'>Reporting District:</div>
                         <div class='idsr-pf-field-container idsr-pf-reporting-district todo'>
-                            {{ idsrobj.get('reporting_district', '?????') }}
+                            {{ idsrobj.get('reporting_district_text', '?????') }}
                         </div>
                     </td>
                     <td>
                         <div class='idsr-pf-label'>Reporting County:</div>
                         <div class='idsr-pf-field-container idsr-pf-field-container-last idsr-pf-reporting-county todo'>
-                            {{ idsrobj.get('reporting_county', '?????') }}
+                            {{ idsrobj.get('reporting_country_text', '?????') }}
                         </div>
                     </td>
+                </tr>
+                <tr>
+                    <td><br>
+                        <div class='idsr-pf-label'>Disease or condition of alert:</div>
+                        <div class='idsr-pf-field-container idsr-pf-diagnosis todo'>
+                            {% set dt = idsrobj.get('diagnosis_text') %}
+                            {% set dt = idsrobj.get('diagnosis_other') if idsrobj.get('diagnosis_other') else dt %}
+                            {{ dt if dt else '?????' }}
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                  <td><br>
+                    <div class=''>
+                        {% set pbc = idsrobj.get('patient_cross_border_text','???') %}
+                        <span class='idsr-pf-field-sublabel idsr-pf-sub-reporting-date-day'>Crossed International Border in last 1 month: <b> {{ pbc }} </b> </span>
+                    </div>
+                  </td>
+                  <td><br>
+                    <div class=''>
+                        {% set clcd = idsrobj.get('patient_case_detected_community_text', '???') %}
+                        <span class='idsr-pf-field-sublabel idsr-pf-sub-reporting-date-day'>Case detected at community level: <b> {{ clcd }} </b> </span>
+                    </div>
+                  </td>
                 </tr>
             </table>
         </div>
