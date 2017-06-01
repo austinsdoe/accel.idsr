@@ -249,7 +249,7 @@ class Run:
                 # PATIENT CREATION
                 p_result = self.api.create(f.getPatient())
                 if not p_result.get('success', ''):
-                    message = p_result['message']
+                    message = p_result.get('message', '')
                     status = 'Fail'
                     self.db.update_status(f.getId(), 'failed')
                     self.insert_log(status, message,
@@ -260,12 +260,12 @@ class Run:
                 status = 'Success'
                 self.insert_log(status, message,
                                 'Patient', f.getId())
-                p_uid = self.api.getUID(p_id, "Patient")
+                p_uid = p_result['obj_uid']
 
                 # CLIENT CONTACT CREATION
                 c_result = self.api.create(f.getContact())
                 if not c_result.get('success', ''):
-                    message = c_result['message']
+                    message = c_result.get('message', '')
                     status = 'Fail'
                     self.db.update_status(f.getId(), 'failed')
                     self.insert_log(status, message,
@@ -283,7 +283,7 @@ class Run:
                 ar.setContactUid(c_id)
                 ar_result = self.api.create(ar)
                 if not ar_result.get('success', ''):
-                    message = str(ar_result['message'])
+                    message = str(ar_result.get('message', ''))
                     status = 'Fail'
                     self.db.update_status(f.getId(), 'failed')
                     self.insert_log(status, message,
@@ -298,6 +298,7 @@ class Run:
             message = str(e)
             status = 'Fail'
             self.insert_log(status, message, 'AR & Patient')
+            self.db.update_status(f.getId(), 'failed')
         threading.Timer(intervals['idsrform'], self.processForms).start()
 
     def insert_log(self, status, message, content_type, idsr_id=None):

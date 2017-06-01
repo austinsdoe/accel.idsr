@@ -6,7 +6,7 @@ class AnalysisRequest():
     def __init__(self, contact_uid, cc_contact, sampler_phone, case_id,
                  patient_record_id, reporting_health_facility, patient_uid,
                  sampling_date, sample_type, analysis_specification,
-                 analyses_requested, client_order_number):
+                 analyses_requested, client_order_number, idsr_code):
         """
         Initializes the AnalysisRequest object.
         """
@@ -30,6 +30,7 @@ class AnalysisRequest():
         # Profiles in Bika
         self.analyses_requested = analyses_requested
         self.client_order_number = client_order_number
+        self.idsr_code = idsr_code
 
     def getContact(self):
         return self.contact
@@ -76,7 +77,9 @@ class AnalysisRequest():
                   'CCContact': self.cc_contact,
                   'CCEmails': self.sampler_phone,
                   'Client': self.reporting_health_facility,
-                  'Batch': self.case_id,
+                  # Batch is empty for now, might be used in the future.
+                  # 'Batch': self.case_id,
+                  'Batch': '',
                   'ClientPatientID': self.patient_uid,
                   'Patient': "uid:" + self.patient_uid,
                   'SamplingDate': self.sampling_date,
@@ -84,8 +87,7 @@ class AnalysisRequest():
                   'Specification': '',
                   'ClientOrderNumber': self.client_order_number,
                   'Profiles': "uid:" + self.analyses_requested,
-                  'Services': [""]
-                  # TODO Analyses MUST BE REMOVED!
-                  # "Analyses": ["5d7c07665dfc43ddbb8d8c354740e412"]
+                  'Services': [""],
+                  'IDSRCode': self.idsr_code
                   }
         return result
