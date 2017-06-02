@@ -16,6 +16,7 @@ div.table {
 }
 div.tr {
   display: table-row;
+  vertical-align: middle;
 }
 div.td {
   /*display: table-column;*/
@@ -26,6 +27,7 @@ div.cell {
   border-width: thin;*/
   padding-left: 5px;
   padding-right: 5px;
+  vertical-align: middle;
 }
 div.idsr-pf-header .form-title {
     font-size: 14pt;
@@ -43,6 +45,7 @@ div.idsr-pf-label {
 div.idsr-pf-field-container {
     border:0.75mm solid #000;
     padding:4px;
+    min-width: 80px;
 }
 div.idsr-pf-field-container-no-border {
     /*border-right:none;*/
@@ -54,6 +57,7 @@ div.idsr-pf-field-container-last {
 }
 div.idsr-pf-field-sub {
     font-size: 7pt;
+    margin-bottom: 5px;
 }
 div.idsr-pf-section-container {
     margin-top:2mm;
