@@ -118,8 +118,9 @@ def step(step):
                                   id=idsrobj.getId())
                     return redirect(url)
                 else:
-                    # This is the last step. Redirect to main page
-                    return redirect(url_for('index'))
+                    # This is the last step. Redirect to preview page
+                    return redirect(url_for('idsrentry.preview',
+                                            id=idsrobj.getId()))
 
         # Oops, unable to save the form
         message = 'Cannot save!'
@@ -165,3 +166,30 @@ def preview():
 
     urltemplate = 'idsrentry/preview.html'
     return render_template(urltemplate, idsrobj=idsrobj)
+
+
+@mod_idsrentry.route('/submit', methods=['POST'])
+@login_required
+def submit():
+    id = request.form.get('id')
+    if not id:
+        return render_template('404.html'), 404
+    idsrobj = Idsr.fetch(id)
+    if not idsrobj:
+        return render_template('404.html'), 404
+
+    kvals = idsrobj.getDict().copy()
+    if not kvals.get('idsr-status') == 'complete':
+        return render_template('404.html'), 404
+
+    kvals['bika-status'] = 'in_queue'
+    idsrobj.update(kvals)
+    if save(idsrobj):
+        message = 'Form Submitted!'
+        flash(message, category='info')
+        return redirect(url_for('index'))
+
+    # It was already in_queue state, nothing to do
+    message = 'Form has been submitted before.'
+    flash(message, category='info')
+    return redirect(url_for('index'))

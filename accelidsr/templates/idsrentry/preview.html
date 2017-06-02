@@ -337,5 +337,33 @@ IDSR Input Form
             </div>
         </div>
     </div>
+    <div class="footer">
+{% if idsrobj.get('idsr-status') == 'complete' %}
+      <script type='text/javascript'>
+      (function ($) {
+          $(document).ready(function () {
+              $('#submit').hide();
+              $('#iAgree').attr("checked", false);
+              $('#iAgree').change(function(e){
+                  e.preventDefault();
+                  if ($(this).is(':checked')) {
+                    $('#submit').show();
+                  }else {
+                    $('#submit').hide();
+                  }
+              });
+          });
+      })(jQuery);
+      </script>
+      <div class="verification">
+          <form method="post" action="submit">
+            <input type="hidden" value="{{idsrobj.getId()}}" name="id">
+            <input type="checkbox" name="accepts" value="accepts" id="iAgree" > <b> I verified the information provided. </b><br>
+            <input type="submit" name="submit" value="Submit This Form" id = "submit"/>
+          </form>
+      </div>
+{% endif %}
+  <a class="cancel" href="{{ request.referrer }}"> Back </a>
+  </div>
 </div>
 {% endblock %}
