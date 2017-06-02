@@ -84,3 +84,9 @@
     </ul>
 </div>
 {% endmacro%}
+
+{% macro render_idsrcode(form) %}
+{% set idsrdict = form.getIdsrObject().getDict() if form.getIdsrObject() else {} %}
+{% set code = ("%s - %s - %s") % (idsrdict.get('county_code','??'),idsrdict.get('facility_code','??'),idsrdict.get('case_id','??'))  %}
+<h2>{{ code }}</h2>
+{% endmacro%}

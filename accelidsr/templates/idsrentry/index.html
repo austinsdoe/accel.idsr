@@ -323,6 +323,8 @@ IDSR Input Form
 {% from "idsrentry/_formhelpers.html" import render_substepsnav %}
 {% from "idsrentry/_formhelpers.html" import render_fields %}
 {% from "idsrentry/_formhelpers.html" import render_formfooter %}
+{% from "idsrentry/_formhelpers.html" import render_idsrcode %}
+{{ render_idsrcode(form) }}
 {{ render_stepsnav(form, steps) }}
 {{ render_substepsnav(form)}}
 <form action="" method="post" id="{{ form.step }}" name="{{ form.step }}">
