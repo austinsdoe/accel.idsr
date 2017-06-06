@@ -1,0 +1,369 @@
+{% extends "base.html" %}
+
+{% block title %}
+IDSR Input Form
+{% endblock %}
+
+{% block head %}
+    {{ super() }}
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/idsrprint.css') }}"/>
+    <style>
+        .todo { color: red; }
+    </style>
+{% endblock %}
+
+{% block content %}
+<div id='idsr-pf-paperform'>
+    <div class='idsr-pf-header'>
+        <div class="table">
+            <div class="tr">
+                <div class="cell"><img width="60mm" src='/static/pictures/flag.png'/></div>
+                <div class='form-title'>Liberia IDSR Case Alert and Lab Submission Form</div>
+                <div class="cell"><img width="50mm" src='/static/pictures/moh.png'/></div>
+            </div>
+        </div>
+        <div class='form-title-note'>
+            NOTE: Send a copy of this form to the DSO. A copy of this form should also accompany every lab sample
+        </div>
+    </div>
+    <div>
+        <div class="table">
+            <div class="tr">
+                <div class="cell">
+                    <div class='idsr-pf-label'>Reporting Date:</div>
+                    <div class='idsr-pf-field-container idsr-pf-field-container-first idsr-pf-reporting-date todo'>
+                        {% set repdate = idsrobj.get('reporting_date') %}
+                        {% set day = repdate.day if repdate else '??' %}
+                        {% set month = repdate.month if repdate else '??' %}
+                        {% set year = repdate.year if repdate else '????' %}
+                        <span class='idsr-pf-reporting-date-day'>{{ day }}</span> /
+                        <span class='idsr-pf-reporting-date-month'>{{ month }}</span> /
+                        <span class='idsr-pf-reporting-date-year'>{{ year }}</span>
+                    </div>
+                    <div class='idsr-pf-field-sub'>
+                        <span class='idsr-pf-field-sublabel'>Day / Month / Year</span>
+                    </div>
+                </div>
+                <div class="cell">
+                    <div class='idsr-pf-label'>IDSR-ID:</div>
+                    <div class='idsr-pf-field-container idsr-pf-idsrid todo'>
+                        {% set countycode = idsrobj.get('county_code') %}
+                        {% set facilitycode = idsrobj.get('facility_code') %}
+                        {% set caseid = idsrobj.get('case_id') %}
+                        {% set cc = countycode if countycode else '????' %}
+                        {% set fc = facilitycode if facilitycode else '????' %}
+                        {% set ci = caseid if caseid else '???' %}
+                        <span class='idsr-pf-idsrid-countycode'>{{ cc }}</span> -
+                        <span class='idsr-pf-idsrid-facilitycode'>{{ fc }}</span> -
+                        <span class='idsr-pf-idsrid-caseid'>{{ ci }}</span>
+                    </div>
+                    <div class='idsr-pf-field-sub'>
+                        <span class='idsr-pf-field-sublabel idsr-pf-sub-idsrid-countycode'>County Code</span>
+                        <span class='idsr-pf-field-sublabel idsr-pf-sub-idsrid-countycode'>Facility Code</span>
+                        <span class='idsr-pf-field-sublabel idsr-pf-sub-idsrid-countycode'>Case ID</span>
+                    </div>
+                </div>
+                <div class="cell">
+                    <div class='idsr-pf-label'>Patient Record ID:</div>
+                    <div class='idsr-pf-field-container idsr-pf-field-container-last idsr-pf-patient-recordid todo'>
+                        {{ idsrobj.get('patient_client_patientid', '?????') }}
+                    </div>
+                    <div class='idsr-pf-field-sub'>&nbsp;</div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class='idsr-pf-section-container'>
+        <div class='section-title'>Disease reporting</div>
+        <div class='idsr-pf-section'>
+            <div class="table">
+                <div class="tr">
+                    <div class="cell">
+                        <div class='idsr-pf-label'>Reporting Health Facility:</div>
+                        <div class='idsr-pf-field-container idsr-pf-field-container-first idsr-pf-reporting-facility todo'>
+                            {{ idsrobj.get('reporting_health_facility_text', '?????') }}
+                        </div>
+                    </div>
+                    <div class="cell">
+                        <div class='idsr-pf-label'>Reporting District:</div>
+                        <div class='idsr-pf-field-container idsr-pf-reporting-district todo'>
+                            {{ idsrobj.get('reporting_district_text', '?????') }}
+                        </div>
+                    </div>
+                    <div class="cell">
+                        <div class='idsr-pf-label'>Reporting County:</div>
+                        <div class='idsr-pf-field-container idsr-pf-field-container-last idsr-pf-reporting-county todo'>
+                            {{ idsrobj.get('reporting_country_text', '?????') }}
+                        </div>
+                    </div>
+                </div>
+                <div class="tr">
+                    <div class="cell">
+                        <div class='idsr-pf-label'>Disease or condition of alert:</div>
+                        <div class='idsr-pf-field-container idsr-pf-diagnosis todo'>
+                            {% set dt = idsrobj.get('diagnosis_text') %}
+                            {% set dt = idsrobj.get('diagnosis_other') if idsrobj.get('diagnosis_other') else dt %}
+                            {{ dt if dt else '?????' }}
+                        </div>
+                    </div>
+                </div>
+                <div class="tr">
+                  <div class="cell">
+                    <div class='idsr-pf-field-container-no-border'>
+                        {% set pbc = idsrobj.get('patient_cross_border_text','???') %}
+                        <span class=''>Crossed International Border in last 1 month: <b> {{ pbc }} </b> </span>
+                    </div>
+                  </div>
+                  <div class="cell">
+                    <div class='idsr-pf-field-container-no-border'>
+                        {% set clcd = idsrobj.get('patient_case_detected_community_text', '???') %}
+                        <span class=''>Case detected at community level: <b> {{ clcd }} </b> </span>
+                    </div>
+                  </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class='idsr-pf-section-container'>
+        <div class='section-title'>Patient Demographics</div>
+        <div class='idsr-pf-section'>
+            <div class="table">
+                <div class="tr">
+                    <div class="cell">
+                        <div class='idsr-pf-label'>Patient First Name:</div>
+                        <div class='idsr-pf-field-container idsr-pf-field-container-first todo'>
+                            {{ idsrobj.get('patient_firstname', '?????') }}
+                        </div>
+                    </div>
+                    <div class="cell">
+                        <div class='idsr-pf-label'>Patient Last Name:</div>
+                        <div class='idsr-pf-field-container todo'>
+                            {{ idsrobj.get('patient_lastname', '?????') }}
+                        </div>
+                    </div>
+                    <div class="cell">
+                        <div class='idsr-pf-label'>Patient Sex:</div>
+                        <div class='idsr-pf-field-container idsr-pf-field-container-last todo'>
+                            {{ idsrobj.get('patient_gender_text', '?????') }}
+                        </div>
+                    </div>
+                    <div class="cell">
+                        <div class='idsr-pf-label'>Patient Age:</div>
+                        <div class='idsr-pf-field-container idsr-pf-field-container-last todo'>
+                            {% set pay = ("%s years " % idsrobj.get('patient_age_years')) if idsrobj.get('patient_age_years', 0) > 0 else '' %}
+                            {% set pam = ("%s months " % idsrobj.get('patient_age_months')) if idsrobj.get('patient_age_months', 0) > 0 else '' %}
+                            {% set pad = ("%s days " % idsrobj.get('patient_age_days')) if idsrobj.get('patient_age_days',0) > 0 else '' %}
+                            {{ pay + pam + pad }}
+                        </div>
+                    </div>
+                </div>
+                <div class="tr">
+                    <div class="cell">
+                        <div class='idsr-pf-label'>Date of Birth:</div>
+                        <div class='idsr-pf-field-container idsr-pf-field-container-first todo'>
+                            {% set pdob = (idsrobj.get('patient_dateofbirth').strftime('%d / %m / %Y')) if idsrobj.get('patient_dateofbirth') else '??/??/????' %}
+                            {{ pdob }}
+                        </div>
+                        <div class='idsr-pf-field-sub'>
+                            <span class='idsr-pf-field-sublabel'>Day / Month / Year</span>
+                        </div>
+                    </div>
+                    <div class="cell">
+                        <div class='idsr-pf-label'>County of Residence:</div>
+                        <div class='idsr-pf-field-container todo'>
+                            {{ idsrobj.get('patient_county_of_residence_text', '?????') }}
+                        </div>
+                    </div>
+                    <div class="cell">
+                        <div class='idsr-pf-label'>District of Residence:</div>
+                        <div class='idsr-pf-field-container idsr-pf-field-container-last todo'>
+                            {{ idsrobj.get('patient_district_of_residence_text', '?????') }}
+                        </div>
+                    </div>
+                </div>
+                <div class="tr">
+                    <div class="cell">
+                        <div class='idsr-pf-label'>Community of Residence:</div>
+                        <div class='idsr-pf-field-container idsr-pf-field-container-first todo'>
+                            {{ idsrobj.get('patient_community_of_residence', '?????') }}
+                        </div>
+                    </div>
+                    <div class="cell" colspan="3">
+                        <div class='idsr-pf-label'>Location Information:</div>
+                        <div class='idsr-pf-field-container todo'>
+                            {% set ppn = ("Parent's Name: %s , " % idsrobj.get('patient_parents_name')) if idsrobj.get('patient_parents_name','') else '' %}
+                            {% set pph = ("Patient phone: %s , " % idsrobj.get('patient_phone_number')) if idsrobj.get('patient_phone_number','') else '' %}
+                            {% set phh = ("Head of Household: %s , " % idsrobj.get('patient_head_of_household')) if idsrobj.get('patient_head_of_household','') else '' %}
+                            {{ phh + ppn +  pph}}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class='idsr-pf-section-container'>
+        <div class='section-title'>Clinical Information</div>
+        <div class='idsr-pf-section'>
+            <div class="table">
+                <div class="tr">
+                    <div class="cell">
+                        <div class='idsr-pf-label'>Date of Onset:</div>
+                        <div class='idsr-pf-field-container idsr-pf-field-container-first todo'>
+                            {% set cdoo = (idsrobj.get('case_date_of_onset').strftime('%d / %m / %Y')) if idsrobj.get('case_date_of_onset') else '??/??/????' %}
+                            {{ cdoo }}
+                        </div>
+                        <div class='idsr-pf-field-sub'>
+                            <span class='idsr-pf-field-sublabel'>Day / Month / Year</span>
+                        </div>
+                    </div>
+                    <div class="cell">
+                        <div class='idsr-pf-label'>Date seen:</div>
+                        <div class='idsr-pf-field-container todo'>
+                            {% set cds = (idsrobj.get('case_date_seen').strftime('%d / %m / %Y')) if idsrobj.get('case_date_seen') else '??/??/????' %}
+                            {{ cds }}
+                        </div>
+                        <div class='idsr-pf-field-sub'>
+                            <span class='idsr-pf-field-sublabel'>Day / Month / Year</span>
+                        </div>
+                    </div>
+                    <div class="cell">
+                        <div class='idsr-pf-label'>In/Out-Patient:</div>
+                        <div class='idsr-pf-field-container idsr-pf-field-container-last todo'>
+                            {{ idsrobj.get('case_inout_patient_text', '?????') }}
+                        </div>
+                    </div>
+                    <div class="cell">
+                        <div class='idsr-pf-label'>Outcome:</div>
+                        <div class='idsr-pf-field-container idsr-pf-field-container-last todo'>
+                            {{ idsrobj.get('case_outcome_text', '?????') }}
+                        </div>
+                    </div>
+                    <div class="cell">
+                        <div class='idsr-pf-label'>Classification:</div>
+                        <div class='idsr-pf-field-container idsr-pf-field-container-last todo'>
+                            {{ idsrobj.get('case_classification_text', '?????') }}
+                        </div>
+                    </div>
+                </div>
+                <div class="tr">
+                    <div class="cell">
+                        <div class='idsr-pf-label'>Reporting Person Name:</div>
+                        <div class='idsr-pf-field-container idsr-pf-field-container-first todo'>
+                            {{ idsrobj.get('reporting_person_firstname', '?????') + idsrobj.get('reporting_person_lastname', '?????') }}
+                        </div>
+                    </div>
+                    <div class="cell">
+                        <div class='idsr-pf-label'>Reporting Person Phone:</div>
+                        <div class='idsr-pf-field-container todo'>
+                            {{ idsrobj.get('reporting_person_phone', '?????') }}
+                        </div>
+                    </div>
+                    <div class="cell">
+                        <div class='idsr-pf-label'>Comments:</div>
+                        <div class='idsr-pf-field-container idsr-pf-field-container-last todo'>
+                            {{ idsrobj.get('health_worker_comments', '?????') }}
+                        </div>
+                    </div>
+                </div>
+                <div class="tr">
+                    <div class="cell">
+                        <div class='idsr-pf-label'>Person Collecting Specimen Name:</div>
+                        <div class='idsr-pf-field-container idsr-pf-field-container-first todo'>
+                            {{ idsrobj.get('sampler_name', '?????') }}
+                        </div>
+                    </div>
+                    <div class="cell">
+                        <div class='idsr-pf-label'>Person Collecting Specimen Phone:</div>
+                        <div class='idsr-pf-field-container idsr-pf-field-container-first todo'>
+                            {{ idsrobj.get('sampler_phone', '?????') }}
+                        </div>
+                    </div>
+                </div>
+                <div class="tr">
+                    <div class="cell">
+                        <div class='idsr-pf-label'>Date of Specimen Collection:</div>
+                        <div class='idsr-pf-field-container idsr-pf-field-container-first todo'>
+                            {% set dosc = (idsrobj.get('date_sampled').strftime('%d / %m / %Y')) if idsrobj.get('date_sampled') else '??/??/????' %}
+                            {{ dosc }}
+                        </div>
+                        <div class='idsr-pf-field-sub'>
+                            <span class='idsr-pf-field-sublabel'>Day / Month / Year</span>
+                        </div>
+                    </div>
+                    <div class="cell">
+                        <div class='idsr-pf-label'>Date Specimen Sent to Lab:</div>
+                        <div class='idsr-pf-field-container idsr-pf-field-container-first todo'>
+                            {% set dosstl = (idsrobj.get('date_specimen_sent').strftime('%d / %m / %Y')) if idsrobj.get('date_specimen_sent') else '??/??/????' %}
+                            {{ dosstl }}
+                        </div>
+                        <div class='idsr-pf-field-sub'>
+                            <span class='idsr-pf-field-sublabel'>Day / Month / Year</span>
+                        </div>
+                    </div>
+                    <div class="cell">
+                        <div class='idsr-pf-label'>Specimen Type:</div>
+                        <div class='idsr-pf-field-container idsr-pf-field-container-first todo'>
+                            {{ idsrobj.get('sample_type', '?????') }}
+                        </div>
+                    </div>
+                </div>
+                <div class="tr">
+                    <div class="cell">
+                        <div class='idsr-pf-label'><u>Only for disease of this alert:</u></div>
+                    </div>
+                    <div class="cell">
+                        <div class='idsr-pf-label'>Vaccination history:</div>
+                        <div class='idsr-pf-field-container idsr-pf-field-container-first todo'>
+                            {{ idsrobj.get('sample_type', '?????') }}
+                        </div>
+                    </div>
+                    <div class="cell">
+                        <div class='idsr-pf-label'># Vaccination:</div>
+                        <div class='idsr-pf-field-container idsr-pf-field-container-first todo'>
+                            {{ idsrobj.get('sample_type', '?????') }}
+                        </div>
+                    </div>
+                    <div class="cell">
+                        <div class='idsr-pf-label'>Date of last vaccination:</div>
+                        <div class='idsr-pf-field-container idsr-pf-field-container-first todo'>
+                            {% set dosstl = (idsrobj.get('date_specimen_sent').strftime('%d / %m / %Y')) if idsrobj.get('date_specimen_sent') else '??/??/????' %}
+                            {{ dosstl }}
+                        </div>
+                        <div class='idsr-pf-field-sub'>
+                            <span class='idsr-pf-field-sublabel'>Day / Month / Year</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="footer">
+{% if idsrobj.get('idsr-status') == 'complete' %}
+      <script type='text/javascript'>
+      (function ($) {
+          $(document).ready(function () {
+              $('#submit').hide();
+              $('#iAgree').attr("checked", false);
+              $('#iAgree').change(function(e){
+                  e.preventDefault();
+                  if ($(this).is(':checked')) {
+                    $('#submit').show();
+                  }else {
+                    $('#submit').hide();
+                  }
+              });
+          });
+      })(jQuery);
+      </script>
+      <div class="verification">
+          <form method="post" action="submit">
+            <input type="hidden" value="{{idsrobj.getId()}}" name="id">
+            <input type="checkbox" name="accepts" value="accepts" id="iAgree" > <b> I verified the information provided. </b><br>
+            <input type="submit" name="submit" value="Submit This Form" id = "submit"/>
+          </form>
+      </div>
+{% endif %}
+  <a class="cancel" href="{{ request.referrer }}"> Back </a>
+  </div>
+</div>
+{% endblock %}

@@ -159,7 +159,7 @@ class AbstractIdsrEntryStepForm(FlaskForm):
 
         kvals['idsr-status'] = 'complete'
         # TODO If we don't want automatic submission of ARs into Bika, comment
-        kvals['bika-status'] = 'in_queue'
+        # kvals['bika-status'] = 'in_queue'
         return kvals
 
     def getDict(self, idsr_object=None):
