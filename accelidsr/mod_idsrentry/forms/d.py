@@ -117,17 +117,6 @@ class IdsrEntryStepD3Form(AbstractIdsrEntryStepForm):
         'Comments',
         render_kw={'rows': '5', 'cols': '50'})
 
-    facility_code = TextField(
-        'Facility Code',
-        validators=[DataRequired(), Length(max=12)]) # maxlength was 8
-
-    case_id = TextField(
-        'Case ID',
-        validators=[Length(max=3), ])
-
-    patient_record_id = TextField(
-        'Patient Record ID',
-        validators=[Length(max=8), ])
 
 registerStepForm(clazz=IdsrEntryStepD3Form, step=STEP, substep=3)
 
