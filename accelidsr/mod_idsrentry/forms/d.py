@@ -83,6 +83,31 @@ class IdsrEntryStepD1Form(AbstractIdsrEntryStepForm):
                 after Date Seen.")
             failures += 1
 
+        # Finally, do not let any of these dates to be before dates from D5.
+        if failures == 0:
+            objdict = self.getDict()
+            # Find the earliest date from D5 step.
+            d5_min = objdict.get('date_sampled', None)
+            if d5_min:
+                d_sent = objdict.get('date_specimen_sent', None)
+                if d_sent and d_sent < d5_min:
+                    d5_min = d_sent
+            else:
+                d5_min = objdict.get('case_date_seen', None)
+
+            # If any of dates from D5 is filled, then do comparison
+            if d5_min:
+                if d_seen > d5_min:
+                    self.case_date_seen.errors.append("Date of Seen can not \
+                        be before Date of Specimen Sent to Lab and/or Date \
+                        of Specimen Collection")
+                    failures += 1
+                if d_onset > d5_min:
+                    self.case_date_of_onset.errors.append("Date of Sampled can \
+                        not be before Date of Specimen Sent to Lab and/or \
+                        Date of Specimen Collection")
+                    failures += 1
+
         return failures == 0
 
 
@@ -202,6 +227,31 @@ class IdsrEntryStepD5Form(AbstractIdsrEntryStepForm):
             self.date_sampled.errors.append("Date of Specimen Sent to Lab can't \
                 be before Date of Specimen Collection.")
             failures += 1
+
+        # Finally, do not let any of these dates to be before dates from D1.
+        if failures == 0:
+            objdict = self.getDict()
+            # Find the earliest date from D1 step.
+            d1_min = objdict.get('case_date_of_onset', None)
+            if d1_min:
+                d_seen = objdict.get('case_date_seen', None)
+                if d_seen and d_seen < d1_min:
+                    d1_min = d_seen
+            else:
+                d1_min = objdict.get('case_date_seen', None)
+
+            # If any of dates from D1 is filled, then do comparison
+            if d1_min:
+                if d_sent < d1_min:
+                    self.date_specimen_sent.errors.append("Date of Specimen\
+                        Sent to Lab can not be before Date of Seen and/or \
+                        Date of Sampled")
+                    failures += 1
+                if d_sampled < d1_min:
+                    self.date_sampled.errors.append("Date of Specimen \
+                        Collection to Lab can not be before Date of Seen \
+                        and/or Date of Sampled")
+                    failures += 1
 
         return failures == 0
 
