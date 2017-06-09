@@ -157,7 +157,17 @@ div#header nav {
 div.formline {
     padding:5px;
 }
-div.required::before {
+div.table-row{
+  display: table-row;
+}
+div.table-cell{
+  display: table-cell;
+  padding-top: 10px;
+}
+div.table-cell-empty{
+  width: 15px;
+}
+div.required div.table-cell-first::after {
     color:red;
     content: "*";
 }
