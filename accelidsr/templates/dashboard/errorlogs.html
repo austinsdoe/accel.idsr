@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+
+{% block title %}
+IDSR Input Form
+{% endblock %}
+
+{% block head %}
+    {{ super() }}
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/new.css') }}"/>
+{% endblock %}
+
+{% block content %}
+<h1>Dashboard</h1>
+<div class='buttons-bar'>
+    <a href="/idsrentry/a">New IDSR Form</a>
+</div>
+<div class='items-table'>
+Test
+
+</div>
+{% endblock %}

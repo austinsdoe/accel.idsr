@@ -7,6 +7,7 @@ from flask import request
 from flask import url_for
 from flask_login import login_required
 from accelidsr.mod_idsrentry.models.idsr import Idsr
+from accelidsr.mod_dashboard.models import ErrorLog
 from accelidsr.mod_idsrentry.models import find_all
 from accelidsr.mod_idsrentry.models import save
 from flask_login import current_user
@@ -84,3 +85,14 @@ def _cancel_idsrs(ids):
 
     return 'Cancelled: %d , Skipped: %d , Failed: %d' % (n_cancelled,
                                                          n_skipped, n_failed)
+
+
+@mod_dashboard.route('/errorlogs')
+@login_required
+def errorlogs():
+    """
+    Displays system errors occured while running Sync App
+    """
+    items = ErrorLog.findAll()
+    urltemplate = 'dashboard/errorlogs.html'
+    return render_template(urltemplate, items=items)
