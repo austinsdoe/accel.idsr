@@ -37,7 +37,7 @@ class SyncJob():
 
     def get_db_format(self):
         result = {
-            'log_time': self.log_time,
+            'log_time': self.log_time.strftime('%d/%m/%Y %M:%S'),
             'status': self.status,
             'message': self.message,
             'content_type': self.content_type

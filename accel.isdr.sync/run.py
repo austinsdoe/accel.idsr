@@ -12,7 +12,7 @@ from database.models.caseoutcome import CaseOutcome
 from database.models.analysisrequest import AnalysisRequest
 from utils.config import intervals
 import threading
-import time
+from datetime import datetime
 
 
 class Run:
@@ -306,7 +306,7 @@ class Run:
         Inserts log of Sync Job to MongoDB.
         """
         print '{0}. {1}'.format(status, message)
-        log = SyncJob(log_time=time.time(),
+        log = SyncJob(log_time=datetime.now(),
                       status=status,
                       message=message,
                       content_type=content_type

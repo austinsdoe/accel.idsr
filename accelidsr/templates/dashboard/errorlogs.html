@@ -10,12 +10,25 @@ IDSR Input Form
 {% endblock %}
 
 {% block content %}
-<h1>Dashboard</h1>
-<div class='buttons-bar'>
-    <a href="/idsrentry/a">New IDSR Form</a>
-</div>
+<h1>Error Logs</h1>
+{% from "dashboard/macros.html" import render_errorlog_table_header %}
 <div class='items-table'>
-Test
+  <table>
+      <thead>
+          {{ render_errorlog_table_header() }}
+      </thead>
+      <tbody>
+          {% for log in items %}
+          {% set lt = log.get('log_time') %}
+          <tr class="{{ loop.cycle('odd', 'even') }}">
+              <td>{{ lt}}</td>
+              <td>{{ log.get('content_type') }}</td>
+              <td>{{ log.get('message') }}</td>
+              <td>{{ log.get('idsr_form_id','') }}</td>
+          </tr>
+          {% endfor %}
+      </tbody>
+  </table>
 
 </div>
 {% endblock %}
