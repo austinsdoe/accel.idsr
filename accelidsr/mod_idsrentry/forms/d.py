@@ -101,13 +101,13 @@ class IdsrEntryStepD2Form(AbstractIdsrEntryStepForm):
         validators=[DataRequired(), Length(min=3)])
     reporting_person_phone = TextField(
         'Phone Number of Reporting Person',
-        validators=[DataRequired(), ])
+        validators=[DataRequired(),  Length(min=10, max=10)])
     sampler_name = TextField(
         'Name of Person Collecting Specimen',
         validators=[DataRequired(), ])
     sampler_phone = TextField(
         'Phone Number of Person Collecting Specimen',
-        validators=[DataRequired(), ])
+        validators=[DataRequired(),  Length(min=10, max=10)])
 
 registerStepForm(clazz=IdsrEntryStepD2Form, step=STEP, substep=2)
 
