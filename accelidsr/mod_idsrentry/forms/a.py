@@ -24,7 +24,7 @@ class IdsrEntryStepA1Form(AbstractIdsrEntryStepForm):
         render_kw={'input-type': 'date'})
 
     county_code = SelectField(
-        'Country Code',
+        'County Code',
         choices=getCountiesChoices(),
         validators=[DataRequired(), ],)
 

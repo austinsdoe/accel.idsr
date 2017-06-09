@@ -171,6 +171,15 @@ IDSR Input Form
                         $("#patient_age_days").val(0);
                     }
                 }else{
+                  if (!$("#patient_age_years").val()) {
+                    $("#patient_age_years").val(0);
+                  }
+                  if (!$("#patient_age_months").val()) {
+                    $("#patient_age_months").val(0);
+                  }
+                  if (!$("#patient_age_days").val()) {
+                    $("#patient_age_days").val(0);
+                  }
                   $("#patient_age_years").prop('readonly', true);
                   $("#patient_age_months").prop('readonly', true);
                   $("#patient_age_days").prop('readonly', true);
