@@ -253,13 +253,13 @@ class Run:
                     status = 'Fail'
                     self.db.update_status(f.getId(), 'failed')
                     self.insert_log(status, message,
-                                    'Patient', f.getId())
+                                    'Patient', f.getId(), f.getIdsrCode())
                     continue
                 p_id = p_result['obj_id']
                 message = 'Patient Created. ID: '+p_id
                 status = 'Success'
                 self.insert_log(status, message,
-                                'Patient', f.getId())
+                                'Patient', f.getId(), f.getIdsrCode())
                 p_uid = p_result['obj_uid']
 
                 # CLIENT CONTACT CREATION
@@ -269,13 +269,13 @@ class Run:
                     status = 'Fail'
                     self.db.update_status(f.getId(), 'failed')
                     self.insert_log(status, message,
-                                    'Contact', f.getId())
+                                    'Contact', f.getId(), f.getIdsrCode())
                     continue
                 c_id = c_result['obj_id']
                 message = 'Contact Created. ID: '+c_id
                 status = 'Success'
                 self.insert_log(status, message,
-                                'Contact', f.getId())
+                                'Contact', f.getId(), f.getIdsrCode())
 
                 # FINALLY AR CREATION
                 ar = f.getAR()
@@ -286,14 +286,14 @@ class Run:
                     message = str(ar_result.get('message', ''))
                     status = 'Fail'
                     self.db.update_status(f.getId(), 'failed')
-                    self.insert_log(status, message,
-                                    'AnalysisRequest', f.getId())
+                    self.insert_log(status, message, 'AnalysisRequest',
+                                    f.getId(), f.getIdsrCode())
                     continue
                 message = 'AR Created. UID: '+ar_result.get('ar_id')
                 status = 'Success'
                 self.db.update_status(f.getId(), 'inserted')
                 self.insert_log(status, message,
-                                'AnalysisRequest', f.getId())
+                                'AnalysisRequest', f.getId(), f.getIdsrCode())
         except Exception, e:
             message = str(e)
             status = 'Fail'
@@ -301,7 +301,8 @@ class Run:
             self.db.update_status(f.getId(), 'failed')
         threading.Timer(intervals['idsrform'], self.processForms).start()
 
-    def insert_log(self, status, message, content_type, idsr_id=None):
+    def insert_log(self, status, message, content_type, idsr_id=None,
+                   idsr_code=None):
         """
         Inserts log of Sync Job to MongoDB.
         """
@@ -313,6 +314,8 @@ class Run:
                       )
         if idsr_id:
             log.set_idsr_id(idsr_id)
+        if idsr_code:
+            log.set_idsr_code(idsr_code)
         self.db.insert('syncjobs', log.get_db_format())
 
 
