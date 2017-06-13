@@ -79,6 +79,7 @@ class Database:
         for c in coll:
             form_id = c['idobj']
             facility_code = c['facility_code']
+            county_code = c['county_code']
 
             # Setting up Patient
             p_clientPatientId = c['patient_client_patientid']
@@ -111,7 +112,7 @@ class Database:
             ar_analysis_specification = ''
             ar_analyses_requested = c['analyses_requested']
             ar_client_order_number = c.get('patient_record_id', '')
-            ar_idsr_code = "%s-%s" % (facility_code, ar_case_id)
+            ar_idsr_code = "%s-%s-%s" % (county_code, facility_code, ar_case_id)
 
             ar = AnalysisRequest(ar_contact_uid, ar_cc_contact, ar_sampler_phone,
                                  ar_case_id, ar_patient_record_id,
@@ -120,7 +121,7 @@ class Database:
                                  ar_analysis_specification,
                                  ar_analyses_requested, ar_client_order_number,
                                  ar_idsr_code)
-            idsr_form = IDSRForm(form_id, patient, contact, ar)
+            idsr_form = IDSRForm(form_id, ar_idsr_code, patient, contact, ar)
             idsr_forms.append(idsr_form)
 
         return idsr_forms

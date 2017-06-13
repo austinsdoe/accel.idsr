@@ -31,7 +31,7 @@ IDSR Input Form
 
             // Updates the selection list of district in accordance with the
             // selected option from the reporting county selection list
-            $('select[id="reporting_country"]').change(function (e) {
+            $('select[id="county_code"]').change(function (e) {
                 var country = $(this).val();
                 var hidid = $(this).attr('id')+"_text";
                 $('#'+hidid).val($(this).find('option:selected').html());
@@ -75,7 +75,7 @@ IDSR Input Form
             // selected option from the reporting county and district selection
             // lists
             $('select[id="reporting_district"]').change(function (e) {
-                var country = $('select[id="reporting_country"]').val();
+                var country = $('select[id="county_code"]').val();
                 var district = $(this).val();
                 var hidid = $(this).attr('id')+"_text";
                 $('#'+hidid).val($(this).find('option:selected').html());
@@ -91,6 +91,9 @@ IDSR Input Form
                     });
                     $('input[id="reporting_health_facility_dynamic"]').val(vals.join('|'));
                 }, "json");
+            });
+            $('select[id="reporting_health_facility"]').change(function (e) {
+                $('input[id="facility_code"]').val($('#reporting_health_facility option:selected').html().substring(0,3));
             });
 
             // Diagnosis "other... logic".
@@ -171,6 +174,15 @@ IDSR Input Form
                         $("#patient_age_days").val(0);
                     }
                 }else{
+                  if (!$("#patient_age_years").val()) {
+                    $("#patient_age_years").val(0);
+                  }
+                  if (!$("#patient_age_months").val()) {
+                    $("#patient_age_months").val(0);
+                  }
+                  if (!$("#patient_age_days").val()) {
+                    $("#patient_age_days").val(0);
+                  }
                   $("#patient_age_years").prop('readonly', true);
                   $("#patient_age_months").prop('readonly', true);
                   $("#patient_age_days").prop('readonly', true);

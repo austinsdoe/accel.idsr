@@ -74,7 +74,7 @@ def getCountiesChoices():
                     ("title", pymongo.ASCENDING)
                 ])
     if records.count() > 0:
-        choices = [(r['code'], r['title']) for r in records]
+        choices = [(r['code'], r['title'] + ' - '+str(r['code'])) for r in records]
         choices.insert(0, ('', 'Select...'))
         return choices
 

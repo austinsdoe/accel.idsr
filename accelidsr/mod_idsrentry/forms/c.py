@@ -30,12 +30,12 @@ class IdsrEntryStepC1Form(AbstractIdsrEntryStepForm):
         validators=[InputRequired(), Length(min=3)])
 
     patient_client_patientid = TextField(
-        'Client Patient ID',
+        'Patient Record ID',
         validators=[InputRequired(), Length(min=3)])
 
     patient_gender = RadioField(
         'Patient Gender',
-        default='u',
+        default='dk',
         choices=[('dk', 'Unknown'), ('male', 'Male'), ('female', 'Female')])
 
     patient_birth_date_estimated = BooleanField(
