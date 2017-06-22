@@ -80,6 +80,7 @@ class Database:
             form_id = c['idobj']
             facility_code = c['facility_code']
             county_code = c['county_code']
+            facility_uid = c['reporting_health_facility']
 
             # Setting up Patient
             p_clientPatientId = c['patient_client_patientid']
@@ -91,7 +92,7 @@ class Database:
             p_phone = c['patient_phone_number']
             patient = Patient(p_clientPatientId, p_is_anon, p_surname,
                               p_firstname, p_birthDate, p_gender, p_phone,
-                              facility_code)
+                              facility_uid)
 
             # Setting up Contact
             c_firstname = c['reporting_person_firstname']

@@ -93,7 +93,9 @@ IDSR Input Form
                 }, "json");
             });
             $('select[id="reporting_health_facility"]').change(function (e) {
-                $('input[id="facility_code"]').val($('#reporting_health_facility option:selected').html().substring(0,3));
+                fac_abr = $('#reporting_health_facility option:selected').html().substring(0,4);
+                fac_id = 'LR' + $('select[id="county_code"]').val() + fac_abr.toUpperCase();
+                $('input[id="facility_code"]').val(fac_id);
             });
 
             // Diagnosis "other... logic".
