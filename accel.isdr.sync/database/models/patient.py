@@ -7,7 +7,7 @@ class Patient():
     """
 
     def __init__(self, clientPatientId, is_anon, surname, firstname, birthDate,
-                 gender, phone, facility_code):
+                 gender, phone, facility_uid):
         self.plone_site_name = settings['plone_site_name']
         self.clientPatientId = clientPatientId
         self.surname = surname
@@ -15,7 +15,7 @@ class Patient():
         self.birthDate = birthDate
         self.gender = gender
         self.phone = phone
-        self.facility_code = facility_code
+        self.facility_uid = facility_uid
         self.is_anon = is_anon
 
     def getClientPatientId(self):
@@ -36,8 +36,8 @@ class Patient():
     def getPhone(self):
         return self.phone
 
-    def getFacilityCode(self):
-        return self.facility_code
+    def getFacilityUID(self):
+        return self.facility_uid
 
     def get_api_format(self):
         result = {
@@ -54,7 +54,7 @@ class Patient():
             "BusinessPhone": '',
             "EmailAddress": '',
             "PatientAsGuarantor": True,
-            "PrimaryReferrer": self.facility_code,
+            "PrimaryReferrerUID": self.facility_uid,
             "Anonymous": self.is_anon
         }
         if self.is_anon:

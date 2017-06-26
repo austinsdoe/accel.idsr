@@ -271,8 +271,8 @@ class Run:
                     self.insert_log(status, message,
                                     'Contact', f.getId(), f.getIdsrCode())
                     continue
-                c_id = c_result['obj_id']
-                message = 'Contact Created. ID: '+c_id
+                c_uid = c_result['obj_uid']
+                message = 'Contact Created. ID: '+c_result['obj_id']
                 status = 'Success'
                 self.insert_log(status, message,
                                 'Contact', f.getId(), f.getIdsrCode())
@@ -280,7 +280,7 @@ class Run:
                 # FINALLY AR CREATION
                 ar = f.getAR()
                 ar.setPatientUid(p_uid)
-                ar.setContactUid(c_id)
+                ar.setContactUid(c_uid)
                 ar_result = self.api.create(ar)
                 if not ar_result.get('success', ''):
                     message = str(ar_result.get('message', ''))
