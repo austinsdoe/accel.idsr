@@ -340,14 +340,16 @@ IDSR Input Form
 {% from "idsrentry/_formhelpers.html" import render_idsrcode %}
 {{ render_idsrcode(form) }}
 {{ render_stepsnav(form, steps) }}
-{{ render_substepsnav(form)}}
+{% if not is_partial %}
+    {{ render_substepsnav(form)}}
+{% endif %}
 <form action="" method="post" id="{{ form.step }}" name="{{ form.step }}">
     <div class='form'>
     {{ form.hidden_tag() }}
     {{ render_fields(form, steps) }}
     </div>
     <div class="form-footer">
-    {{ render_formfooter(form) }}
+    {{ render_formfooter(form, is_partial) }}
     </div>
 </form>
 {% endblock %}
