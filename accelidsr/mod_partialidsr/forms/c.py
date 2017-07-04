@@ -18,7 +18,7 @@ class PartialIdsrC(AbstractPartialIdsrStepForm):
         validators=[InputRequired(), Length(min=3)])
 
     patient_middlename = StringField(
-        'Patient Middle StringField')
+        'Patient Middle Name')
 
     patient_lastname = StringField(
         'Patient Last Name',
@@ -61,7 +61,6 @@ class PartialIdsrC(AbstractPartialIdsrStepForm):
         success = super(PartialIdsrC, self).validate()
         failures = 0 if success else 1
         objdict = self.getDict()
-
         # Checking if Date of Birth is correct. Since DateTimeField already
         # has a date formatter, it returns None when entered value is not in
         # proper format. Just adding error message here.
@@ -70,5 +69,7 @@ class PartialIdsrC(AbstractPartialIdsrStepForm):
             self.patient_dateofbirth.errors.append(" Please enter valid Date \
             of Birth in DD/MM/YYYY format.")
             failures += 1
+
+        return failures == 0
 
 registerStepForm(clazz=PartialIdsrC, step=STEP)

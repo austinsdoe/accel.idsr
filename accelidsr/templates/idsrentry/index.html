@@ -332,7 +332,11 @@ IDSR Input Form
 {% endblock %}
 
 {% block content %}
-<h1>IDSR Form Submission</h1>
+{% if not is_partial %}
+    <h1>IDSR Form Submission</h1>
+{% else %}
+    <h1>Partial IDSR Form</h1>
+{% endif %}
 {% from "idsrentry/_formhelpers.html" import render_stepsnav %}
 {% from "idsrentry/_formhelpers.html" import render_substepsnav %}
 {% from "idsrentry/_formhelpers.html" import render_fields %}
