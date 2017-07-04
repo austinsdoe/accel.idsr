@@ -63,7 +63,7 @@
     {% set cssname = ' '.join([cssstatus, csscurrent]) %}
     {% set idobj = form.getDict().get('_id', '') %}
     {% set urlparams = '?id='+idobj if idobj else '' %}
-    <li class='{{ cssname }}'><a href="/idsrentry/{{ ''.join([step['id'],urlparams]) }}"><span class='number'>{{ step['id'].upper() }}</span><span class='small'><br/>{{ step['title'] }}</span></a></li>
+    <li class='{{ cssname }}'><a href="{{ ''.join([step['id'],urlparams]) }}"><span class='number'>{{ step['id'].upper() }}</span><span class='small'><br/>{{ step['title'] }}</span></a></li>
 {% endfor %}
     </ul>
 </div>

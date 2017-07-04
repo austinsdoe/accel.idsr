@@ -9,9 +9,7 @@ from flask_login import current_user
 from flask_login import login_required
 from accelidsr.mod_idsrentry.models import save
 from accelidsr.mod_idsrentry.models.idsr import Idsr
-from accelidsr.mod_idsrentry.json import IdsrJson
 from accelidsr.mod_partialidsr.forms import getAvailableSteps
-from accelidsr.mod_partialidsr.forms import getNextStepId
 from accelidsr.mod_partialidsr.forms import newStepFormInstance
 from accelidsr.mod_partialidsr.forms import loadStepFormInstance
 
@@ -79,6 +77,7 @@ def step(step):
             formdict = form.getDict(idsrobj)
             if not idsrobj.getId():
                 formdict['createdby'] = current_user.get_username()
+                formdict['is_partial'] = True
             formdict['modifiedby'] = current_user.get_username()
             idsrobj.update(formdict)
             if save(idsrobj):

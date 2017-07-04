@@ -167,6 +167,6 @@ def loadStepFormInstance(requestform=None):
 
 # Import custom forms to be loaded dynamically here
 from accelidsr.mod_partialidsr.forms import a
-from accelidsr.mod_idsrentry.forms import b
-from accelidsr.mod_idsrentry.forms import c
-from accelidsr.mod_idsrentry.forms import d
+from accelidsr.mod_partialidsr.forms import b
+from accelidsr.mod_partialidsr.forms import c
+from accelidsr.mod_partialidsr.forms import d

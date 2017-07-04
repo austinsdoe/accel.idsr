@@ -7,7 +7,7 @@ from accelidsr.mod_idsrentry.validators import DynamicDataValidator
 from accelidsr.mod_partialidsr.forms import registerStepForm
 from accelidsr.mod_partialidsr.forms.baseform import AbstractPartialIdsrStepForm
 
-STEP = ('A', 'Basic information')
+STEP = ('A', 'Basic Information')
 
 
 class PartialIdsrA(AbstractPartialIdsrStepForm):
