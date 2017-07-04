@@ -99,6 +99,8 @@ class AbstractPartialIdsrStepForm(FlaskForm):
                 kvals['idsr-status'] = 'incomplete'
                 kvals['bika-status'] = 'pending'
                 return kvals
+
+        kvals['idsr-status'] = 'complete'
         return kvals
 
     def getDict(self, idsr_object=None):
