@@ -314,19 +314,19 @@ IDSR Input Form
                     <div class="cell">
                         <div class='idsr-pf-label'>Vaccination history:</div>
                         <div class='idsr-pf-field-container idsr-pf-field-container-first todo'>
-                            {{ idsrobj.get('sample_type', '?????') }}
+                            {{ idsrobj.get('vaccinated_for_disease_text', '?????') }}
                         </div>
                     </div>
                     <div class="cell">
                         <div class='idsr-pf-label'># Vaccination:</div>
                         <div class='idsr-pf-field-container idsr-pf-field-container-first todo'>
-                            {{ idsrobj.get('sample_type', '?????') }}
+                            {{ idsrobj.get('number_of_vaccinations', '?????') }}
                         </div>
                     </div>
                     <div class="cell">
                         <div class='idsr-pf-label'>Date of last vaccination:</div>
                         <div class='idsr-pf-field-container idsr-pf-field-container-first todo'>
-                            {% set dosstl = (idsrobj.get('date_specimen_sent').strftime('%d / %m / %Y')) if idsrobj.get('date_specimen_sent') else '??/??/????' %}
+                            {% set dosstl = (idsrobj.get('date_of_most_recent_vaccination').strftime('%d / %m / %Y')) if idsrobj.get('date_specimen_sent') else '??/??/????' %}
                             {{ dosstl }}
                         </div>
                         <div class='idsr-pf-field-sub'>

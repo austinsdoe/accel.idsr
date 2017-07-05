@@ -332,7 +332,11 @@ IDSR Input Form
 {% endblock %}
 
 {% block content %}
-<h1>IDSR Form Submission</h1>
+{% if not is_partial %}
+    <h1>IDSR Form Submission</h1>
+{% else %}
+    <h1>Partial IDSR Form</h1>
+{% endif %}
 {% from "idsrentry/_formhelpers.html" import render_stepsnav %}
 {% from "idsrentry/_formhelpers.html" import render_substepsnav %}
 {% from "idsrentry/_formhelpers.html" import render_fields %}
@@ -340,14 +344,16 @@ IDSR Input Form
 {% from "idsrentry/_formhelpers.html" import render_idsrcode %}
 {{ render_idsrcode(form) }}
 {{ render_stepsnav(form, steps) }}
-{{ render_substepsnav(form)}}
+{% if not is_partial %}
+    {{ render_substepsnav(form)}}
+{% endif %}
 <form action="" method="post" id="{{ form.step }}" name="{{ form.step }}">
     <div class='form'>
     {{ form.hidden_tag() }}
     {{ render_fields(form, steps) }}
     </div>
     <div class="form-footer">
-    {{ render_formfooter(form) }}
+    {{ render_formfooter(form, is_partial) }}
     </div>
 </form>
 {% endblock %}

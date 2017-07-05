@@ -37,6 +37,9 @@ app.register_blueprint(mod_auth)
 from accelidsr.mod_idsrentry.controllers import mod_idsrentry
 app.register_blueprint(mod_idsrentry)
 
+from accelidsr.mod_partialidsr.controllers import mod_partialidsr
+app.register_blueprint(mod_partialidsr)
+
 from accelidsr.mod_dashboard.controllers import mod_dashboard
 app.register_blueprint(mod_dashboard)
 

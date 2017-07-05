@@ -89,7 +89,7 @@ class Database:
             p_firstname = c.get('patient_firstname', '')
             p_birthDate = c['patient_dateofbirth'].strftime('%Y-%m-%dT%H:%M:%S')
             p_gender = c['patient_gender']
-            p_phone = c['patient_phone_number']
+            p_phone = c.get('patient_phone_number')
             patient = Patient(p_clientPatientId, p_is_anon, p_surname,
                               p_firstname, p_birthDate, p_gender, p_phone,
                               facility_uid)
@@ -102,14 +102,14 @@ class Database:
             # Setting up AR
             ar_contact_uid = ''
             ar_cc_contact = ''
-            ar_sampler_phone = c['sampler_phone']
+            ar_sampler_phone = c.get('sampler_phone','')
             ar_case_id = c['case_id']
             ar_patient_record_id = c.get('patient_record_id', '')
             ar_reporting_health_facility = facility_code
             ar_patient_uid = ''
             ar_sampling_date = c['date_sampled'].strftime("%Y-%m-%d %H:%M")
             # TODO make sure that sample_type is UID
-            ar_sample_type = c['sample_type']
+            ar_sample_type = c.get('sample_type','')
             ar_analysis_specification = ''
             ar_analyses_requested = c['analyses_requested']
             ar_client_order_number = c.get('patient_record_id', '')
