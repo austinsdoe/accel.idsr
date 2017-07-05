@@ -11,6 +11,8 @@ from accelidsr.mod_dashboard.models import ErrorLog
 from accelidsr.mod_idsrentry.models import find_all
 from accelidsr.mod_idsrentry.models import save
 from flask_login import current_user
+from flask import Response
+from accelidsr.utils import CSV_HEADERS
 
 # Define the blueprint: 'auth', set its url prefix: app.url/dashboard
 mod_dashboard = Blueprint('dashboard', __name__, url_prefix='/dashboard')
@@ -96,3 +98,34 @@ def errorlogs():
     items = ErrorLog.findAll()
     urltemplate = 'dashboard/errorlogs.html'
     return render_template(urltemplate, items=items)
+
+
+@mod_dashboard.route('/export')
+@login_required
+def export():
+    """
+    Export Forms as a CSV file.
+    """
+    results = []
+    items = Idsr.findAll()
+
+    # Write CSV HEADERS First
+    for header in CSV_HEADERS:
+        for k in header.keys():
+            results.append(k + ",")
+    results.append("\n")
+
+    # Each Record is going to be a row... Get value for each header and add as a column to item's row.
+    for item in items:
+        for header in CSV_HEADERS:
+            for v in header.itervalues():
+                results.append(str(item.get(v, "")) + ",")
+        results.append("\n")
+
+    generator = (row for row in results)
+    import datetime
+    file_name = "ACCEL_FORMS_" + datetime.datetime.now().strftime("%Y%m%d%H%M")
+    return Response(generator,
+                    mimetype="text/plain",
+                    headers={"Content-Disposition": "attachment;filename="+file_name+".csv",
+                             "Content-Type": "text/csv; charset=utf-8"})
