@@ -31,37 +31,16 @@ def partialidsrentry():
 @login_required
 def step(step):
     """
-    Renders the IDSR's form wizard at the step (and substep) indicated. For
-    example, if step='a', it will load its first substep (A.1). If the value
-    for the step param is 'd_4', the function will load the form D.4.
-    If a parameter 'id' is provided via get or post, the form is displayed with
-    the input fields filled with previously submitted data that corresponds to
-    the given id, but only if the logged user has enough privileges (the user
-    is the creator and/or with admin role). Otherwise, redirects to an error
-    page stating the user has not enough privileges.
-    If an 'id' is provided and the conditions explained above are met but the
-    form was already transferred to Bika, then all fields will be filled, but
-    in readonly mode.
-    This function is also in charge of saving the form loaded and if so,
-    redirect the user to the next substep within the current step or, if the
-    current substep is the last one, to the next step. In turn, if the current
-    step is the last step from the wizard form, returns to the idsrlist view.
+    Renders Partial form as same as Full IDSR Form under 'mod_idsrentry.controllers.step' does. The difference is that
+    we don't have substeps here.
 
     :param step: the step (and/or substep) to load (e.g 'a', 'b_2')
     :param type: string
     :returns: the html of the form for the passed in step (and/or substep)
     """
     idsrobj = Idsr()
-    # Is this a post and form submission?
     if request.method == 'POST':
-        # Get the form that suits with the current step, loaded
-        # with the vars from request.form
         form = loadStepFormInstance(requestform=request.form)
-        # We need first to assign the choices to fields their values have been
-        # rendered dynamically to prevent the validation to fail.
-        # Used for fields like District SelectField, loaded dynamically when
-        # a County is selected in the form.
-        # https://wtforms.readthedocs.io/en/latest/fields.html#wtforms.fields.SelectField
         fdict = request.form.to_dict()
         for field in form:
             dname = field.name + '_dynamic'
@@ -103,9 +82,6 @@ def step(step):
     # No Post submission, check if this is a previously created IDSR record
     id = request.args.get('id')
     if id:
-        # This is a previously created form. Fetch the data stored in the db
-        # for this IDSR record, check if the user has enough privileges and
-        # fill the form fields with previously stored values
         idsrobj = Idsr.fetch(id)
         if idsrobj:
             #TODO Check the user has enough privileges if previously data is available

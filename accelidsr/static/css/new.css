@@ -200,6 +200,9 @@ div.required div.table-cell-first::after {
 .items-table table tr.even {
     background-color: #e9e9e9;
 }
+.items-table table tr.partialidsr{
+    background-color: bisque;
+}
 .items-table table tr th {
     border-bottom:1px solid #cdcdcd;
 }
