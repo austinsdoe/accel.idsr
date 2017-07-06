@@ -51,6 +51,16 @@ class PloneApi:
         result = self.send_request(url)
         return result
 
+    def getContentFromCatalog(self, catalog_name, content_type, **kwargs):
+        url = self.jsonapi_url + '/read?portal_type='\
+            + content_type + '&catalog_name=' + catalog_name
+        for key, value in kwargs.iteritems():
+            url += "&%s=%s" % (key, value)
+        if 'limit' not in kwargs:
+            url += '&limit=9999'
+        result = self.send_request(url)
+        return result
+
     def getGeo(self, content):
         """
         Getting Geo objects from Bika Instance using JsonAPi
