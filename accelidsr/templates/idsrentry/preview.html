@@ -326,7 +326,7 @@ IDSR Input Form
                     <div class="cell">
                         <div class='idsr-pf-label'>Date of last vaccination:</div>
                         <div class='idsr-pf-field-container idsr-pf-field-container-first todo'>
-                            {% set dosstl = (idsrobj.get('date_of_most_recent_vaccination').strftime('%d / %m / %Y')) if idsrobj.get('date_specimen_sent') else '??/??/????' %}
+                            {% set dosstl = (idsrobj.get('date_of_most_recent_vaccination').strftime('%d / %m / %Y')) if idsrobj.get('date_of_most_recent_vaccination') else '??/??/????' %}
                             {{ dosstl }}
                         </div>
                         <div class='idsr-pf-field-sub'>
