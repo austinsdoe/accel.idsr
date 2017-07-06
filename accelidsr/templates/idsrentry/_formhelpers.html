@@ -87,6 +87,10 @@
 
 {% macro render_idsrcode(form) %}
 {% set idsrdict = form.getIdsrObject().getDict() if form.getIdsrObject() else {} %}
-{% set code = ("%s - %s - %s") % (idsrdict.get('county_code','??'),idsrdict.get('facility_code','??'),idsrdict.get('case_id','??'))  %}
+{% if (idsrdict.get('county_code','') and idsrdict.get('facility_code','') and idsrdict.get('case_id','') ) %}
+    {% set code = ("%s - %s - %s") % (idsrdict.get('county_code'),idsrdict.get('facility_code'),idsrdict.get('case_id')) %}
+{% else %}
+    {% set code = '' %}
+{% endif %}
 <h2>{{ code }}</h2>
 {% endmacro%}
