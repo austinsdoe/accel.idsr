@@ -155,13 +155,13 @@ class Run:
         try:
             imported = 0
             db_uids = self.db.get_uids('diseases')
-            api_diss = self.api.getContent('Disease').get('items', {})
+            api_diss = self.api.getContentFromCatalog('bika_setup_catalog','Disease').get('objects', {})
             if not api_diss or len(api_diss) == 0:
                 print '[WARN] No Diseases found in Bika'
-            new_diseases = [Disease(uid=d['uid'],
+            new_diseases = [Disease(uid=d['UID'],
                                     title=d['title'])
                             for d in api_diss
-                            if d['uid'] not in db_uids]
+                            if d['UID'] not in db_uids]
             imported = len(new_diseases)
             for d in new_diseases:
                 self.db.insert('diseases', d.get_db_format())
@@ -180,14 +180,14 @@ class Run:
         try:
             imported = 0
             db_uids = self.db.get_uids('caseoutcomes')
-            api_cos = self.api.getContent('CaseOutcome').get('items', {})
+            api_cos = self.api.getContentFromCatalog('bika_setup_catalog', 'CaseOutcome').get('objects', {})
             if not api_cos or len(api_cos) == 0:
                 print '[WARN] No Case Outcomes found in Bika'
-            new_cos = [CaseOutcome(uid=co['uid'],
+            new_cos = [CaseOutcome(uid=co['UID'],
                                    id=co['id'],
                                    title=co['title'])
                        for co in api_cos
-                       if co['uid'] not in db_uids]
+                       if co['UID'] not in db_uids]
             imported = len(new_cos)
             for co in new_cos:
                 self.db.insert('caseoutcomes', co.get_db_format())
