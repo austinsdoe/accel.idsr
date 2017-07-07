@@ -142,25 +142,28 @@ IDSR Input Form
                 if (anon.length > 0) {
                     $(anon).closest('div.formline').addClass('anon');
                     if ($(anon).is(':checked')) {
-                        $('div.formline').not('.anon').hide();
-                        // fill all required fields with dummy data
-                        $('input[required]').not('[input-type="date"]').val('000');
-                        $('input[required][input-type="date"]').val('01/01/2017');
-                        $('#patient_birth_date_estimated').prop('checked', false);
+                        loadAnonPatient();
                     }
                     $(anon).change(function(e) {
                         if ($(anon).is(':checked')) {
-                            $('div.formline').not('.anon').hide();
-                            $('input[required]').not('[input-type="date"]').val('000');
-                            $('input[required][input-type="date"]').val('01/01/2017');
-                            $('#patient_birth_date_estimated').prop('checked', false);
+                            loadAnonPatient();
                         } else {
                             $('div.formline').not('.anon').show();
-                            $('input[required]').val('');
+                            $('input[id*=name]:visible').each(function() {
+                                $(this).val('');
+                                $(this).closest('div.formline').show();
+                            });
                         }
                     });
                     loadEstimatedDateOfBirth();
                 }
+            }
+
+            function loadAnonPatient(){
+                $('input[id*=name]:visible').each(function() {
+                    $(this).val('Anonymous');
+                    $(this).closest('div.formline').hide();
+                });
             }
 
             function loadEstimatedDateOfBirth() {
