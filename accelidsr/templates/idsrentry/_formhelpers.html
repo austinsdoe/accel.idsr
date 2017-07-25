@@ -47,8 +47,9 @@
 
 {% macro render_formfooter(form, is_partial) %}
 <a class='cancel' href='/'>Cancel</a>
-{% if not is_partial and not form.isFirstSubstep() %}
-    <a class='prev' href='/idsrentry/{{ form.getPrevStepId() }}{% if form.idobj.data %}?id={{ form.idobj.data }} {% endif %}'>Previous</a>
+{% if form.getPrevStepId() %}
+  {% set href_type = 'idsrentry' if not is_partial else 'partialidsr' %}
+    <a class='prev' href='/{{href_type}}/{{ form.getPrevStepId() }}{% if form.idobj.data %}?id={{ form.idobj.data }} {% endif %}'>Previous</a>
 {% endif %}
 {{ form.submit }}
 {% endmacro %}

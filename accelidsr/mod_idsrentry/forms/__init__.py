@@ -157,9 +157,10 @@ def getPrevStepId(step, substep=None):
     """
     if not step:
         raise ValueError("No step passed in")
-    substep = substep if substep else 1
+    if not substep:
+        substep = 1
     substeps = getAvailableSubsteps(step)
-    if substeps:
+    if len(substeps) > 1:
         sortedss = sorted(substeps.keys())
         pos = [i for i, x in enumerate(sortedss) if x == str(substep)]
         if pos and pos[0] > 0:
@@ -173,7 +174,7 @@ def getPrevStepId(step, substep=None):
         substeps = getAvailableSubsteps(prevstep)
         if substeps:
             sortedss = sorted(substeps.keys())
-            return '{0}_{1}'.format(prevstep, steps[-1:])
+            return '{0}_{1}'.format(prevstep, sortedss[-1:][0])
         return '{0}'.format(prevstep)
     # Ooops, we reached the end of the wizard form. No further step, return 0
     return ''
