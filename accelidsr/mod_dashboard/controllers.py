@@ -129,3 +129,26 @@ def export():
                     mimetype="text/plain",
                     headers={"Content-Disposition": "attachment;filename="+file_name+".csv",
                              "Content-Type": "text/csv; charset=utf-8"})
+
+
+@mod_dashboard.route('/cancel', methods=['GET'])
+@login_required
+def cancel():
+    id = request.args.get('id')
+    if not id:
+        return render_template('404.html'), 404
+    idsrobj = Idsr.fetch(id)
+    if not idsrobj:
+        return render_template('404.html'), 404
+
+    kvals = idsrobj.getDict().copy()
+    kvals['bika-status'] = 'cancelled'
+    idsrobj.update(kvals)
+    if save(idsrobj):
+        message = 'Form Cancelled!'
+        flash(message, category='info')
+        return redirect(url_for('index'))
+
+    message = 'Something went wrong.'
+    flash(message, category='error')
+    return redirect(url_for('index'))

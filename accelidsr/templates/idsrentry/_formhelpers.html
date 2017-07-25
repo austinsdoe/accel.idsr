@@ -47,6 +47,9 @@
 
 {% macro render_formfooter(form, is_partial) %}
 <a class='cancel' href='/'>Resume Later</a>
+{% if form.idobj.data %}
+    <a class='cancel' href='{{url_for("dashboard.cancel")}}?id={{form.idobj.data}}' onclick="return confirm('If you CANCEL this form, it will not be submitted to Bika. Are you Sure?');">Cancel</a>
+{% endif %}
 {% if form.getPrevStepId() %}
   {% set href_type = 'idsrentry' if not is_partial else 'partialidsr' %}
     <a class='prev' href='/{{href_type}}/{{ form.getPrevStepId() }}{% if form.idobj.data %}?id={{ form.idobj.data }} {% endif %}'>Previous</a>
