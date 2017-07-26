@@ -1,5 +1,5 @@
 from pymongo import MongoClient
-from accelidsr.accel_idsr_sync.utils.config import settings
+from ..utils.config import settings
 from .models.patient import Patient
 from .models.idsrform import IDSRForm
 from .models.contact import Contact

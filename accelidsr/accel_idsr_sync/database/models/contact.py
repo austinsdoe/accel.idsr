@@ -1,4 +1,4 @@
-from accelidsr.accel_idsr_sync.utils.config import settings
+from ...utils.config import settings
 
 class Contact():
     """

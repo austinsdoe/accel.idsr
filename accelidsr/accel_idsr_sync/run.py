@@ -1,5 +1,5 @@
 from .api.ploneapi import PloneApi
-from accelidsr.accel_idsr_sync.database.database import Database
+from .database.database import Database
 from .database.models.analysisprofile import AnalysisProfile
 from .database.models.sampletype import SampleType
 from .database.models.disease import Disease
