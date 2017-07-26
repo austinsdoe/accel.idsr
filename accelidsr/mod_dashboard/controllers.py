@@ -8,11 +8,11 @@ from flask import url_for
 from flask_login import login_required
 from accelidsr.mod_idsrentry.models.idsr import Idsr
 from accelidsr.mod_dashboard.models import ErrorLog
-from accelidsr.mod_idsrentry.models import find_all
 from accelidsr.mod_idsrentry.models import save
 from flask_login import current_user
 from flask import Response
 from accelidsr.utils import CSV_HEADERS
+from accelidsr.accel_idsr_sync.run import Run
 
 # Define the blueprint: 'auth', set its url prefix: app.url/dashboard
 mod_dashboard = Blueprint('dashboard', __name__, url_prefix='/dashboard')
@@ -48,6 +48,8 @@ def doaction():
         ids = request.form.getlist('chk_idsr_ids')
         if action == 'Cancel':
             message = _cancel_idsrs(ids)
+        elif action == 'BikaSubmit':
+            message = _submit_idsrs(ids)
     except:
         message = 'An error occured...'
         category = 'error'
@@ -63,7 +65,7 @@ def _cancel_idsrs(ids):
     message containing numbers of cancelled, skipped and failed operations.
 
     :param ids: list of unique IDs of IDSR Forms
-    :type func: list
+    :type ids: list
     """
     n_cancelled = 0
     n_skipped = 0
@@ -87,6 +89,18 @@ def _cancel_idsrs(ids):
 
     return 'Cancelled: %d , Skipped: %d , Failed: %d' % (n_cancelled,
                                                          n_skipped, n_failed)
+
+
+def _submit_idsrs(ids):
+    """
+    Submit Forms to BIka.
+    :param ids: list of unique IDs of IDSR Forms
+    :type ids: list
+    """
+    runner = Run()
+    forms = runner.db.get_waiting_forms(ids)
+    runner.processForms(forms=forms, timer_disabled=True)
+    return "Submit Finished. See error logs for more information."
 
 
 @mod_dashboard.route('/errorlogs')

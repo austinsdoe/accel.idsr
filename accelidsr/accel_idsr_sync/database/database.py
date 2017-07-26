@@ -1,12 +1,12 @@
 from pymongo import MongoClient
-from utils.config import settings
-from models.patient import Patient
-from models.idsrform import IDSRForm
-from models.contact import Contact
-from models.analysisrequest import AnalysisRequest
+from accelidsr.accel_idsr_sync.utils.config import settings
+from .models.patient import Patient
+from .models.idsrform import IDSRForm
+from .models.contact import Contact
+from .models.analysisrequest import AnalysisRequest
 
 
-class Database:
+class Database():
 
     _db = None
 
@@ -67,7 +67,7 @@ class Database:
                     }
                 )
 
-    def get_waiting_forms(self):
+    def get_waiting_forms(self, ids=None):
         """
         This function returns set of IDSR forms which are in_queue status.
         Each IDSR form object has a Patient and an AR objects created from
@@ -75,6 +75,8 @@ class Database:
         """
         idsr_forms = []
         query = {"bika-status": "in_queue"}
+        if ids:
+            query["idobj"] = {"$in": ids}
         coll = self._db['idsrform'].find(query)
         for c in coll:
             form_id = c['idobj']
