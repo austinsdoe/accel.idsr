@@ -1,5 +1,4 @@
-from utils import config
-from utils.config import settings
+from ..utils.config import settings
 import json
 import urllib
 import urllib2

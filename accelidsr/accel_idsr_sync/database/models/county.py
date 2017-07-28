@@ -1,4 +1,4 @@
-
+from ...utils.config import COUNTY_CODES
 class County():
     """
     Class that represents County(Province/State)
@@ -18,10 +18,13 @@ class County():
         return self.title
 
     def get_code(self):
+        for code in COUNTY_CODES:
+            if self.code == code['bika_code']:
+                self.code = code['tla']
         return self.code
 
     def get_db_format(self):
         return {
-            'code': self.code,
+            'code': self.get_code(),
             'title': self.title
         }

@@ -1,21 +1,19 @@
-from api.ploneapi import PloneApi
-from database.database import Database
-from database.models.analysisprofile import AnalysisProfile
-from database.models.sampletype import SampleType
-from database.models.disease import Disease
-from database.models.county import County
-from database.models.district import District
-from database.models.syncjob import SyncJob
-from database.models.patient import Patient
-from database.models.facility import Facility
-from database.models.caseoutcome import CaseOutcome
-from database.models.analysisrequest import AnalysisRequest
-from utils.config import intervals
+from .api.ploneapi import PloneApi
+from .database.database import Database
+from .database.models.analysisprofile import AnalysisProfile
+from .database.models.sampletype import SampleType
+from .database.models.disease import Disease
+from .database.models.county import County
+from .database.models.district import District
+from .database.models.syncjob import SyncJob
+from .database.models.facility import Facility
+from .database.models.caseoutcome import CaseOutcome
+from .utils.config import intervals
 import threading
 from datetime import datetime
 
 
-class Run:
+class Run():
     """
     The Main Class. To start Sync App, it is enough to initiate instance of
     this class...
@@ -23,6 +21,8 @@ class Run:
     def __init__(self):
         self.api = PloneApi()
         self.db = Database()
+
+    def start(self):
         # We are running different methods for each content type because time
         # intervals of diverse content types can differ.
         self.processAnalysisProfiles()
@@ -229,7 +229,7 @@ class Run:
         self.insert_log(status, message, 'Facility')
         threading.Timer(intervals['facility'], self.processFacilities).start()
 
-    def processForms(self):
+    def processForms(self, forms=None, timer_disabled=False):
         """
         This function gets all newly created IDSR forms and sends requests to
         API to create Patient and ARs.
@@ -242,7 +242,8 @@ class Run:
         """
         print 'Submitting IDSR Forms to Bika...'
         try:
-            forms = self.db.get_waiting_forms()
+            if not forms:
+                forms = self.db.get_waiting_forms()
             for f in forms:
                 # To create a new AR, Patient UID and Contact ID are required
 
@@ -299,7 +300,8 @@ class Run:
             status = 'Fail'
             self.insert_log(status, message, 'AR & Patient')
             self.db.update_status(f.getId(), 'failed')
-        threading.Timer(intervals['idsrform'], self.processForms).start()
+        if not timer_disabled:
+            threading.Timer(intervals['idsrform'], self.processForms).start()
 
     def insert_log(self, status, message, content_type, idsr_id=None,
                    idsr_code=None):
@@ -317,6 +319,3 @@ class Run:
         if idsr_code:
             log.set_idsr_code(idsr_code)
         self.db.insert('syncjobs', log.get_db_format())
-
-
-run = Run()

@@ -1,4 +1,4 @@
-from utils.config import settings
+from ...utils.config import settings
 
 
 class Patient():

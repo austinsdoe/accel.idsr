@@ -1,3 +1,5 @@
+from ...utils.config import COUNTY_CODES
+
 
 class District():
     """
@@ -18,10 +20,13 @@ class District():
         return self.title
 
     def get_cocode(self):
+        for code in COUNTY_CODES:
+            if self.cocode == code['bika_code']:
+                self.cocode = code['tla']
         return self.cocode
 
     def get_db_format(self):
         return {
-            'county_code': self.cocode,
+            'county_code': self.get_cocode(),
             'title': self.title
         }
