@@ -101,22 +101,15 @@ def getNextStepId(step):
 
 def getPrevStepId(step):
     """
-    Returns the previous step (and/or substep) before the step (and substep)
-    passed in.
+    Returns the previous step before the step passed in.
 
     :param step: the current step
     :type step: string
-    :param substep: the current substep.
-    :type substep: int
     :returns: The next step id before the current step and substep
     :rtype: string
     """
     if not step:
         raise ValueError("No step passed in")
-    substep = substep if substep else 1
-    substeps = getAvailableSubsteps(step)
-    # The substep passed in is the first one from the step. Return the last
-    # substep from the previous top-level step
     steps = [k['id'] for k in getAvailableSteps()]
     pos = [i for i, x in enumerate(steps) if x == str(step)]
     if pos and pos[0] > 0:
