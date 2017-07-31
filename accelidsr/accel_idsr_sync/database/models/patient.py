@@ -54,7 +54,7 @@ class Patient():
             "BusinessPhone": '',
             "EmailAddress": '',
             "PatientAsGuarantor": True,
-            "PrimaryReferrerUID": self.facility_uid,
+            "PrimaryReferrer": "UID:"+self.facility_uid,
             "Anonymous": self.is_anon
         }
         if self.is_anon:

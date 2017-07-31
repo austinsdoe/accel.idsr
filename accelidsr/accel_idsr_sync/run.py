@@ -11,6 +11,7 @@ from .database.models.caseoutcome import CaseOutcome
 from .utils.config import intervals
 import threading
 from datetime import datetime
+from .utils.config import COUNTY_CODES
 
 
 class Run():
@@ -48,13 +49,10 @@ class Run():
         try:
             imported = 0
             db_codes = self.db.get_codes('counties')
-            api_counties = self.api.getGeo('States')
-            if not api_counties or len(api_counties) == 0:
-                print '[WARN] No counties found in Bika'
-            new_counties = [County(code=c[1],
-                                   title=c[2])
-                            for c in api_counties
-                            if c[1] not in db_codes]
+            new_counties = [County(code=c['tla'],
+                                   title=c["title"])
+                            for c in COUNTY_CODES
+                            if c["tla"] not in db_codes]
             imported = len(new_counties)
             for c in new_counties:
                 self.db.insert('counties', c.get_db_format())
